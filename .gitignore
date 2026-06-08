@@ -66,3 +66,11 @@ share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+
+# Hidden files and folders (starting with a dot)
+.*
+!.gitignore
+!.gitkeep
+
+# Windows system hidden files
+desktop.ini
