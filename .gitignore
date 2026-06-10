@@ -72,6 +72,11 @@ share/python-wheels/
 !.gitignore
 !.gitkeep
 !.env.example
+!.streamlit/
 
 # Windows system hidden files
 desktop.ini
+
+# Streamlit secrets
+.streamlit/secrets.toml
+!.streamlit/secrets.toml.example

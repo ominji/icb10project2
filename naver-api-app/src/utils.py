@@ -11,16 +11,23 @@ def init_naver_credentials():
     .env 파일에서 네이버 API 정보를 가져와 세션 상태(st.session_state)에 저장하고
     공통 검색 조건을 초기화합니다.
     """
-    # .env 로드 (app.py 또는 pages/*.py가 위치한 폴더 기준으로 naver-api-app/.env를 정확히 찾아 로드)
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    dotenv_path = os.path.join(os.path.dirname(current_dir), '.env')
-    load_dotenv(dotenv_path)
+    # 1. st.secrets 우선 로드 (Streamlit Cloud 배포 환경 또는 로컬 secrets.toml)
+    client_id = st.secrets.get("NAVER_CLIENT_ID") if "NAVER_CLIENT_ID" in st.secrets else None
+    client_secret = st.secrets.get("NAVER_CLIENT_SECRET") if "NAVER_CLIENT_SECRET" in st.secrets else None
     
-    # API 키 초기화
+    # 2. st.secrets에 없으면 .env 로드 및 환경 변수 참조 (로컬 .env 개발 환경)
+    if not client_id or not client_secret:
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        dotenv_path = os.path.join(os.path.dirname(current_dir), '.env')
+        load_dotenv(dotenv_path)
+        client_id = os.environ.get("NAVER_CLIENT_ID", "")
+        client_secret = os.environ.get("NAVER_CLIENT_SECRET", "")
+    
+    # API 키 세션 저장
     if "client_id" not in st.session_state or not st.session_state["client_id"]:
-        st.session_state["client_id"] = os.environ.get("NAVER_CLIENT_ID", "")
+        st.session_state["client_id"] = client_id
     if "client_secret" not in st.session_state or not st.session_state["client_secret"]:
-        st.session_state["client_secret"] = os.environ.get("NAVER_CLIENT_SECRET", "")
+        st.session_state["client_secret"] = client_secret
         
     # 공통 검색 조건 초기화 (하위 페이지 직진입 대응)
     if "keywords" not in st.session_state:
