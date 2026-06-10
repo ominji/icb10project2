@@ -71,6 +71,7 @@ share/python-wheels/
 .*
 !.gitignore
 !.gitkeep
+!.env.example
 
 # Windows system hidden files
 desktop.ini

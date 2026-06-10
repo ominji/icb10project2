@@ -1,0 +1,2787 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧲 Operation: Money Magnet - PB 관제 대시보드 v2</title>
+    <meta name="description" content="iM뱅크 PB 고객들의 자산 유출 위험을 실시간으로 방어하는 지능형 인터랙티브 대시보드입니다.">
+    <!-- Google Fonts, Chart.js, 및 FontAwesome 연동 -->
+    <link rel="stylesheet" href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #00bda7;
+            --primary-light: #e2f1f0;
+            --primary-dark: #008f7e;
+            --bg-dark: #080f19;
+            --sidebar-bg: #0c1625;
+            --card-bg: rgba(15, 27, 46, 0.7);
+            --card-border: rgba(0, 189, 167, 0.12);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-yellow: #fbbf24;
+            --accent-red: #f87171;
+            --accent-green: #34d399;
+            --input-bg: #111e30;
+            --input-border: #1e2e45;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'NanumSquareRound', 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            background-image: radial-gradient(circle at 10% 20%, rgba(0, 189, 167, 0.04) 0%, transparent 40%),
+                              radial-gradient(circle at 90% 80%, rgba(0, 143, 126, 0.03) 0%, transparent 40%);
+        }
+
+        /* 전체 레이아웃 */
+        .app-container {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* 사이드바 */
+        .sidebar {
+            width: 320px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--card-border);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-logo {
+            text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+        }
+
+        .logo-img {
+            max-width: 140px;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-subtitle {
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sidebar-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 5px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .checkbox-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12.5px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-item input {
+            accent-color: var(--primary);
+            width: 15px;
+            height: 15px;
+        }
+
+        .range-slider-container {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-top: 4px;
+        }
+
+        .range-values {
+            font-size: 11px;
+            color: var(--primary);
+            font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+            text-align: right;
+        }
+
+        .range-slider {
+            width: 100%;
+            accent-color: var(--primary);
+            height: 5px;
+            background: var(--input-bg);
+            border-radius: 3px;
+            outline: none;
+        }
+
+        /* 메인 콘텐츠 영역 */
+        .main-content {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* 헤더 */
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1.5px solid var(--card-border);
+            padding-bottom: 16px;
+        }
+
+        .header-title-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-title {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(45deg, #ffffff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .header-subtitle {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .header-meta {
+            text-align: right;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .header-meta span {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* 상단 탭 */
+        .tabs-container {
+            display: flex;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            gap: 10px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            font-family: 'NanumSquareRound', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #ffffff;
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        /* 탭 본문 */
+        .tab-pane {
+            display: none;
+            flex-direction: column;
+            gap: 24px;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .tab-pane.active {
+            display: flex;
+        }
+
+        /* 1열 레이아웃: 지표판 + 차트 */
+        .tab1-top-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 2.8fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .tab1-top-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* KPI 선택판 */
+        .kpi-selector-panel {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .kpi-panel-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 10px;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .kpi-btn {
+            background-color: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 10px;
+            padding: 12px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            color: var(--text-muted);
+        }
+
+        .kpi-btn:hover {
+            border-color: rgba(0, 189, 167, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .kpi-btn.active {
+            background-color: rgba(0, 189, 167, 0.15);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .kpi-btn-label {
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .kpi-btn-value {
+            font-size: 15px;
+            font-weight: 800;
+            font-family: 'Outfit', sans-serif;
+            color: #ffffff;
+        }
+
+        .kpi-btn.active .kpi-btn-value {
+            color: var(--primary);
+        }
+
+        /* 상세 차트 영역 */
+        .kpi-detail-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .kpi-detail-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .kpi-chart-wrapper {
+            position: relative;
+            height: 180px;
+            width: 100%;
+        }
+
+        /* 단디의 족집게 해설 */
+        .dandi-brief-box {
+            background-color: rgba(0, 189, 167, 0.04);
+            border: 1.5px solid rgba(0, 189, 167, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .dandi-avatar {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            background: rgba(0, 189, 167, 0.1);
+            border-radius: 50%;
+            border: 1px solid var(--primary);
+            padding: 3px;
+        }
+
+        .dandi-commentary {
+            font-size: 12.5px;
+            color: var(--text-main);
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        .dandi-commentary b {
+            color: var(--primary);
+        }
+
+        /* 2x2 차트 그리드 */
+        .charts-grid-2x2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid-2x2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .grid-chart-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .grid-chart-title {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--text-muted);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 8px;
+        }
+
+        .grid-chart-wrapper {
+            position: relative;
+            height: 170px;
+            width: 100%;
+        }
+
+        /* 테이블 및 실시간 리포트 레이아웃 */
+        .tab1-bottom-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 2.8fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .tab1-bottom-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 단디 브리핑 카드 */
+        .dandi-report-card {
+            background: linear-gradient(135deg, rgba(15, 27, 46, 0.95), rgba(8, 15, 25, 0.98));
+            border: 1.5px solid var(--primary);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            box-shadow: 0 4px 20px rgba(0, 189, 167, 0.05);
+        }
+
+        .dandi-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .dandi-large-avatar {
+            width: 55px;
+            height: 55px;
+            object-fit: contain;
+            background: rgba(0, 189, 167, 0.15);
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            padding: 4px;
+        }
+
+        .dandi-card-title h3 {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .dandi-card-title p {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .dandi-card-body {
+            font-size: 13px;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+            line-weight: 1.6;
+        }
+
+        /* 테이블 */
+        .table-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .table-header {
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 12.5px;
+        }
+
+        th {
+            padding: 12px 14px;
+            border-bottom: 2px solid rgba(0, 189, 167, 0.15);
+            color: var(--text-muted);
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        tr:hover td {
+            background-color: rgba(0, 189, 167, 0.02);
+            color: #ffffff;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 10.5px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .badge-high { background-color: rgba(248, 113, 113, 0.12); color: var(--accent-red); border: 1px solid rgba(248, 113, 113, 0.25); }
+        .badge-medium { background-color: rgba(251, 146, 60, 0.12); color: var(--accent-yellow); border: 1px solid rgba(251, 146, 60, 0.25); }
+        .badge-low { background-color: rgba(52, 211, 153, 0.12); color: var(--accent-green); border: 1px solid rgba(52, 211, 153, 0.25); }
+
+        /* ------------------ 탭 2: 고객 상세 분석 ------------------ */
+        .search-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .search-input {
+            width: 100%;
+            background-color: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: #ffffff;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(0, 189, 167, 0.15);
+        }
+
+        /* 자동완성 드롭다운 */
+        .autocomplete-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: var(--sidebar-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            margin-top: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            display: none;
+        }
+
+        .autocomplete-item {
+            padding: 10px 16px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .autocomplete-item:hover {
+            background-color: rgba(0, 189, 167, 0.1);
+            color: var(--primary);
+        }
+
+        .search-btn-wrapper {
+            display: flex;
+            align-items: flex-end;
+            padding-bottom: 2px;
+        }
+
+        .search-success-tag {
+            background-color: rgba(52, 211, 153, 0.12);
+            color: var(--accent-green);
+            border: 1px solid rgba(52, 211, 153, 0.25);
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* 고객 상세 정보 그리드 */
+        .customer-cockpit-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .cockpit-step-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .cockpit-row-1 {
+            display: grid;
+            grid-template-columns: 1.2fr 1.3fr 1.1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 900px) {
+            .cockpit-row-1 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .cockpit-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .cockpit-card-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-muted);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cockpit-info-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .cockpit-info-list p b {
+            color: var(--primary);
+        }
+
+        .cockpit-chart-wrapper {
+            position: relative;
+            height: 120px;
+            width: 100%;
+        }
+
+        /* 프로그레스바 */
+        .progress-container {
+            width: 100%;
+            background-color: var(--input-bg);
+            border-radius: 6px;
+            height: 10px;
+            margin-top: 6px;
+            margin-bottom: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 6px;
+            width: 0%;
+            transition: width 0.5s ease-out;
+        }
+
+        /* 콕핏 2단계: 시뮬레이션 */
+        .cockpit-row-2 {
+            display: grid;
+            grid-template-columns: 1.1fr 1.3fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 900px) {
+            .cockpit-row-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .sim-expected-saving-box {
+            background-color: rgba(52, 211, 153, 0.05);
+            border-radius: 12px;
+            padding: 12px 18px;
+            border: 1px solid rgba(52, 211, 153, 0.2);
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .sim-saving-title {
+            color: var(--accent-green);
+            font-size: 12.5px;
+            font-weight: 600;
+        }
+
+        .sim-saving-value {
+            margin-top: 3px;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        /* 플레이북 카드 */
+        .playbook-card {
+            background-color: rgba(15, 27, 46, 0.9);
+            border: 1px solid var(--card-border);
+            border-left: 5px solid var(--primary);
+            padding: 16px;
+            border-radius: 6px 12px 12px 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .playbook-header-title {
+            margin: 0;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 14.5px;
+        }
+
+        .script-box {
+            background-color: rgba(251, 191, 36, 0.06);
+            border-left: 4px solid var(--accent-yellow);
+            padding: 12px;
+            border-radius: 4px;
+            color: #fef08a;
+            font-size: 12px;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .product-chips-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .product-chip {
+            display: inline-block;
+            background-color: rgba(0, 189, 167, 0.05);
+            border: 1.2px solid var(--primary);
+            color: var(--primary);
+            border-radius: 20px;
+            padding: 3px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .product-chip:hover {
+            background-color: var(--primary);
+            color: var(--bg-dark);
+        }
+
+        /* 대형 버튼 */
+        .btn-large {
+            width: 100%;
+            background-color: var(--primary);
+            color: var(--bg-dark);
+            border: 1.5px solid var(--primary);
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .btn-large:hover:not(:disabled) {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-large:disabled {
+            background-color: var(--input-bg);
+            border-color: var(--input-border);
+            color: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        /* 콕핏 3단계: CRM 및 액션 */
+        .cockpit-row-3 {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 900px) {
+            .cockpit-row-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .crm-log-item {
+            font-size: 11.5px;
+            color: var(--text-muted);
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            margin-bottom: 6px;
+        }
+
+        .crm-log-item b {
+            color: var(--primary);
+        }
+
+        .action-btns-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .action-sub-btn {
+            background-color: var(--input-bg);
+            border: 1.5px solid var(--input-border);
+            color: var(--text-main);
+            border-radius: 8px;
+            padding: 8px 4px;
+            font-size: 11.5px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .action-sub-btn:hover {
+            border-color: var(--primary);
+            background-color: rgba(0, 189, 167, 0.02);
+            transform: translateY(-1px);
+        }
+
+        .action-recent-log {
+            font-size: 11px;
+            color: var(--accent-yellow);
+            margin-top: 5px;
+        }
+
+        /* 피칭 가이드 */
+        .pitch-guide-card {
+            background-color: rgba(255, 255, 255, 0.02);
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            margin-top: 10px;
+        }
+
+        .pitch-guide-text {
+            font-style: italic;
+            color: #d1d5db;
+            font-size: 11.5px;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        /* ------------------ 탭 3: 시장 인사이트 ------------------ */
+        .insights-kpis {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .insights-kpis {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .insight-kpi-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .insight-kpi-title {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .insight-kpi-value {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--primary);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .insights-row-2 {
+            display: grid;
+            grid-template-columns: 1.5fr 1.2fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 900px) {
+            .insights-row-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 로딩 오버레이 */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(8, 15, 25, 0.85);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(0, 189, 167, 0.2);
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* 토스트 팝업 */
+        .toast-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 2000;
+        }
+
+        .toast-item {
+            background-color: #0c1625;
+            border: 1.5px solid var(--primary);
+            border-left: 5px solid var(--primary);
+            color: #ffffff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 600;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 3.5s forwards;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 250px;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; transform: translateY(10px); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 셀렉트 인풋 */
+        .styled-select {
+            width: 100%;
+            background-color: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: #ffffff;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .styled-select:focus {
+            border-color: var(--primary);
+        }
+
+        /* 푸터 */
+        footer {
+            text-align: center;
+            padding: 30px 0 10px;
+            color: var(--text-muted);
+            font-size: 11.5px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- 1. 사이드바 글로벌 필터 -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <img src="../im_bank_logo.png" alt="iM뱅크 로고" class="logo-img" onerror="this.src='https://via.placeholder.com/140x30/00bda7/ffffff?text=iM+Bank'">
+                <p class="sidebar-subtitle">공식 자산 관리 관제 대시보드</p>
+            </div>
+
+            <section class="sidebar-section">
+                <div class="sidebar-title">🔍 글로벌 필터</div>
+                
+                <!-- 직군 필터 -->
+                <div class="filter-group">
+                    <div class="filter-label">고객 직군</div>
+                    <div class="checkbox-list" id="jobFilterList">
+                        <label class="checkbox-item"><input type="checkbox" value="일반사무" checked> 일반사무</label>
+                        <label class="checkbox-item"><input type="checkbox" value="제조업" checked> 제조업</label>
+                        <label class="checkbox-item"><input type="checkbox" value="IT/개발" checked> IT/개발</label>
+                        <label class="checkbox-item"><input type="checkbox" value="전문직" checked> 전문직</label>
+                    </div>
+                </div>
+
+                <!-- 자산 규모 필터 -->
+                <div class="filter-group">
+                    <div class="filter-label">최저 평균 잔액 (원) <span class="range-values" id="balVal">0원</span></div>
+                    <div class="range-slider-container">
+                        <input type="range" class="range-slider" id="balSlider" min="0" max="150000000" step="5000000" value="0">
+                    </div>
+                </div>
+
+                <!-- 이체 비중 필터 -->
+                <div class="filter-group">
+                    <div class="filter-label">최소 월급날 이체 비중 <span class="range-values" id="ratioVal">0%</span></div>
+                    <div class="range-slider-container">
+                        <input type="range" class="range-slider" id="ratioSlider" min="0" max="100" step="5" value="0">
+                    </div>
+                </div>
+
+                <!-- 관심 테마 필터 -->
+                <div class="filter-group">
+                    <div class="filter-label">주력 관심 테마</div>
+                    <div class="checkbox-list" id="themeFilterList">
+                        <label class="checkbox-item"><input type="checkbox" value="반도체" checked> 반도체</label>
+                        <label class="checkbox-item"><input type="checkbox" value="항공/방산" checked> 항공/방산</label>
+                        <label class="checkbox-item"><input type="checkbox" value="2차전지" checked> 2차전지</label>
+                        <label class="checkbox-item"><input type="checkbox" value="리츠/배당" checked> 리츠/배당</label>
+                        <label class="checkbox-item"><input type="checkbox" value="금융/은행" checked> 금융/은행</label>
+                    </div>
+                </div>
+
+                <!-- 자산 누수 수준 필터 -->
+                <div class="filter-group">
+                    <div class="filter-label">⚠️ 자산 누수 등급</div>
+                    <div class="checkbox-list" id="riskFilterList">
+                        <label class="checkbox-item"><input type="checkbox" value="고위험" checked> 고위험</label>
+                        <label class="checkbox-item"><input type="checkbox" value="중위험" checked> 중위험</label>
+                        <label class="checkbox-item"><input type="checkbox" value="저위험" checked> 저위험</label>
+                    </div>
+                </div>
+            </section>
+        </aside>
+
+        <!-- 2. 메인 콘텐츠 -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="header-title-container">
+                    <span class="header-title">🧲 Operation: Money Magnet</span>
+                    <span class="header-subtitle">(머니무브 방어 사령부)</span>
+                </div>
+                <div class="header-meta">
+                    📅 기준일자: <span id="currentDateSpan">2026년 06월 10일</span>
+                </div>
+            </header>
+
+            <div style="font-size: 13.5px; color: var(--text-muted); margin-top: -15px; font-weight: 500;">
+                나가는 돈도 다시 보자! 증권사로 향하는 자금을 자석처럼 끌어당기는 PB 관제탑
+            </div>
+
+            <!-- 상단 탭 -->
+            <nav class="tabs-container">
+                <button class="tab-btn active" onclick="switchTab('tab1')">📊 은행 전체 통계</button>
+                <button class="tab-btn" onclick="switchTab('tab2')">🎯 고객 상세 분석</button>
+                <button class="tab-btn" onclick="switchTab('tab3')">📈 시장 인사이트</button>
+            </nav>
+
+            <!-- ------------------ 탭 1: 은행 전체 통계 ------------------ -->
+            <section class="tab-pane active" id="tab1">
+                <div class="tab1-top-layout">
+                    <!-- KPI 요약 패널 -->
+                    <div class="kpi-selector-panel">
+                        <div class="kpi-panel-title">🎛️ 요약 지표 선택</div>
+                        <div class="kpi-grid">
+                            <div class="kpi-btn active" id="btn_total_aum" onclick="selectKpi('total_aum')">
+                                <span class="kpi-btn-label">💰 총 관리 자산 (AUM)</span>
+                                <span class="kpi-btn-value" id="kpi_val_total_aum">₩0</span>
+                            </div>
+                            <div class="kpi-btn" id="btn_avg_balance" onclick="selectKpi('avg_balance')">
+                                <span class="kpi-btn-label">📊 고객 평균 자산</span>
+                                <span class="kpi-btn-value" id="kpi_val_avg_balance">₩0</span>
+                            </div>
+                            <div class="kpi-btn" id="btn_high_risk_count" onclick="selectKpi('high_risk_count')">
+                                <span class="kpi-btn-label">🚨 누수 고위험 고객 수</span>
+                                <span class="kpi-btn-value" id="kpi_val_high_risk_count">0명</span>
+                            </div>
+                            <div class="kpi-btn" id="btn_potential_outflow" onclick="selectKpi('potential_outflow')">
+                                <span class="kpi-btn-label">💸 월급날 유출 우려 자산</span>
+                                <span class="kpi-btn-value" id="kpi_val_potential_outflow">₩0</span>
+                            </div>
+                            <div class="kpi-btn" id="btn_avg_age" onclick="selectKpi('avg_age')">
+                                <span class="kpi-btn-label">👥 대상 고객 평균 연령</span>
+                                <span class="kpi-btn-value" id="kpi_val_avg_age">0.0세</span>
+                            </div>
+                            <div class="kpi-btn" id="btn_top_theme" onclick="selectKpi('top_theme')">
+                                <span class="kpi-btn-label">⭐ 최다 관심 테마 (1위)</span>
+                                <span class="kpi-btn-value" id="kpi_val_top_theme">N/A</span>
+                            </div>
+                            <div class="kpi-btn" id="btn_defense_rate" onclick="selectKpi('defense_rate')">
+                                <span class="kpi-btn-label">🛡️ 마케팅 방어 성공률</span>
+                                <span class="kpi-btn-value" id="kpi_val_defense_rate">0.0%</span>
+                            </div>
+                            <div class="kpi-btn" id="btn_monthly_target" onclick="selectKpi('monthly_target')">
+                                <span class="kpi-btn-label">📈 이달 목표 달성률</span>
+                                <span class="kpi-btn-value" id="kpi_val_monthly_target">0.0%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 지표 상세 진단 및 차트 -->
+                    <div class="kpi-detail-card">
+                        <div class="kpi-detail-title">
+                            <span id="detailKpiEmoji">💰</span> <span id="detailKpiName">총 관리 자산 (AUM)</span> 지표 정밀 진단 차트
+                        </div>
+                        <div class="kpi-chart-wrapper">
+                            <canvas id="kpiDetailChart"></canvas>
+                        </div>
+                        <div class="dandi-brief-box">
+                            <img src="../dandi_mascot_2d.png" alt="단디 마스코트" class="dandi-avatar" onerror="this.src='https://via.placeholder.com/45/00bda7/ffffff?text=Dandi'">
+                            <div class="dandi-commentary">
+                                <b>🐧 단디의 족집게 해설:</b>
+                                <span id="dandiBriefText">해설 로딩 중...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="font-size: 15px; font-weight:700; margin-top: 10px;">📊 다차원 분석 시각화 그리드</div>
+
+                <!-- 2x2 차트 그리드 -->
+                <div class="charts-grid-2x2">
+                    <div class="grid-chart-card">
+                        <div class="grid-chart-title">📌 자산 규모 대비 월급날 이체 비중 (버블 크기 = 자산 누수율)</div>
+                        <div class="grid-chart-wrapper">
+                            <canvas id="scatterChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="grid-chart-card">
+                        <div class="grid-chart-title">📌 주력 관심 테마별 자산 누적 규모 (v2 데이터 피드백)</div>
+                        <div class="grid-chart-wrapper">
+                            <canvas id="themeBarChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="grid-chart-card">
+                        <div class="grid-chart-title">📌 직군별 자금 누수 등급 분포</div>
+                        <div class="grid-chart-wrapper">
+                            <canvas id="jobStackChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="grid-chart-card">
+                        <div class="grid-chart-title">📌 주력 관심 테마별 고객 분포 현황</div>
+                        <div class="grid-chart-wrapper">
+                            <canvas id="themePieChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 테이블 및 브리핑 레이아웃 -->
+                <div class="tab1-bottom-layout">
+                    <!-- 요약 보고 -->
+                    <div class="dandi-report-card">
+                        <div class="dandi-card-header">
+                            <img src="../dandi_mascot_2d.png" alt="단디 마스코트" class="dandi-large-avatar" onerror="this.src='https://via.placeholder.com/55/00bda7/ffffff?text=Dandi'">
+                            <div class="dandi-card-title">
+                                <h3>📢 단디의 실시간 은행 전체 요약 보고</h3>
+                                <p>Money Move 관제 센터 알림</p>
+                            </div>
+                        </div>
+                        <div class="dandi-card-body" id="dandiReportSummary">
+                            보고서 작성 중...
+                        </div>
+                    </div>
+
+                    <!-- 집중 케어 리스트 -->
+                    <div class="table-card">
+                        <div class="table-header">
+                            🚨 유출 우려 자산 상위 집중 케어 대상 (TOP 10)
+                        </div>
+                        <div class="table-wrapper">
+                            <table id="topTenTable">
+                                <thead>
+                                    <tr>
+                                        <th>고객 ID</th>
+                                        <th>고객명</th>
+                                        <th>연령</th>
+                                        <th>직군</th>
+                                        <th>평균 잔액</th>
+                                        <th>월급날 이체 비중</th>
+                                        <th>유출 우려 자산</th>
+                                        <th>관심 테마</th>
+                                        <th>자산 누수율</th>
+                                        <th>누수 등급</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="topTenTableBody">
+                                    <!-- JS가 동적으로 채워넣음 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ------------------ 탭 2: 고객 상세 분석 ------------------ -->
+            <section class="tab-pane" id="tab2">
+                <div class="cockpit-step-title">🎯 개별 고객 맞춤 상담 Cockpit (360도 뷰)</div>
+                <div style="font-size:12.5px; color: var(--text-muted); margin-top:-15px; margin-bottom:10px;">
+                    선택한 고객의 자산 구성 상태, 5대 테마 관심도, 마케팅 시나리오 및 CRM 로그를 통합 관제합니다.
+                </div>
+
+                <!-- 고객 검색 영역 -->
+                <div class="search-container">
+                    <div class="search-input-wrapper">
+                        <label class="filter-label" style="font-weight:700;">고객 검색</label>
+                        <input type="text" class="search-input" id="customerSearchInput" placeholder="고객 ID(예: C00023) 또는 고객명 입력 후 선택..." oninput="onSearchInput()">
+                        <div class="autocomplete-dropdown" id="searchDropdown"></div>
+                    </div>
+                    <div class="search-btn-wrapper">
+                        <div class="search-success-tag" id="searchResultTag">🔍 고객 조회 완료</div>
+                    </div>
+                </div>
+
+                <div class="customer-cockpit-grid" id="cockpitMainArea" style="display:none;">
+                    <!-- 1단계: 다차원 종합 진단 -->
+                    <div>
+                        <div class="cockpit-step-title">📋 1단계: 고객 다차원 종합 진단</div>
+                        <div class="cockpit-row-1">
+                            <!-- 인적 요약 정보 -->
+                            <div class="cockpit-card">
+                                <div class="cockpit-card-title">👥 고객 기본 요약 <span style="font-size:16px;">👤</span></div>
+                                <div class="cockpit-info-list" id="custBasicInfo">
+                                    <!-- 동적 렌더링 -->
+                                </div>
+                            </div>
+                            <!-- 5대 테마 관심도 -->
+                            <div class="cockpit-card">
+                                <div class="cockpit-card-title">🧬 5대 테마 섹터별 관심도 분포 <span style="font-size:16px;">📊</span></div>
+                                <div class="cockpit-chart-wrapper">
+                                    <canvas id="custThemeRadar"></canvas>
+                                </div>
+                            </div>
+                            <!-- 자산 누수율 분석 -->
+                            <div class="cockpit-card">
+                                <div class="cockpit-card-title">⚠️ 자산 누수율(Leakage Rate) 분석 <span style="font-size:16px;">🚨</span></div>
+                                <div class="cockpit-info-list" id="custLeakageInfo">
+                                    <!-- 동적 렌더링 -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2단계: 제언 시뮬레이션 및 Playbook -->
+                    <div>
+                        <div class="cockpit-step-title">💡 2단계: 자산 방어 시뮬레이션 및 마케팅 전략 제언</div>
+                        <div class="cockpit-row-2">
+                            <!-- 시뮬레이터 -->
+                            <div class="cockpit-card">
+                                <div class="cockpit-card-title">🎛️ 포트폴리오 자산 방어 시뮬레이터 <span style="font-size:16px;">⚡</span></div>
+                                
+                                <div class="filter-group" style="gap:5px;">
+                                    <div class="filter-label">테마 특화 랩 가입 제안 금액 (원)</div>
+                                    <input type="range" class="range-slider" id="simSlider" min="0" max="100000000" step="1000000" value="0" oninput="onSimSliderChange()">
+                                    <div class="range-values" id="simSliderVal" style="font-size:13px; font-weight:800;">0원</div>
+                                </div>
+
+                                <div class="sim-expected-saving-box">
+                                    <div class="sim-saving-title">💡 제안 포트폴리오의 연간 세액 절감 효과</div>
+                                    <div class="sim-saving-value" id="simSavingVal">연간 약 ₩0 절세 예상</div>
+                                </div>
+
+                                <div class="cockpit-chart-wrapper" style="height:120px;">
+                                    <canvas id="simChart"></canvas>
+                                </div>
+                            </div>
+
+                            <!-- 단디 추천 플레이북 -->
+                            <div class="cockpit-card">
+                                <div class="cockpit-card-title">🛡️ 단디의 🧲 마그넷 솔루션 추천 <span style="font-size:16px;">🐧</span></div>
+                                <div style="display:flex; gap:15px; align-items:flex-start;">
+                                    <img src="../dandi_mascot_2d.png" alt="단디" style="width:65px; height:65px; object-fit:contain; background:rgba(0,189,167,0.1); border-radius:50%; border:1.5px solid var(--primary); padding:3px;">
+                                    <div style="flex-grow:1; display:flex; flex-direction:column; gap:10px;">
+                                        <div class="playbook-card" id="playbookCardContent">
+                                            <!-- 동적 템플릿 로드 -->
+                                        </div>
+                                        <button class="btn-large" id="defendBtn" onclick="runDefendMagnet()">🚀 마그넷 솔루션 가동 (방어 실행)</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3단계: CRM 및 액션 -->
+                    <div>
+                        <div class="cockpit-step-title">📂 3단계: CRM 이력 관리 및 마케팅 실행</div>
+                        <div class="cockpit-row-3">
+                            <!-- CRM 이력 -->
+                            <div class="cockpit-card">
+                                <div class="cockpit-card-title">📁 상담 및 마케팅 이력 (CRM) <span style="font-size:16px;">📆</span></div>
+                                <div id="crmLogList">
+                                    <div class="crm-log-item">🗓️ <b>2026-05-15</b>: 상반기 VIP 세무/상속 1:1 상담 초청장 발송 완료 (PB 담당자)</div>
+                                    <div class="crm-log-item">🗓️ <b>2026-04-10</b>: 1분기 정기 예금 만기 재유치 성공 (AUM 방어 ₩4,000만)</div>
+                                    <div class="crm-log-item">🗓️ <b>2026-03-02</b>: 신년 맞이 VIP 명절 특별 감사 기프트 세트 택배 전달 완료</div>
+                                </div>
+                            </div>
+                            <!-- PB 실시간 마케팅 액션 -->
+                            <div class="cockpit-card">
+                                <div class="cockpit-card-title">⚡ 실시간 PB 마케팅 액션 <span style="font-size:16px;">⚙️</span></div>
+                                <div class="action-btns-grid">
+                                    <button class="action-sub-btn" onclick="triggerAction('email')">📧 이메일 발송</button>
+                                    <button class="action-sub-btn" onclick="triggerAction('sms')">💬 SMS 제안</button>
+                                    <button class="action-sub-btn" onclick="triggerAction('call')">📞 유선 예약</button>
+                                </div>
+                                <div class="action-recent-log" id="recentActionLogText">현재 세션에 기록된 마케팅 로그가 없습니다.</div>
+
+                                <div class="pitch-guide-card">
+                                    <div style="font-size:11px; font-weight:700; color:var(--primary); margin-bottom:4px;">🎙️ PB 실전 피칭 가이드 (Script Generator)</div>
+                                    <p class="pitch-guide-text" id="pitchingScriptText">...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ------------------ 탭 3: 시장 인사이트 ------------------ -->
+            <section class="tab-pane" id="tab3">
+                <div class="cockpit-step-title">📈 시장 섹터별 고객 분석 및 마케팅 인사이트</div>
+                <div style="font-size:12.5px; color: var(--text-muted); margin-top:-15px; margin-bottom:10px;">
+                    지점 전체 고객이 지닌 5대 메이저 테마 섹터에 대한 관심도를 바탕으로 섹터 특화 통계 및 마케팅 시나리오를 제공합니다.
+                </div>
+
+                <!-- 섹터 선택 -->
+                <div class="search-container" style="grid-template-columns: 1fr;">
+                    <div class="filter-group">
+                        <label class="filter-label" style="font-weight:700;">분석 및 마케팅 제안을 생성할 섹터를 선택하세요</label>
+                        <select class="styled-select" id="sectorSelect" onchange="onSectorSelectChange()">
+                            <option value="반도체">반도체</option>
+                            <option value="항공/방산">항공/방산</option>
+                            <option value="2차전지">2차전지</option>
+                            <option value="리츠/배당">리츠/배당</option>
+                            <option value="금융/은행">금융/은행</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 섹터 KPI 3선 -->
+                <div class="insights-kpis">
+                    <div class="insight-kpi-card">
+                        <div class="insight-kpi-title" id="sec_kpi1_title">'반도체' 평균 관심 점수</div>
+                        <div class="insight-kpi-value" id="sec_kpi1_val">0.0 점</div>
+                    </div>
+                    <div class="insight-kpi-card">
+                        <div class="insight-kpi-title" id="sec_kpi2_title">고관심 고객 수 (60점 이상)</div>
+                        <div class="insight-kpi-value" id="sec_kpi2_val">0명 (0.0%)</div>
+                    </div>
+                    <div class="insight-kpi-card">
+                        <div class="insight-kpi-title" id="sec_kpi3_title">'반도체' 선호군 자산 규모</div>
+                        <div class="insight-kpi-value" id="sec_kpi3_val">₩0</div>
+                    </div>
+                </div>
+
+                <!-- 분석 차트 및 고객 리스트 -->
+                <div class="insights-row-2">
+                    <div class="grid-chart-card" style="min-height:300px;">
+                        <div class="grid-chart-title" id="insightChartTitle">📊 이탈 등급별 섹터 관심도 점수 분포</div>
+                        <div class="kpi-chart-wrapper" style="height:220px;">
+                            <canvas id="insightHistogramChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="table-card">
+                        <div class="table-header" id="insightTableTitle">
+                            🎯 섹터 최선호 고관심 고객 TOP 5
+                        </div>
+                        <div class="table-wrapper">
+                            <table id="insightTopTable">
+                                <thead>
+                                    <tr>
+                                        <th>고객 ID</th>
+                                        <th>고객명</th>
+                                        <th>직군</th>
+                                        <th>평균 잔액</th>
+                                        <th>월급날 이체 비중</th>
+                                        <th>섹터 관심도</th>
+                                        <th>누수 등급</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="insightTopTableBody">
+                                    <!-- 동적 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 종합 코멘터리 및 상품 포트폴리오 -->
+                <div class="dandi-brief-box" style="padding:20px; align-items:center;">
+                    <img src="../dandi_mascot_2d.png" alt="단디" style="width:70px; height:70px; object-fit:contain; background:rgba(0,189,167,0.1); border-radius:50%; border:2px solid var(--primary); padding:4px; flex-shrink:0;">
+                    <div style="display:flex; flex-direction:column; gap:12px; flex-grow:1;">
+                        <h4 style="font-size:15px; font-weight:800; color:var(--primary);" id="dandiInsightHeader">📝 단디의 섹터 종합 마케팅 코멘터리</h4>
+                        <div style="font-size:13px; line-height:1.7; color:#e2e8f0;" id="dandiInsightCommentary">
+                            코멘트 생성 중...
+                        </div>
+                        <div style="margin-top:5px; border-top:1px solid rgba(255,255,255,0.08); padding-top:12px;">
+                            <div style="font-size:12px; font-weight:700; color:#ffffff; margin-bottom:6px;" id="dandiProductHeader">📦 섹터 추천 상품 포트폴리오</div>
+                            <div class="product-chips-container" id="sectorRecommendChips">
+                                <!-- Chips -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 푸터 -->
+            <footer>
+                <p>© 2026 iM뱅크(대구은행) PB Money Move Control Center. All Rights Reserved. Confidential.</p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- 로딩 화면 -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text" id="loadingText">머니 마그넷 전자기장 가동 중...</div>
+    </div>
+
+    <!-- 토스트 컨테이너 -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- 3. 데이터 및 동작 로직 스크립트 -->
+    <script>
+        // 추출된 160명의 고객 데이터
+        const originalCustomers = [{"Customer_ID": "C00025", "Name": "고객25", "Age": 48, "Job_Type": "일반사무", "Avg_Balance": 119542838, "Salary_Day_Transfer": 0.1312, "반도체": 21, "항공/방산": 82, "2차전지": 45, "리츠/배당": 39, "금융/은행": 84, "Risk_Score": 21.07, "Main_Theme": "금융/은행", "Risk_Level": "저위험"}, {"Customer_ID": "C00045", "Name": "고객45", "Age": 44, "Job_Type": "IT/개발", "Avg_Balance": 133391447, "Salary_Day_Transfer": 0.4411, "반도체": 85, "항공/방산": 92, "2차전지": 92, "리츠/배당": 10, "금융/은행": 73, "Risk_Score": 61.87, "Main_Theme": "항공/방산", "Risk_Level": "고위험"}, {"Customer_ID": "C00056", "Name": "고객56", "Age": 33, "Job_Type": "전문직", "Avg_Balance": 111705651, "Salary_Day_Transfer": 0.3708, "반도체": 49, "항공/방산": 17, "2차전지": 58, "리츠/배당": 59, "금융/은행": 48, "Risk_Score": 43.65, "Main_Theme": "리츠/배당", "Risk_Level": "중위험"}, {"Customer_ID": "C00092", "Name": "고객92", "Age": 38, "Job_Type": "IT/개발", "Avg_Balance": 124697724, "Salary_Day_Transfer": 0.2901, "반도체": 66, "항공/방산": 14, "2차전지": 94, "리츠/배당": 82, "금융/은행": 55, "Risk_Score": 49.41, "Main_Theme": "2차전지", "Risk_Level": "중위험"}, {"Customer_ID": "C00197", "Name": "고객197", "Age": 32, "Job_Type": "일반사무", "Avg_Balance": 124299882, "Salary_Day_Transfer": 0.8604, "반도체": 66, "항공/방산": 86, "2차전지": 3, "리츠/배당": 49, "금융/은행": 69, "Risk_Score": 65.43, "Main_Theme": "항공/방산", "Risk_Level": "고위험"}, {"Customer_ID": "C00268", "Name": "고객268", "Age": 41, "Job_Type": "IT/개발", "Avg_Balance": 104204232, "Salary_Day_Transfer": 0.6814, "반도체": 48, "항공/방산": 97, "2차전지": 86, "리츠/배당": 28, "금융/은행": 96, "Risk_Score": 67.68, "Main_Theme": "항공/방산", "Risk_Level": "고위험"}, {"Customer_ID": "C00356", "Name": "고객356", "Age": 49, "Job_Type": "IT/개발", "Avg_Balance": 122522512, "Salary_Day_Transfer": 0.1197, "반도체": 26, "항공/방산": 45, "2차전지": 50, "리츠/배당": 92, "금융/은행": 4, "Risk_Score": 22.38, "Main_Theme": "리츠/배당", "Risk_Level": "저위험"}, {"Customer_ID": "C00457", "Name": "고객457", "Age": 47, "Job_Type": "제조업", "Avg_Balance": 112117823, "Salary_Day_Transfer": 0.4333, "반도체": 11, "항공/방산": 32, "2차전지": 15, "리츠/배당": 55, "금융/은행": 68, "Risk_Score": 31.2, "Main_Theme": "금융/은행", "Risk_Level": "저위험"}, {"Customer_ID": "C00491", "Name": "고객491", "Age": 36, "Job_Type": "IT/개발", "Avg_Balance": 122435378, "Salary_Day_Transfer": 0.7499, "반도체": 88, "항공/방산": 5, "2차전지": 37, "리츠/배당": 35, "금융/은행": 11, "Risk_Score": 70.0, "Main_Theme": "반도체", "Risk_Level": "고위험"}, {"Customer_ID": "C00494", "Name": "고객494", "Age": 36, "Job_Type": "제조업", "Avg_Balance": 130608264, "Salary_Day_Transfer": 0.2977, "반도체": 92, "항공/방산": 45, "2차전지": 10, "리츠/배당": 79, "금융/은행": 93, "Risk_Score": 38.26, "Main_Theme": "금융/은행", "Risk_Level": "저위험"}, {"Customer_ID": "C00530", "Name": "고객530", "Age": 35, "Job_Type": "제조업", "Avg_Balance": 107468374, "Salary_Day_Transfer": 0.8062, "반도체": 47, "항공/방산": 31, "2차전지": 48, "리츠/배당": 92, "금융/은행": 32, "Risk_Score": 67.37, "Main_Theme": "리츠/배당", "Risk_Level": "고위험"}, {"Customer_ID": "C00542", "Name": "고객542", "Age": 37, "Job_Type": "일반사무", "Avg_Balance": 103053877, "Salary_Day_Transfer": 0.7037, "반도체": 64, "항공/방산": 38, "2차전지": 49, "리츠/배당": 71, "금융/은행": 33, "Risk_Score": 64.82, "Main_Theme": "리츠/배당", "Risk_Level": "고위험"}, {"Customer_ID": "C00591", "Name": "고객591", "Age": 45, "Job_Type": "전문직", "Avg_Balance": 107210923, "Salary_Day_Transfer": 0.288, "반도체": 37, "항공/방산": 75, "2차전지": 15, "리츠/배당": 72, "금융/은행": 62, "Risk_Score": 27.68, "Main_Theme": "항공/방산", "Risk_Level": "저위험"}, {"Customer_ID": "C00604", "Name": "고객604", "Age": 34, "Job_Type": "전문직", "Avg_Balance": 112455536, "Salary_Day_Transfer": 0.1065, "반도체": 4, "항공/방산": 84, "2차전지": 36, "리츠/배당": 71, "금융/은행": 0, "Risk_Score": 14.39, "Main_Theme": "항공/방산", "Risk_Level": "저위험"}, {"Customer_ID": "C00617", "Name": "고객617", "Age": 30, "Job_Type": "전문직", "Avg_Balance": 137457485, "Salary_Day_Transfer": 0.6698, "반도체": 19, "항공/방산": 37, "2차전지": 11, "리츠/배당": 11, "금융/은행": 94, "Risk_Score": 46.19, "Main_Theme": "금융/은행", "Risk_Level": "중위험"}, {"Customer_ID": "C00624", "Name": "고객624", "Age": 32, "Job_Type": "제조업", "Avg_Balance": 105472463, "Salary_Day_Transfer": 0.6251, "반도체": 32, "항공/방산": 40, "2차전지": 27, "리츠/배당": 52, "금융/은행": 38, "Risk_Score": 49.31, "Main_Theme": "리츠/배당", "Risk_Level": "중위험"}, {"Customer_ID": "C00629", "Name": "고객629", "Age": 48, "Job_Type": "전문직", "Avg_Balance": 127575689, "Salary_Day_Transfer": 0.5414, "반도체": 78, "항공/방산": 86, "2차전지": 3, "리츠/배당": 28, "금융/은행": 69, "Risk_Score": 48.68, "Main_Theme": "항공/방산", "Risk_Level": "중위험"}, {"Customer_ID": "C00667", "Name": "고객667", "Age": 47, "Job_Type": "제조업", "Avg_Balance": 133181752, "Salary_Day_Transfer": 0.2753, "반도체": 10, "항공/방산": 0, "2차전지": 4, "리츠/배당": 29, "금융/은행": 54, "Risk_Score": 19.32, "Main_Theme": "금융/은행", "Risk_Level": "저위험"}, {"Customer_ID": "C00706", "Name": "고객706", "Age": 48, "Job_Type": "IT/개발", "Avg_Balance": 101806647, "Salary_Day_Transfer": 0.7134, "반도체": 53, "항공/방산": 80, "2차전지": 99, "리츠/배당": 98, "금융/은행": 79, "Risk_Score": 73.2, "Main_Theme": "2차전지", "Risk_Level": "고위험"}, {"Customer_ID": "C00760", "Name": "고객760", "Age": 42, "Job_Type": "일반사무", "Avg_Balance": 115787472, "Salary_Day_Transfer": 0.4598, "반도체": 41, "항공/방산": 1, "2차전지": 16, "리츠/배당": 43, "금융/은행": 4, "Risk_Score": 38.99, "Main_Theme": "리츠/배당", "Risk_Level": "저위험"}, {"Customer_ID": "C00782", "Name": "고객782", "Age": 49, "Job_Type": "전문직", "Avg_Balance": 112632435, "Salary_Day_Transfer": 0.1564, "반도체": 36, "항공/방산": 27, "2차전지": 78, "리츠/배당": 40, "금융/은행": 41, "Risk_Score": 32.19, "Main_Theme": "2차전지", "Risk_Level": "저위험"}, {"Customer_ID": "C00803", "Name": "고객803", "Age": 33, "Job_Type": "전문직", "Avg_Balance": 109784260, "Salary_Day_Transfer": 0.853, "반도체": 80, "항공/방산": 60, "2차전지": 67, "리츠/배당": 3, "금융/은행": 27, "Risk_Score": 80.58, "Main_Theme": "반도체", "Risk_Level": "고위험"}, {"Customer_ID": "C00837", "Name": "고객837", "Age": 47, "Job_Type": "IT/개발", "Avg_Balance": 114464054, "Salary_Day_Transfer": 0.2515, "반도체": 28, "항공/방산": 10, "2차전지": 2, "리츠/배당": 94, "금융/은행": 71, "Risk_Score": 21.09, "Main_Theme": "리츠/배당", "Risk_Level": "저위험"}, {"Customer_ID": "C00843", "Name": "고객843", "Age": 42, "Job_Type": "일반사무", "Avg_Balance": 122304599, "Salary_Day_Transfer": 0.4716, "반도체": 72, "항공/방산": 16, "2차전지": 23, "리츠/배당": 35, "금융/은행": 22, "Risk_Score": 47.3, "Main_Theme": "반도체", "Risk_Level": "중위험"}, {"Customer_ID": "C00863", "Name": "고객863", "Age": 31, "Job_Type": "IT/개발", "Avg_Balance": 115050348, "Salary_Day_Transfer": 0.3178, "반도체": 97, "항공/방산": 96, "2차전지": 87, "리츠/배당": 71, "금융/은행": 6, "Risk_Score": 55.87, "Main_Theme": "반도체", "Risk_Level": "중위험"}, {"Customer_ID": "C00879", "Name": "고객879", "Age": 33, "Job_Type": "제조업", "Avg_Balance": 126050297, "Salary_Day_Transfer": 0.3625, "반도체": 4, "항공/방산": 62, "2차전지": 65, "리츠/배당": 89, "금융/은행": 43, "Risk_Score": 35.55, "Main_Theme": "리츠/배당", "Risk_Level": "저위험"}, {"Customer_ID": "C00884", "Name": "고객884", "Age": 37, "Job_Type": "일반사무", "Avg_Balance": 119699192, "Salary_Day_Transfer": 0.4853, "반도체": 2, "항공/방산": 67, "2차전지": 47, "리츠/배당": 33, "금융/은행": 1, "Risk_Score": 38.92, "Main_Theme": "항공/방산", "Risk_Level": "저위험"}, {"Customer_ID": "C00927", "Name": "고객927", "Age": 35, "Job_Type": "일반사무", "Avg_Balance": 118445693, "Salary_Day_Transfer": 0.7385, "반도체": 44, "항공/방산": 99, "2차전지": 88, "리츠/배당": 15, "금융/은행": 61, "Risk_Score": 70.71, "Main_Theme": "항공/방산", "Risk_Level": "고위험"}, {"Customer_ID": "C00953", "Name": "고객953", "Age": 37, "Job_Type": "일반사무", "Avg_Balance": 106715080, "Salary_Day_Transfer": 0.4189, "반도체": 68, "항공/방산": 66, "2차전지": 10, "리츠/배당": 39, "금융/은행": 65, "Risk_Score": 40.74, "Main_Theme": "반도체", "Risk_Level": "중위험"}, {"Customer_ID": "C01023", "Name": "고객1023", "Age": 46, "Job_Type": "제조업", "Avg_Balance": 117297781, "Salary_Day_Transfer": 0.3039, "반도체": 13, "항공/방산": 64, "2차전지": 25, "리츠/배당": 51, "금융/은행": 12, "Risk_Score": 25.83, "Main_Theme": "항공/방산", "Risk_Level": "저위험"}, {"Customer_ID": "C01073", "Name": "고객1073", "Age": 40, "Job_Type": "전문직", "Avg_Balance": 125947043, "Salary_Day_Transfer": 0.8982, "반도체": 42, "항공/방산": 51, "2차전지": 66, "리츠/배당": 49, "금융/은행": 87, "Risk_Score": 75.49, "Main_Theme": "금융/은행", "Risk_Level": "고위험"}, {"Customer_ID": "C01137", "Name": "고객1137", "Age": 31, "Job_Type": "전문직", "Avg_Balance": 118117472, "Salary_Day_Transfer": 0.3124, "반도체": 11, "항공/방산": 37, "2차전지": 95, "리츠/배당": 22, "금융/은행": 16, "Risk_Score": 39.94, "Main_Theme": "2차전지", "Risk_Level": "저위험"}, {"Customer_ID": "C01171", "Name": "고객1171", "Age": 33, "Job_Type": "일반사무", "Avg_Balance": 129499090, "Salary_Day_Transfer": 0.829, "반도체": 77, "항공/방산": 45, "2차전지": 76, "리츠/배당": 51, "금융/은행": 37, "Risk_Score": 80.34, "Main_Theme": "반도체", "Risk_Level": "고위험"}, {"Customer_ID": "C01177", "Name": "고객1177", "Age": 40, "Job_Type": "전문직", "Avg_Balance": 113645623, "Salary_Day_Transfer": 0.2788, "반도체": 77, "항공/방산": 61, "2차전지": 93, "리츠/배당": 81, "금융/은행": 19, "Risk_Score": 50.73, "Main_Theme": "2차전지", "Risk_Level": "중위험"}, {"Customer_ID": "C01186", "Name": "고객1186", "Age": 37, "Job_Type": "전문직", "Avg_Balance": 104683660, "Salary_Day_Transfer": 0.479, "반도체": 75, "항공/방산": 49, "2차전지": 87, "리츠/배당": 83, "금융/은행": 35, "Risk_Score": 61.14, "Main_Theme": "2차전지", "Risk_Level": "고위험"}, {"Customer_ID": "C01306", "Name": "고객1306", "Age": 34, "Job_Type": "제조업", "Avg_Balance": 122460762, "Salary_Day_Transfer": 0.3777, "반도체": 74, "항공/방산": 16, "2차전지": 17, "리츠/배당": 23, "금융/은행": 45, "Risk_Score": 40.86, "Main_Theme": "반도체", "Risk_Level": "중위험"}, {"Customer_ID": "C01393", "Name": "고객1393", "Age": 45, "Job_Type": "전문직", "Avg_Balance": 113575176, "Salary_Day_Transfer": 0.5001, "반도체": 26, "항공/방산": 65, "2차전지": 6, "리츠/배당": 80, "금융/은행": 94, "Risk_Score": 36.41, "Main_Theme": "금융/은행", "Risk_Level": "저위험"}, {"Customer_ID": "C01434", "Name": "고객1434", "Age": 39, "Job_Type": "IT/개발", "Avg_Balance": 114916151, "Salary_Day_Transfer": 0.4161, "반도체": 25, "항공/방산": 58, "2차전지": 32, "리츠/배당": 71, "금융/은행": 6, "Risk_Score": 36.37, "Main_Theme": "리츠/배당", "Risk_Level": "저위험"}, {"Customer_ID": "C01438", "Name": "고객1438", "Age": 34, "Job_Type": "제조업", "Avg_Balance": 119135194, "Salary_Day_Transfer": 0.6754, "반도체": 41, "항공/방산": 16, "2차전지": 92, "리츠/배당": 11, "금융/은행": 1, "Risk_Score": 67.12, "Main_Theme": "2차전지", "Risk_Level": "고위험"}, {"Customer_ID": "C01462", "Name": "고객1462", "Age": 44, "Job_Type": "IT/개발", "Avg_Balance": 104916630, "Salary_Day_Transfer": 0.4661, "반도체": 71, "항공/방산": 27, "2차전지": 21, "리츠/배당": 30, "금융/은행": 41, "Risk_Score": 46.37, "Main_Theme": "반도체", "Risk_Level": "중위험"}, {"Customer_ID": "C01466", "Name": "고객1466", "Age": 31, "Job_Type": "IT/개발", "Avg_Balance": 104962002, "Salary_Day_Transfer": 0.8561, "반도체": 13, "항공/방산": 70, "2차전지": 93, "리츠/배당": 26, "금융/은행": 21, "Risk_Score": 72.56, "Main_Theme": "2차전지", "Risk_Level": "고위험"}, {"Customer_ID": "C01476", "Name": "고객1476", "Age": 40, "Job_Type": "제조업", "Avg_Balance": 105418890, "Salary_Day_Transfer": 0.3815, "반도체": 2, "항공/방산": 44, "2차전지": 20, "리츠/배당": 0, "금융/은행": 66, "Risk_Score": 27.29, "Main_Theme": "금융/은행", "Risk_Level": "저위험"}, {"Customer_ID": "C01478", "Name": "고객1478", "Age": 31, "Job_Type": "제조업", "Avg_Balance": 98403919, "Salary_Day_Transfer": 0.4425, "반도체": 24, "항공/방산": 85, "2차전지": 72, "리츠/배당": 91, "금융/은행": 42, "Risk_Score": 45.75, "Main_Theme": "리츠/배당", "Risk_Level": "중위험"}, {"Customer_ID": "C01559", "Name": "고객1559", "Age": 30, "Job_Type": "제조업", "Avg_Balance": 133385155, "Salary_Day_Transfer": 0.6756, "반도체": 42, "항공/방산": 43, "2차전지": 61, "리츠/배당": 43, "금융/은행": 13, "Risk_Score": 61.14, "Main_Theme": "2차전지", "Risk_Level": "고위험"}, {"Customer_ID": "C01579", "Name": "고객1579", "Age": 37, "Job_Type": "IT/개발", "Avg_Balance": 111605503, "Salary_Day_Transfer": 0.256, "반도체": 78, "항공/방산": 8, "2차전지": 71, "리츠/배당": 97, "금융/은행": 90, "Risk_Score": 45.16, "Main_Theme": "리츠/배당", "Risk_Level": "중위험"}, {"Customer_ID": "C01584", "Name": "고객1584", "Age": 35, "Job_Type": "제조업", "Avg_Balance": 101681421, "Salary_Day_Transfer": 0.7187, "반도체": 35, "항공/방산": 92, "2차전지": 87, "리츠/배당": 28, "금융/은행": 27, "Risk_Score": 67.52, "Main_Theme": "항공/방산", "Risk_Level": "고위험"}, {"Customer_ID": "C01587", "Name": "고객1587", "Age": 38, "Job_Type": "전문직", "Avg_Balance": 113389668, "Salary_Day_Transfer": 0.8883, "반도체": 97, "항공/방산": 99, "2차전지": 42, "리츠/배당": 26, "금융/은행": 62, "Risk_Score": 81.1, "Main_Theme": "항공/방산", "Risk_Level": "고위험"}, {"Customer_ID": "C01624", "Name": "고객1624", "Age": 38, "Job_Type": "IT/개발", "Avg_Balance": 101821705, "Salary_Day_Transfer": 0.8218, "반도체": 8, "항공/방산": 96, "2차전지": 1, "리츠/배당": 24, "금융/은행": 87, "Risk_Score": 51.11, "Main_Theme": "항공/방산", "Risk_Level": "중위험"}, {"Customer_ID": "C01642", "Name": "고객1642", "Age": 38, "Job_Type": "IT/개발", "Avg_Balance": 105847413, "Salary_Day_Transfer": 0.447, "반도체": 70, "항공/방산": 9, "2차전지": 81, "리츠/배당": 71, "금융/은행": 31, "Risk_Score": 57.02, "Main_Theme": "2차전지", "Risk_Level": "중위험"}, {"Customer_ID": "C01665", "Name": "고객1665", "Age": 45, "Job_Type": "일반사무", "Avg_Balance": 121030543, "Salary_Day_Transfer": 0.2469, "반도체": 71, "항공/방산": 84, "2차전지": 81, "리츠/배당": 63, "금융/은행": 95, "Risk_Score": 45.21, "Main_Theme": "금융/은행", "Risk_Level": "중위험"}, {"Customer_ID": "C01669", "Name": "고객1669", "Age": 43, "Job_Type": "전문직", "Avg_Balance": 123248193, "Salary_Day_Transfer": 0.5199, "반도체": 91, "항공/방산": 51, "2차전지": 18, "리츠/배당": 79, "금융/은행": 14, "Risk_Score": 52.99, "Main_Theme": "반도체", "Risk_Level": "중위험"}, {"Customer_ID": "C01682", "Name": "고객1682", "Age": 35, "Job_Type": "일반사무", "Avg_Balance": 106159898, "Salary_Day_Transfer": 0.1333, "반도체": 58, "항공/방산": 76, "2차전지": 85, "리츠/배당": 58, "금융/은행": 12, "Risk_Score": 36.6, "Main_Theme": "2차전지", "Risk_Level": "저위험"}, {"Customer_ID": "C01712", "Name": "고객1712", "Age": 34, "Job_Type": "제조업", "Avg_Balance": 148226379, "Salary_Day_Transfer": 0.1718, "반도체": 63, "항공/방산": 6, "2차전지": 43, "리츠/배당": 60, "금융/은행": 47, "Risk_Score": 31.51, "Main_Theme": "반도체", "Risk_Level": "저위험"}, {"Customer_ID": "C01738", "Name": "고객1738", "Age": 48, "Job_Type": "제조업", "Avg_Balance": 124012573, "Salary_Day_Transfer": 0.8082, "반도체": 51, "항공/방산": 31, "2차전지": 28, "리츠/배당": 9, "금융/은행": 60, "Risk_Score": 64.29, "Main_Theme": "금융/은행", "Risk_Level": "고위험"}, {"Customer_ID": "C01779", "Name": "고객1779", "Age": 37, "Job_Type": "제조업", "Avg_Balance": 126672630, "Salary_Day_Transfer": 0.6425, "반도체": 84, "항공/방산": 12, "2차전지": 11, "리츠/배당": 55, "금융/은행": 41, "Risk_Score": 57.55, "Main_Theme": "반도체", "Risk_Level": "중위험"}, {"Customer_ID": "C01808", "Name": "고객1808", "Age": 48, "Job_Type": "일반사무", "Avg_Balance": 112277356, "Salary_Day_Transfer": 0.2345, "반도체": 79, "항공/방산": 80, "2차전지": 37, "리츠/배당": 57, "금융/은행": 42, "Risk_Score": 37.27, "Main_Theme": "항공/방산", "Risk_Level": "저위험"}, {"Customer_ID": "C01841", "Name": "고객1841", "Age": 37, "Job_Type": "제조업", "Avg_Balance": 111217706, "Salary_Day_Transfer": 0.252, "반도체": 93, "항공/방산": 65, "2차전지": 17, "리츠/배당": 28, "금융/은행": 47, "Risk_Score": 37.12, "Main_Theme": "반도체", "Risk_Level": "저위험"}, {"Customer_ID": "C01898", "Name": "고객1898", "Age": 39, "Job_Type": "전문직", "Avg_Balance": 111496125, "Salary_Day_Transfer": 0.6908, "반도체": 59, "항공/방산": 57, "2차전지": 21, "리츠/배당": 58, "금융/은행": 82, "Risk_Score": 57.45, "Main_Theme": "금융/은행", "Risk_Level": "중위험"}, {"Customer_ID": "C01917", "Name": "고객1917", "Age": 46, "Job_Type": "일반사무", "Avg_Balance": 127769857, "Salary_Day_Transfer": 0.2686, "반도체": 30, "항공/방산": 87, "2차전지": 56, "리츠/배당": 80, "금융/은행": 71, "Risk_Score": 33.31, "Main_Theme": "항공/방산", "Risk_Level": "저위험"}, {"Customer_ID": "C01937", "Name": "고객1937", "Age": 30, "Job_Type": "일반사무", "Avg_Balance": 103829870, "Salary_Day_Transfer": 0.5721, "반도체": 2, "항공/방산": 57, "2차전지": 60, "리츠/배당": 27, "금융/은행": 18, "Risk_Score": 46.72, "Main_Theme": "2차전지", "Risk_Level": "중위험"}, {"Customer_ID": "C01987", "Name": "고객1987", "Age": 35, "Job_Type": "일반사무", "Avg_Balance": 107447182, "Salary_Day_Transfer": 0.6856, "반도체": 74, "항공/방산": 82, "2차전지": 26, "리츠/배당": 86, "금융/은행": 12, "Risk_Score": 61.13, "Main_Theme": "리츠/배당", "Risk_Level": "고위험"}, {"Customer_ID": "C02008", "Name": "고객2008", "Age": 45, "Job_Type": "전문직", "Avg_Balance": 113040782, "Salary_Day_Transfer": 0.8118, "반도체": 36, "항공/방산": 36, "2차전지": 86, "리츠/배당": 96, "금융/은행": 22, "Risk_Score": 73.11, "Main_Theme": "리츠/배당", "Risk_Level": "고위험"}, {"Customer_ID": "C02019", "Name": "고객2019", "Age": 42, "Job_Type": "일반사무", "Avg_Balance": 104387271, "Salary_Day_Transfer": 0.5299, "반도체": 85, "항공/방산": 9, "2차전지": 30, "리츠/배당": 7, "금융/은행": 57, "Risk_Score": 54.79, "Main_Theme": "반도체", "Risk_Level": "중위험"}, {"Customer_ID": "C02031", "Name": "고객2031", "Age": 36, "Job_Type": "전문직", "Avg_Balance": 119185359, "Salary_Day_Transfer": 0.1261, "반도체": 71, "항공/방산": 84, "2차전지": 33, "리츠/배당": 69, "금융/은행": 10, "Risk_Score": 28.37, "Main_Theme": "항공/방산", "Risk_Level": "저위험"}, {"Customer_ID": "C02044", "Name": "고객2044", "Age": 38, "Job_Type": "IT/개발", "Avg_Balance": 137942028, "Salary_Day_Transfer": 0.8258, "반도체": 30, "항공/방산": 6, "2차전지": 10, "리츠/배당": 23, "금융/은행": 75, "Risk_Score": 57.55, "Main_Theme": "금융/은행", "Risk_Level": "중위험"}, {"Customer_ID": "C02076", "Name": "고객2076", "Age": 38, "Job_Type": "IT/개발", "Avg_Balance": 105494294, "Salary_Day_Transfer": 0.366, "반도체": 40, "항공/방산": 8, "2차전지": 22, "리츠/배당": 19, "금융/은행": 21, "Risk_Score": 34.36, "Main_Theme": "반도체", "Risk_Level": "저위험"}, {"Customer_ID": "C02080", "Name": "고객2080", "Age": 31, "Job_Type": "IT/개발", "Avg_Balance": 121309247, "Salary_Day_Transfer": 0.7686, "반도체": 17, "항공/방산": 39, "2차전지": 26, "리츠/배당": 60, "금융/은행": 96, "Risk_Score": 54.72, "Main_Theme": "금융/은행", "Risk_Level": "중위험"}, {"Customer_ID": "C02103", "Name": "고객2103", "Age": 31, "Job_Type": "IT/개발", "Avg_Balance": 109172924, "Salary_Day_Transfer": 0.3073, "반도체": 1, "항공/방산": 33, "2차전지": 29, "리츠/배당": 51, "금융/은행": 39, "Risk_Score": 24.44, "Main_Theme": "리츠/배당", "Risk_Level": "저위험"}, {"Customer_ID": "C02151", "Name": "고객2151", "Age": 49, "Job_Type": "IT/개발", "Avg_Balance": 133576208, "Salary_Day_Transfer": 0.49, "반도체": 80, "항공/방산": 8, "2차전지": 50, "리츠/배당": 81, "금융/은행": 63, "Risk_Score": 55.4, "Main_Theme": "리츠/배당", "Risk_Level": "중위험"}, {"Customer_ID": "C02153", "Name": "고객2153", "Age": 36, "Job_Type": "제조업", "Avg_Balance": 119232182, "Salary_Day_Transfer": 0.6164, "반도체": 99, "항공/방산": 36, "2차전지": 59, "리츠/배당": 97, "금융/은행": 38, "Risk_Score": 68.58, "Main_Theme": "반도체", "Risk_Level": "고위험"}, {"Customer_ID": "C02196", "Name": "고객2196", "Age": 31, "Job_Type": "전문직", "Avg_Balance": 109308611, "Salary_Day_Transfer": 0.1224, "반도체": 70, "항공/방산": 11, "2차전지": 41, "리츠/배당": 92, "금융/은행": 22, "Risk_Score": 29.54, "Main_Theme": "리츠/배당", "Risk_Level": "저위험"}, {"Customer_ID": "C02235", "Name": "고객2235", "Age": 48, "Job_Type": "일반사무", "Avg_Balance": 117219766, "Salary_Day_Transfer": 0.8227, "반도체": 42, "항공/방산": 90, "2차전지": 70, "리츠/배당": 21, "금융/은행": 87, "Risk_Score": 71.76, "Main_Theme": "항공/방산", "Risk_Level": "고위험"}, {"Customer_ID": "C02262", "Name": "고객2262", "Age": 37, "Job_Type": "전문직", "Avg_Balance": 129805221, "Salary_Day_Transfer": 0.7555, "반도체": 16, "항공/방산": 71, "2차전지": 97, "리츠/배당": 16, "금융/은행": 54, "Risk_Score": 67.93, "Main_Theme": "2차전지", "Risk_Level": "고위험"}, {"Customer_ID": "C02285", "Name": "고객2285", "Age": 46, "Job_Type": "IT/개발", "Avg_Balance": 112782408, "Salary_Day_Transfer": 0.4595, "반도체": 12, "항공/방산": 83, "2차전지": 82, "리츠/배당": 62, "금융/은행": 89, "Risk_Score": 46.37, "Main_Theme": "금융/은행", "Risk_Level": "중위험"}, {"Customer_ID": "C02318", "Name": "고객2318", "Age": 44, "Job_Type": "전문직", "Avg_Balance": 113113905, "Salary_Day_Transfer": 0.403, "반도체": 7, "항공/방산": 27, "2차전지": 4, "리츠/배당": 91, "금융/은행": 45, "Risk_Score": 26.38, "Main_Theme": "리츠/배당", "Risk_Level": "저위험"}, {"Customer_ID": "C02332", "Name": "고객2332", "Age": 31, "Job_Type": "전문직", "Avg_Balance": 120120938, "Salary_Day_Transfer": 0.1708, "반도체": 41, "항공/방산": 71, "2차전지": 27, "리츠/배당": 30, "금융/은행": 72, "Risk_Score": 23.85, "Main_Theme": "금융/은행", "Risk_Level": "저위험"}, {"Customer_ID": "C02372", "Name": "고객2372", "Age": 49, "Job_Type": "일반사무", "Avg_Balance": 107931478, "Salary_Day_Transfer": 0.3172, "반도체": 85, "항공/방산": 71, "2차전지": 4, "리츠/배당": 93, "금융/은행": 58, "Risk_Score": 36.83, "Main_Theme": "리츠/배당", "Risk_Level": "저위험"}, {"Customer_ID": "C02445", "Name": "고객2445", "Age": 35, "Job_Type": "전문직", "Avg_Balance": 128047803, "Salary_Day_Transfer": 0.1405, "반도체": 86, "항공/방산": 80, "2차전지": 87, "리츠/배당": 1, "금융/은행": 0, "Risk_Score": 43.03, "Main_Theme": "2차전지", "Risk_Level": "중위험"}, {"Customer_ID": "C02468", "Name": "고객2468", "Age": 42, "Job_Type": "전문직", "Avg_Balance": 111112038, "Salary_Day_Transfer": 0.767, "반도체": 36, "항공/방산": 57, "2차전지": 47, "리츠/배당": 40, "금융/은행": 51, "Risk_Score": 62.62, "Main_Theme": "항공/방산", "Risk_Level": "고위험"}, {"Customer_ID": "C02557", "Name": "고객2557", "Age": 41, "Job_Type": "IT/개발", "Avg_Balance": 127758291, "Salary_Day_Transfer": 0.4563, "반도체": 20, "항공/방산": 4, "2차전지": 66, "리츠/배당": 81, "금융/은행": 78, "Risk_Score": 44.58, "Main_Theme": "리츠/배당", "Risk_Level": "중위험"}, {"Customer_ID": "C02578", "Name": "고객2578", "Age": 38, "Job_Type": "일반사무", "Avg_Balance": 117940919, "Salary_Day_Transfer": 0.4817, "반도체": 51, "항공/방산": 22, "2차전지": 94, "리츠/배당": 55, "금융/은행": 97, "Risk_Score": 57.9, "Main_Theme": "금융/은행", "Risk_Level": "중위험"}, {"Customer_ID": "C02587", "Name": "고객2587", "Age": 35, "Job_Type": "IT/개발", "Avg_Balance": 124970572, "Salary_Day_Transfer": 0.7625, "반도체": 22, "항공/방산": 63, "2차전지": 22, "리츠/배당": 8, "금융/은행": 92, "Risk_Score": 54.55, "Main_Theme": "금융/은행", "Risk_Level": "중위험"}, {"Customer_ID": "C02604", "Name": "고객2604", "Age": 40, "Job_Type": "전문직", "Avg_Balance": 125171479, "Salary_Day_Transfer": 0.2693, "반도체": 34, "항공/방산": 53, "2차전지": 54, "리츠/배당": 67, "금융/은행": 81, "Risk_Score": 33.76, "Main_Theme": "금융/은행", "Risk_Level": "저위험"}, {"Customer_ID": "C02628", "Name": "고객2628", "Age": 32, "Job_Type": "일반사무", "Avg_Balance": 103076867, "Salary_Day_Transfer": 0.7755, "반도체": 60, "항공/방산": 49, "2차전지": 82, "리츠/배당": 72, "금융/은행": 13, "Risk_Score": 74.93, "Main_Theme": "2차전지", "Risk_Level": "고위험"}, {"Customer_ID": "C02671", "Name": "고객2671", "Age": 35, "Job_Type": "전문직", "Avg_Balance": 110060686, "Salary_Day_Transfer": 0.1179, "반도체": 65, "항공/방산": 48, "2차전지": 57, "리츠/배당": 94, "금융/은행": 1, "Risk_Score": 31.47, "Main_Theme": "리츠/배당", "Risk_Level": "저위험"}, {"Customer_ID": "C02692", "Name": "고객2692", "Age": 44, "Job_Type": "일반사무", "Avg_Balance": 107563955, "Salary_Day_Transfer": 0.4625, "반도체": 58, "항공/방산": 78, "2차전지": 89, "리츠/배당": 32, "금융/은행": 30, "Risk_Score": 57.15, "Main_Theme": "2차전지", "Risk_Level": "중위험"}, {"Customer_ID": "C02693", "Name": "고객2693", "Age": 47, "Job_Type": "제조업", "Avg_Balance": 131630300, "Salary_Day_Transfer": 0.7991, "반도체": 66, "항공/방산": 15, "2차전지": 90, "리츠/배당": 72, "금융/은행": 69, "Risk_Score": 79.15, "Main_Theme": "2차전지", "Risk_Level": "고위험"}, {"Customer_ID": "C02695", "Name": "고객2695", "Age": 30, "Job_Type": "제조업", "Avg_Balance": 130605510, "Salary_Day_Transfer": 0.8027, "반도체": 50, "항공/방산": 12, "2차전지": 32, "리츠/배당": 54, "금융/은행": 51, "Risk_Score": 64.56, "Main_Theme": "리츠/배당", "Risk_Level": "고위험"}, {"Customer_ID": "C02758", "Name": "고객2758", "Age": 49, "Job_Type": "전문직", "Avg_Balance": 120469444, "Salary_Day_Transfer": 0.1208, "반도체": 77, "항공/방산": 76, "2차전지": 49, "리츠/배당": 0, "금융/은행": 0, "Risk_Score": 32.45, "Main_Theme": "반도체", "Risk_Level": "저위험"}, {"Customer_ID": "C02776", "Name": "고객2776", "Age": 43, "Job_Type": "IT/개발", "Avg_Balance": 112485188, "Salary_Day_Transfer": 0.292, "반도체": 86, "항공/방산": 19, "2차전지": 64, "리츠/배당": 17, "금융/은행": 15, "Risk_Score": 47.52, "Main_Theme": "반도체", "Risk_Level": "중위험"}, {"Customer_ID": "C02778", "Name": "고객2778", "Age": 44, "Job_Type": "일반사무", "Avg_Balance": 113978028, "Salary_Day_Transfer": 0.3015, "반도체": 36, "항공/방산": 12, "2차전지": 2, "리츠/배당": 55, "금융/은행": 69, "Risk_Score": 25.69, "Main_Theme": "금융/은행", "Risk_Level": "저위험"}, {"Customer_ID": "C02816", "Name": "고객2816", "Age": 42, "Job_Type": "일반사무", "Avg_Balance": 115246391, "Salary_Day_Transfer": 0.1666, "반도체": 39, "항공/방산": 83, "2차전지": 29, "리츠/배당": 93, "금융/은행": 99, "Risk_Score": 23.59, "Main_Theme": "금융/은행", "Risk_Level": "저위험"}, {"Customer_ID": "C02820", "Name": "고객2820", "Age": 35, "Job_Type": "IT/개발", "Avg_Balance": 111944439, "Salary_Day_Transfer": 0.666, "반도체": 68, "항공/방산": 29, "2차전지": 86, "리츠/배당": 9, "금융/은행": 36, "Risk_Score": 70.76, "Main_Theme": "2차전지", "Risk_Level": "고위험"}, {"Customer_ID": "C02839", "Name": "고객2839", "Age": 36, "Job_Type": "IT/개발", "Avg_Balance": 113024839, "Salary_Day_Transfer": 0.1158, "반도체": 70, "항공/방산": 41, "2차전지": 25, "리츠/배당": 63, "금융/은행": 80, "Risk_Score": 25.95, "Main_Theme": "금융/은행", "Risk_Level": "저위험"}, {"Customer_ID": "C02860", "Name": "고객2860", "Age": 30, "Job_Type": "IT/개발", "Avg_Balance": 116350952, "Salary_Day_Transfer": 0.7008, "반도체": 35, "항공/방산": 98, "2차전지": 92, "리츠/배당": 21, "금융/은행": 69, "Risk_Score": 67.45, "Main_Theme": "항공/방산", "Risk_Level": "고위험"}, {"Customer_ID": "C02916", "Name": "고객2916", "Age": 40, "Job_Type": "전문직", "Avg_Balance": 125916728, "Salary_Day_Transfer": 0.7488, "반도체": 75, "항공/방산": 52, "2차전지": 11, "리츠/배당": 15, "금융/은행": 55, "Risk_Score": 62.13, "Main_Theme": "반도체", "Risk_Level": "고위험"}, {"Customer_ID": "C02986", "Name": "고객2986", "Age": 39, "Job_Type": "전문직", "Avg_Balance": 134820264, "Salary_Day_Transfer": 0.3052, "반도체": 68, "항공/방산": 56, "2차전지": 71, "리츠/배당": 6, "금융/은행": 90, "Risk_Score": 46.11, "Main_Theme": "금융/은행", "Risk_Level": "중위험"}, {"Customer_ID": "C03019", "Name": "고객3019", "Age": 41, "Job_Type": "일반사무", "Avg_Balance": 115161724, "Salary_Day_Transfer": 0.6442, "반도체": 62, "항공/방산": 62, "2차전지": 65, "리츠/배당": 44, "금융/은행": 83, "Risk_Score": 64.05, "Main_Theme": "금융/은행", "Risk_Level": "고위험"}, {"Customer_ID": "C03048", "Name": "고객3048", "Age": 42, "Job_Type": "IT/개발", "Avg_Balance": 114643265, "Salary_Day_Transfer": 0.8035, "반도체": 18, "항공/방산": 61, "2차전지": 45, "리츠/배당": 21, "금융/은행": 57, "Risk_Score": 60.81, "Main_Theme": "항공/방산", "Risk_Level": "고위험"}, {"Customer_ID": "C03069", "Name": "고객3069", "Age": 35, "Job_Type": "일반사무", "Avg_Balance": 144434572, "Salary_Day_Transfer": 0.29, "반도체": 82, "항공/방산": 72, "2차전지": 29, "리츠/배당": 35, "금융/은행": 70, "Risk_Score": 39.6, "Main_Theme": "반도체", "Risk_Level": "저위험"}, {"Customer_ID": "C03082", "Name": "고객3082", "Age": 44, "Job_Type": "제조업", "Avg_Balance": 102959099, "Salary_Day_Transfer": 0.1476, "반도체": 65, "항공/방산": 4, "2차전지": 70, "리츠/배당": 98, "금융/은행": 94, "Risk_Score": 35.86, "Main_Theme": "리츠/배당", "Risk_Level": "저위험"}, {"Customer_ID": "C03097", "Name": "고객3097", "Age": 48, "Job_Type": "전문직", "Avg_Balance": 121496799, "Salary_Day_Transfer": 0.6606, "반도체": 49, "항공/방산": 93, "2차전지": 61, "리츠/배당": 8, "금융/은행": 85, "Risk_Score": 61.64, "Main_Theme": "항공/방산", "Risk_Level": "고위험"}, {"Customer_ID": "C03112", "Name": "고객3112", "Age": 31, "Job_Type": "제조업", "Avg_Balance": 115267243, "Salary_Day_Transfer": 0.5256, "반도체": 55, "항공/방산": 86, "2차전지": 93, "리츠/배당": 86, "금융/은행": 70, "Risk_Score": 61.14, "Main_Theme": "2차전지", "Risk_Level": "고위험"}, {"Customer_ID": "C03114", "Name": "고객3114", "Age": 32, "Job_Type": "제조업", "Avg_Balance": 114760425, "Salary_Day_Transfer": 0.4148, "반도체": 35, "항공/방산": 93, "2차전지": 93, "리츠/배당": 93, "금융/은행": 19, "Risk_Score": 50.49, "Main_Theme": "항공/방산", "Risk_Level": "중위험"}, {"Customer_ID": "C03117", "Name": "고객3117", "Age": 48, "Job_Type": "일반사무", "Avg_Balance": 109351967, "Salary_Day_Transfer": 0.8502, "반도체": 84, "항공/방산": 82, "2차전지": 88, "리츠/배당": 45, "금융/은행": 92, "Risk_Score": 85.41, "Main_Theme": "금융/은행", "Risk_Level": "고위험"}, {"Customer_ID": "C03128", "Name": "고객3128", "Age": 30, "Job_Type": "IT/개발", "Avg_Balance": 107790151, "Salary_Day_Transfer": 0.2777, "반도체": 81, "항공/방산": 22, "2차전지": 68, "리츠/배당": 18, "금융/은행": 79, "Risk_Score": 46.46, "Main_Theme": "반도체", "Risk_Level": "중위험"}, {"Customer_ID": "C03132", "Name": "고객3132", "Age": 37, "Job_Type": "일반사무", "Avg_Balance": 127458220, "Salary_Day_Transfer": 0.404, "반도체": 12, "항공/방산": 71, "2차전지": 23, "리츠/배당": 97, "금융/은행": 55, "Risk_Score": 31.24, "Main_Theme": "리츠/배당", "Risk_Level": "저위험"}, {"Customer_ID": "C03143", "Name": "고객3143", "Age": 43, "Job_Type": "일반사무", "Avg_Balance": 105190770, "Salary_Day_Transfer": 0.4916, "반도체": 11, "항공/방산": 7, "2차전지": 56, "리츠/배당": 33, "금융/은행": 40, "Risk_Score": 42.9, "Main_Theme": "2차전지", "Risk_Level": "중위험"}, {"Customer_ID": "C03146", "Name": "고객3146", "Age": 35, "Job_Type": "IT/개발", "Avg_Balance": 101573286, "Salary_Day_Transfer": 0.4529, "반도체": 52, "항공/방산": 87, "2차전지": 70, "리츠/배당": 19, "금융/은행": 38, "Risk_Score": 51.58, "Main_Theme": "항공/방산", "Risk_Level": "중위험"}, {"Customer_ID": "C03163", "Name": "고객3163", "Age": 39, "Job_Type": "제조업", "Avg_Balance": 124589341, "Salary_Day_Transfer": 0.1877, "반도체": 82, "항공/방산": 54, "2차전지": 34, "리츠/배당": 66, "금융/은행": 85, "Risk_Score": 34.46, "Main_Theme": "금융/은행", "Risk_Level": "저위험"}, {"Customer_ID": "C03213", "Name": "고객3213", "Age": 46, "Job_Type": "제조업", "Avg_Balance": 99353669, "Salary_Day_Transfer": 0.3251, "반도체": 34, "항공/방산": 45, "2차전지": 1, "리츠/배당": 18, "금융/은행": 11, "Risk_Score": 26.5, "Main_Theme": "항공/방산", "Risk_Level": "저위험"}, {"Customer_ID": "C03227", "Name": "고객3227", "Age": 33, "Job_Type": "일반사무", "Avg_Balance": 111301832, "Salary_Day_Transfer": 0.7228, "반도체": 96, "항공/방산": 63, "2차전지": 84, "리츠/배당": 85, "금융/은행": 15, "Risk_Score": 79.37, "Main_Theme": "반도체", "Risk_Level": "고위험"}, {"Customer_ID": "C03268", "Name": "고객3268", "Age": 47, "Job_Type": "일반사무", "Avg_Balance": 115240139, "Salary_Day_Transfer": 0.1832, "반도체": 3, "항공/방산": 53, "2차전지": 61, "리츠/배당": 46, "금융/은행": 5, "Risk_Score": 23.79, "Main_Theme": "2차전지", "Risk_Level": "저위험"}, {"Customer_ID": "C03299", "Name": "고객3299", "Age": 41, "Job_Type": "일반사무", "Avg_Balance": 115358248, "Salary_Day_Transfer": 0.5603, "반도체": 11, "항공/방산": 79, "2차전지": 57, "리츠/배당": 28, "금융/은행": 39, "Risk_Score": 47.22, "Main_Theme": "항공/방산", "Risk_Level": "중위험"}, {"Customer_ID": "C03303", "Name": "고객3303", "Age": 33, "Job_Type": "전문직", "Avg_Balance": 107817203, "Salary_Day_Transfer": 0.7849, "반도체": 1, "항공/방산": 62, "2차전지": 91, "리츠/배당": 5, "금융/은행": 23, "Risk_Score": 65.5, "Main_Theme": "2차전지", "Risk_Level": "고위험"}, {"Customer_ID": "C03305", "Name": "고객3305", "Age": 32, "Job_Type": "일반사무", "Avg_Balance": 109592603, "Salary_Day_Transfer": 0.4597, "반도체": 44, "항공/방산": 25, "2차전지": 33, "리츠/배당": 50, "금융/은행": 50, "Risk_Score": 42.98, "Main_Theme": "리츠/배당", "Risk_Level": "중위험"}, {"Customer_ID": "C03321", "Name": "고객3321", "Age": 32, "Job_Type": "IT/개발", "Avg_Balance": 122636222, "Salary_Day_Transfer": 0.6054, "반도체": 97, "항공/방산": 98, "2차전지": 72, "리츠/배당": 82, "금융/은행": 89, "Risk_Score": 70.12, "Main_Theme": "항공/방산", "Risk_Level": "고위험"}, {"Customer_ID": "C03378", "Name": "고객3378", "Age": 47, "Job_Type": "전문직", "Avg_Balance": 113707421, "Salary_Day_Transfer": 0.897, "반도체": 78, "항공/방산": 16, "2차전지": 34, "리츠/배당": 19, "금융/은행": 52, "Risk_Score": 76.22, "Main_Theme": "반도체", "Risk_Level": "고위험"}, {"Customer_ID": "C03413", "Name": "고객3413", "Age": 30, "Job_Type": "제조업", "Avg_Balance": 108396525, "Salary_Day_Transfer": 0.3563, "반도체": 55, "항공/방산": 55, "2차전지": 82, "리츠/배당": 15, "금융/은행": 85, "Risk_Score": 48.78, "Main_Theme": "금융/은행", "Risk_Level": "중위험"}, {"Customer_ID": "C03423", "Name": "고객3423", "Age": 43, "Job_Type": "제조업", "Avg_Balance": 124649379, "Salary_Day_Transfer": 0.4324, "반도체": 31, "항공/방산": 10, "2차전지": 4, "리츠/배당": 5, "금융/은행": 57, "Risk_Score": 32.94, "Main_Theme": "금융/은행", "Risk_Level": "저위험"}, {"Customer_ID": "C03428", "Name": "고객3428", "Age": 35, "Job_Type": "일반사무", "Avg_Balance": 103807297, "Salary_Day_Transfer": 0.5728, "반도체": 27, "항공/방산": 43, "2차전지": 62, "리츠/배당": 2, "금융/은행": 33, "Risk_Score": 52.17, "Main_Theme": "2차전지", "Risk_Level": "중위험"}, {"Customer_ID": "C03481", "Name": "고객3481", "Age": 39, "Job_Type": "IT/개발", "Avg_Balance": 117648664, "Salary_Day_Transfer": 0.3795, "반도체": 56, "항공/방산": 11, "2차전지": 32, "리츠/배당": 69, "금융/은행": 22, "Risk_Score": 40.37, "Main_Theme": "리츠/배당", "Risk_Level": "중위험"}, {"Customer_ID": "C03509", "Name": "고객3509", "Age": 46, "Job_Type": "제조업", "Avg_Balance": 110930265, "Salary_Day_Transfer": 0.1326, "반도체": 4, "항공/방산": 96, "2차전지": 36, "리츠/배당": 31, "금융/은행": 65, "Risk_Score": 15.96, "Main_Theme": "항공/방산", "Risk_Level": "저위험"}, {"Customer_ID": "C03517", "Name": "고객3517", "Age": 47, "Job_Type": "제조업", "Avg_Balance": 118640604, "Salary_Day_Transfer": 0.4304, "반도체": 54, "항공/방산": 36, "2차전지": 9, "리츠/배당": 42, "금융/은행": 14, "Risk_Score": 38.43, "Main_Theme": "반도체", "Risk_Level": "저위험"}, {"Customer_ID": "C03547", "Name": "고객3547", "Age": 37, "Job_Type": "전문직", "Avg_Balance": 138944282, "Salary_Day_Transfer": 0.5171, "반도체": 82, "항공/방산": 11, "2차전지": 25, "리츠/배당": 39, "금융/은행": 99, "Risk_Score": 52.43, "Main_Theme": "금융/은행", "Risk_Level": "중위험"}, {"Customer_ID": "C03565", "Name": "고객3565", "Age": 33, "Job_Type": "일반사무", "Avg_Balance": 111281173, "Salary_Day_Transfer": 0.2255, "반도체": 61, "항공/방산": 3, "2차전지": 37, "리츠/배당": 14, "금융/은행": 77, "Risk_Score": 33.13, "Main_Theme": "금융/은행", "Risk_Level": "저위험"}, {"Customer_ID": "C03705", "Name": "고객3705", "Age": 36, "Job_Type": "IT/개발", "Avg_Balance": 103449624, "Salary_Day_Transfer": 0.6333, "반도체": 30, "항공/방산": 45, "2차전지": 94, "리츠/배당": 26, "금융/은행": 58, "Risk_Score": 62.8, "Main_Theme": "2차전지", "Risk_Level": "고위험"}, {"Customer_ID": "C03716", "Name": "고객3716", "Age": 30, "Job_Type": "IT/개발", "Avg_Balance": 111141363, "Salary_Day_Transfer": 0.4494, "반도체": 17, "항공/방산": 48, "2차전지": 18, "리츠/배당": 39, "금융/은행": 91, "Risk_Score": 33.96, "Main_Theme": "금융/은행", "Risk_Level": "저위험"}, {"Customer_ID": "C03737", "Name": "고객3737", "Age": 33, "Job_Type": "전문직", "Avg_Balance": 104074491, "Salary_Day_Transfer": 0.5581, "반도체": 42, "항공/방산": 24, "2차전지": 94, "리츠/배당": 27, "금융/은행": 27, "Risk_Score": 60.68, "Main_Theme": "2차전지", "Risk_Level": "고위험"}, {"Customer_ID": "C03758", "Name": "고객3758", "Age": 49, "Job_Type": "일반사무", "Avg_Balance": 116023163, "Salary_Day_Transfer": 0.5118, "반도체": 91, "항공/방산": 99, "2차전지": 34, "리츠/배당": 50, "금융/은행": 24, "Risk_Score": 55.71, "Main_Theme": "항공/방산", "Risk_Level": "중위험"}, {"Customer_ID": "C03895", "Name": "고객3895", "Age": 33, "Job_Type": "IT/개발", "Avg_Balance": 111362872, "Salary_Day_Transfer": 0.619, "반도체": 26, "항공/방산": 22, "2차전지": 81, "리츠/배당": 79, "금융/은행": 8, "Risk_Score": 58.54, "Main_Theme": "2차전지", "Risk_Level": "중위험"}, {"Customer_ID": "C03952", "Name": "고객3952", "Age": 32, "Job_Type": "전문직", "Avg_Balance": 110338857, "Salary_Day_Transfer": 0.54, "반도체": 60, "항공/방산": 88, "2차전지": 62, "리츠/배당": 17, "금융/은행": 38, "Risk_Score": 56.8, "Main_Theme": "항공/방산", "Risk_Level": "중위험"}, {"Customer_ID": "C04079", "Name": "고객4079", "Age": 32, "Job_Type": "제조업", "Avg_Balance": 129209340, "Salary_Day_Transfer": 0.2302, "반도체": 36, "항공/방산": 55, "2차전지": 90, "리츠/배당": 51, "금융/은행": 65, "Risk_Score": 39.01, "Main_Theme": "2차전지", "Risk_Level": "저위험"}, {"Customer_ID": "C04089", "Name": "고객4089", "Age": 31, "Job_Type": "일반사무", "Avg_Balance": 104680999, "Salary_Day_Transfer": 0.5272, "반도체": 42, "항공/방산": 70, "2차전지": 94, "리츠/배당": 69, "금융/은행": 22, "Risk_Score": 58.83, "Main_Theme": "2차전지", "Risk_Level": "중위험"}, {"Customer_ID": "C04115", "Name": "고객4115", "Age": 39, "Job_Type": "전문직", "Avg_Balance": 108826492, "Salary_Day_Transfer": 0.5387, "반도체": 74, "항공/방산": 25, "2차전지": 68, "리츠/배당": 88, "금융/은행": 11, "Risk_Score": 60.72, "Main_Theme": "리츠/배당", "Risk_Level": "고위험"}, {"Customer_ID": "C04131", "Name": "고객4131", "Age": 40, "Job_Type": "제조업", "Avg_Balance": 108087837, "Salary_Day_Transfer": 0.8462, "반도체": 58, "항공/방산": 60, "2차전지": 3, "리츠/배당": 46, "금융/은행": 55, "Risk_Score": 62.97, "Main_Theme": "항공/방산", "Risk_Level": "고위험"}, {"Customer_ID": "C04226", "Name": "고객4226", "Age": 48, "Job_Type": "제조업", "Avg_Balance": 105135421, "Salary_Day_Transfer": 0.382, "반도체": 5, "항공/방산": 90, "2차전지": 53, "리츠/배당": 42, "금융/은행": 31, "Risk_Score": 34.52, "Main_Theme": "항공/방산", "Risk_Level": "저위험"}, {"Customer_ID": "C04250", "Name": "고객4250", "Age": 39, "Job_Type": "전문직", "Avg_Balance": 110670427, "Salary_Day_Transfer": 0.3597, "반도체": 76, "항공/방산": 30, "2차전지": 5, "리츠/배당": 6, "금융/은행": 5, "Risk_Score": 37.78, "Main_Theme": "반도체", "Risk_Level": "저위험"}, {"Customer_ID": "C04325", "Name": "고객4325", "Age": 36, "Job_Type": "일반사무", "Avg_Balance": 106201004, "Salary_Day_Transfer": 0.4348, "반도체": 96, "항공/방산": 76, "2차전지": 37, "리츠/배당": 13, "금융/은행": 8, "Risk_Score": 52.69, "Main_Theme": "반도체", "Risk_Level": "중위험"}, {"Customer_ID": "C04337", "Name": "고객4337", "Age": 34, "Job_Type": "제조업", "Avg_Balance": 106196674, "Salary_Day_Transfer": 0.6557, "반도체": 70, "항공/방산": 98, "2차전지": 52, "리츠/배당": 33, "금융/은행": 36, "Risk_Score": 63.74, "Main_Theme": "항공/방산", "Risk_Level": "고위험"}, {"Customer_ID": "C04342", "Name": "고객4342", "Age": 37, "Job_Type": "전문직", "Avg_Balance": 109561761, "Salary_Day_Transfer": 0.3838, "반도체": 3, "항공/방산": 39, "2차전지": 65, "리츠/배당": 93, "금융/은행": 28, "Risk_Score": 36.63, "Main_Theme": "리츠/배당", "Risk_Level": "저위험"}, {"Customer_ID": "C04344", "Name": "고객4344", "Age": 43, "Job_Type": "IT/개발", "Avg_Balance": 114295066, "Salary_Day_Transfer": 0.5298, "반도체": 57, "항공/방산": 44, "2차전지": 60, "리츠/배당": 55, "금융/은행": 89, "Risk_Score": 55.19, "Main_Theme": "금융/은행", "Risk_Level": "중위험"}, {"Customer_ID": "C04389", "Name": "고객4389", "Age": 49, "Job_Type": "일반사무", "Avg_Balance": 113908740, "Salary_Day_Transfer": 0.3339, "반도체": 71, "항공/방산": 44, "2차전지": 71, "리츠/배당": 73, "금융/은행": 20, "Risk_Score": 48.43, "Main_Theme": "리츠/배당", "Risk_Level": "중위험"}, {"Customer_ID": "C04448", "Name": "고객4448", "Age": 49, "Job_Type": "제조업", "Avg_Balance": 120039591, "Salary_Day_Transfer": 0.7434, "반도체": 50, "항공/방산": 66, "2차전지": 76, "리츠/배당": 29, "금융/은행": 10, "Risk_Score": 69.8, "Main_Theme": "2차전지", "Risk_Level": "고위험"}, {"Customer_ID": "C04450", "Name": "고객4450", "Age": 46, "Job_Type": "제조업", "Avg_Balance": 111003347, "Salary_Day_Transfer": 0.3157, "반도체": 64, "항공/방산": 35, "2차전지": 43, "리츠/배당": 23, "금융/은행": 7, "Risk_Score": 40.34, "Main_Theme": "반도체", "Risk_Level": "중위험"}, {"Customer_ID": "C04451", "Name": "고객4451", "Age": 33, "Job_Type": "제조업", "Avg_Balance": 110110582, "Salary_Day_Transfer": 0.7289, "반도체": 64, "항공/방산": 20, "2차전지": 45, "리츠/배당": 54, "금융/은행": 6, "Risk_Score": 65.54, "Main_Theme": "반도체", "Risk_Level": "고위험"}, {"Customer_ID": "C04513", "Name": "고객4513", "Age": 48, "Job_Type": "IT/개발", "Avg_Balance": 123259241, "Salary_Day_Transfer": 0.7029, "반도체": 15, "항공/방산": 2, "2차전지": 44, "리츠/배당": 50, "금융/은행": 75, "Risk_Score": 53.97, "Main_Theme": "금융/은행", "Risk_Level": "중위험"}, {"Customer_ID": "C04608", "Name": "고객4608", "Age": 32, "Job_Type": "IT/개발", "Avg_Balance": 101911374, "Salary_Day_Transfer": 0.3412, "반도체": 44, "항공/방산": 93, "2차전지": 79, "리츠/배당": 53, "금융/은행": 87, "Risk_Score": 45.07, "Main_Theme": "항공/방산", "Risk_Level": "중위험"}, {"Customer_ID": "C04623", "Name": "고객4623", "Age": 40, "Job_Type": "제조업", "Avg_Balance": 117640920, "Salary_Day_Transfer": 0.2924, "반도체": 33, "항공/방산": 41, "2차전지": 83, "리츠/배당": 48, "금융/은행": 78, "Risk_Score": 40.75, "Main_Theme": "2차전지", "Risk_Level": "중위험"}, {"Customer_ID": "C04655", "Name": "고객4655", "Age": 42, "Job_Type": "전문직", "Avg_Balance": 114138036, "Salary_Day_Transfer": 0.4745, "반도체": 64, "항공/방산": 50, "2차전지": 15, "리츠/배당": 23, "금융/은행": 12, "Risk_Score": 44.27, "Main_Theme": "반도체", "Risk_Level": "중위험"}, {"Customer_ID": "C04680", "Name": "고객4680", "Age": 46, "Job_Type": "전문직", "Avg_Balance": 111352311, "Salary_Day_Transfer": 0.2232, "반도체": 94, "항공/방산": 71, "2차전지": 45, "리츠/배당": 28, "금융/은행": 65, "Risk_Score": 41.19, "Main_Theme": "반도체", "Risk_Level": "중위험"}, {"Customer_ID": "C04728", "Name": "고객4728", "Age": 45, "Job_Type": "제조업", "Avg_Balance": 118065230, "Salary_Day_Transfer": 0.4133, "반도체": 88, "항공/방산": 26, "2차전지": 96, "리츠/배당": 8, "금융/은행": 64, "Risk_Score": 61.6, "Main_Theme": "2차전지", "Risk_Level": "고위험"}, {"Customer_ID": "C04762", "Name": "고객4762", "Age": 36, "Job_Type": "일반사무", "Avg_Balance": 105038210, "Salary_Day_Transfer": 0.7581, "반도체": 90, "항공/방산": 63, "2차전지": 75, "리츠/배당": 38, "금융/은행": 16, "Risk_Score": 78.49, "Main_Theme": "반도체", "Risk_Level": "고위험"}, {"Customer_ID": "C04764", "Name": "고객4764", "Age": 48, "Job_Type": "제조업", "Avg_Balance": 105779428, "Salary_Day_Transfer": 0.5181, "반도체": 11, "항공/방산": 8, "2차전지": 23, "리츠/배당": 84, "금융/은행": 54, "Risk_Score": 37.89, "Main_Theme": "리츠/배당", "Risk_Level": "저위험"}, {"Customer_ID": "C04797", "Name": "고객4797", "Age": 40, "Job_Type": "제조업", "Avg_Balance": 101856769, "Salary_Day_Transfer": 0.5562, "반도체": 27, "항공/방산": 39, "2차전지": 63, "리츠/배당": 74, "금융/은행": 24, "Risk_Score": 51.37, "Main_Theme": "리츠/배당", "Risk_Level": "중위험"}, {"Customer_ID": "C04840", "Name": "고객4840", "Age": 45, "Job_Type": "IT/개발", "Avg_Balance": 104863121, "Salary_Day_Transfer": 0.3613, "반도체": 68, "항공/방산": 67, "2차전지": 72, "리츠/배당": 10, "금융/은행": 60, "Risk_Score": 49.68, "Main_Theme": "2차전지", "Risk_Level": "중위험"}, {"Customer_ID": "C04860", "Name": "고객4860", "Age": 35, "Job_Type": "IT/개발", "Avg_Balance": 109641910, "Salary_Day_Transfer": 0.461, "반도체": 63, "항공/방산": 55, "2차전지": 60, "리츠/배당": 5, "금융/은행": 16, "Risk_Score": 52.26, "Main_Theme": "반도체", "Risk_Level": "중위험"}, {"Customer_ID": "C04932", "Name": "고객4932", "Age": 35, "Job_Type": "일반사무", "Avg_Balance": 106604988, "Salary_Day_Transfer": 0.3138, "반도체": 24, "항공/방산": 30, "2차전지": 59, "리츠/배당": 97, "금융/은행": 85, "Risk_Score": 35.43, "Main_Theme": "리츠/배당", "Risk_Level": "저위험"}, {"Customer_ID": "C04941", "Name": "고객4941", "Age": 34, "Job_Type": "전문직", "Avg_Balance": 122579294, "Salary_Day_Transfer": 0.779, "반도체": 68, "항공/방산": 53, "2차전지": 4, "리츠/배당": 83, "금융/은행": 2, "Risk_Score": 61.14, "Main_Theme": "리츠/배당", "Risk_Level": "고위험"}, {"Customer_ID": "C04991", "Name": "고객4991", "Age": 40, "Job_Type": "IT/개발", "Avg_Balance": 104247826, "Salary_Day_Transfer": 0.5114, "반도체": 89, "항공/방산": 86, "2차전지": 88, "리츠/배당": 36, "금융/은행": 9, "Risk_Score": 66.08, "Main_Theme": "반도체", "Risk_Level": "고위험"}];
+
+        // 시스템 세션 및 가상 상태
+        const state = {
+            customers: JSON.parse(JSON.stringify(originalCustomers)), // 딥카피를 통한 상태 유지
+            filteredCustomers: [],
+            defendedCustomers: new Set(),
+            selectedKpi: 'total_aum',
+            selectedCustomer: null,
+            actionLogs: [],
+            selectedSector: '반도체'
+        };
+
+        // 추천 상품 칩 DB
+        const products = {
+            '반도체': ['피델리티 글로벌 테크놀로지 펀드', 'AB 미국 그로스 펀드', '하나 반도체 포커스 펀드', 'KODEX 반도체 특정금전신탁', 'TIGER 미국테크TOP10 특정금전신탁', 'KODEX 미국AI테크TOP10+15%프리미엄 신탁'],
+            '항공/방산': ['한화 K방산 펀드', 'TIGER 우주항공방산 특정금전신탁', 'ARIRANG K방산Fn 특정금전신탁', '맥쿼리인프라 특정금전신탁'],
+            '2차전지': ['KB 2차전지 포커스 펀드', '한국투자 글로벌 전기차&배터리 펀드', 'TIGER 2차전지테마 특정금전신탁', 'KODEX 2차전지산업 특정금전신탁'],
+            '리츠/배당': ['신영 밸류 고배당 펀드', '베어링 고배당 펀드', 'TIGER 미국배당+7%프리미엄 신탁', 'TIGER 리츠부동산인프라 신탁'],
+            '금융/은행': ['TIGER 은행고배당플러스TOP10 특정금전신탁', 'KODEX 은행 특정금전신탁']
+        };
+
+        // 전술 피칭 가이드 시나리오 DB
+        const pitchingScripts = {
+            '반도체': `"고객님, 매달 월급날마다 직접 증권사로 자금(이체비율)을 이체하여 반도체 개별 종목을 매매하시는 것보다, 위험 통제력이 입증되고 연간 약 ₩{taxSaving}의 절세 혜택도 가능한 당행의 'iM 글로벌 AI 반도체 랩'을 권유해 드립니다."`,
+            '2차전지': `"고객님, 최근 급변하는 2차전지 주식 시장의 직간접 투자 변동성 위험을 감내하시기보다, 밸류체인 내 우량 핵심 기업 위주로 자동 분산하고 연간 약 ₩{taxSaving}의 세금 이연 혜택이 적용되는 당행의 'K-배터리 밸류체인 랩'을 추천합니다."`,
+            '항공/방산': `"고객님, 수출 호조로 장기 실적 우상향이 기대되는 항공/방산 섹터에 직접 투자하시는 대신, 당행의 체계적인 전략 포트폴리오를 통해 연간 약 ₩{taxSaving}의 소득 이연 절세 혜택과 함께 장기 분산 운용하는 'iM 방산 테마 랩'을 검토해보십시오."`,
+            '리츠/배당': `"고객님, 안정적인 고정 캐시플로우 창출을 위해 주식을 직접 운용하시는 번거로움 대신, 매달 정기적으로 현금 배당을 수취하면서 연간 약 ₩{taxSaving}의 우수한 절세 효과까지 적용되는 'iM 글로벌 부동산 리츠 랩'을 제안합니다."`,
+            '금융/은행': `"고객님, 최근 국가적 밸류업 프로그램 최대 수혜주인 우량 금융 및 은행 섹터 투자를 적극 고려 중이시라면, 연간 약 ₩{taxSaving}의 금융소득 종합과세 절세 및 원천 이연 혜택이 적용되는 당행의 '금융 밸류업 고배당 랩'으로 장기 투자를 제안합니다."`
+        };
+
+        // ------------------ 차트 레퍼런스 객체 ------------------
+        let kpiDetailChartInstance = null;
+        let scatterChartInstance = null;
+        let themeBarChartInstance = null;
+        let jobStackChartInstance = null;
+        let themePieChartInstance = null;
+        let simChartInstance = null;
+        let radarChartInstance = null;
+        let insightHistogramChartInstance = null;
+
+        // ------------------ 헬퍼 함수 ------------------
+        function formatWon(val) {
+            return '₩' + Math.round(val).toLocaleString();
+        }
+
+        function getRiskLevel(score) {
+            if (score > 60) return "고위험";
+            if (score >= 40) return "중위험";
+            return "저위험";
+        }
+
+        function getVipLevel(balance) {
+            if (balance >= 90000000) return "👑 로얄 (Royal) 고객";
+            if (balance >= 75000000) return "🥇 골드 (Gold) 고객";
+            if (balance >= 60000000) return "🥈 톱 (Top) 고객";
+            if (balance >= 45000000) return "🥉 에이스 (Ace) 고객";
+            return "🌱 프라임 (Prime) 고객";
+        }
+
+        function showToast(message, icon = '✅') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast-item';
+            toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.remove();
+            }, 3800);
+        }
+
+        // ------------------ 필터링 및 업데이트 시스템 ------------------
+        function applyFilters() {
+            // 필터 값 수집
+            const selectedJobs = Array.from(document.querySelectorAll('#jobFilterList input:checked')).map(el => el.value);
+            const minBal = parseInt(document.getElementById('balSlider').value);
+            const minRatio = parseFloat(document.getElementById('ratioSlider').value) / 100;
+            const selectedThemes = Array.from(document.querySelectorAll('#themeFilterList input:checked')).map(el => el.value);
+            const selectedRisks = Array.from(document.querySelectorAll('#riskFilterList input:checked')).map(el => el.value);
+
+            // 라벨 업데이트
+            document.getElementById('balVal').innerText = formatWon(minBal);
+            document.getElementById('ratioVal').innerText = Math.round(minRatio * 100) + '%';
+
+            // 필터 적용
+            state.filteredCustomers = state.customers.filter(c => {
+                const cRisk = getRiskLevel(c.Risk_Score);
+                return selectedJobs.includes(c.Job_Type) &&
+                       c.Avg_Balance >= minBal &&
+                       c.Salary_Day_Transfer >= minRatio &&
+                       selectedThemes.includes(c.Main_Theme) &&
+                       selectedRisks.includes(cRisk);
+            });
+
+            // 화면 리렌더링
+            renderAll();
+        }
+
+        function renderAll() {
+            if (state.filteredCustomers.length === 0) {
+                // 필터링 데이터 없음 경고
+                document.getElementById('dandiReportSummary').innerText = "⚠️ 선택하신 필터에 해당하는 고객이 없습니다. 사이드바 필터를 넓게 조정해 보세요!";
+                return;
+            }
+
+            renderKpis();
+            renderTopTenTable();
+            renderScatterChart();
+            renderThemeBarChart();
+            renderJobStackChart();
+            renderThemePieChart();
+            renderKpiDetail();
+            renderDandiSummary();
+            renderSectorInsights();
+        }
+
+        // ------------------ 탭 1 렌더링 함수들 ------------------
+        function renderKpis() {
+            const fc = state.filteredCustomers;
+            
+            // 1. 총 AUM
+            const totalAum = fc.reduce((acc, c) => acc + c.Avg_Balance, 0);
+            document.getElementById('kpi_val_total_aum').innerText = formatWon(totalAum);
+
+            // 2. 고객 평균 자산
+            const avgBal = totalAum / fc.length;
+            document.getElementById('kpi_val_avg_balance').innerText = formatWon(avgBal);
+
+            // 3. 누수 고위험 고객 수
+            const highRiskCount = fc.filter(c => getRiskLevel(c.Risk_Score) === "고위험").length;
+            const highRiskRatio = (highRiskCount / fc.length) * 100;
+            document.getElementById('kpi_val_high_risk_count').innerText = `${highRiskCount}명 (${highRiskRatio.toFixed(1)}%)`;
+
+            // 4. 월급날 유출 우려 자산
+            const potentialOutflow = fc.reduce((acc, c) => acc + (c.Avg_Balance * c.Salary_Day_Transfer), 0);
+            document.getElementById('kpi_val_potential_outflow').innerText = formatWon(potentialOutflow);
+
+            // 5. 평균 연령
+            const avgAge = fc.reduce((acc, c) => acc + c.Age, 0) / fc.length;
+            document.getElementById('kpi_val_avg_age').innerText = `${avgAge.toFixed(1)}세`;
+
+            // 6. 최다 관심 테마
+            const themeCounts = {};
+            fc.forEach(c => {
+                themeCounts[c.Main_Theme] = (themeCounts[c.Main_Theme] || 0) + 1;
+            });
+            let topTheme = 'N/A';
+            let maxCount = -1;
+            for (const [theme, count] of Object.entries(themeCounts)) {
+                if (count > maxCount) {
+                    maxCount = count;
+                    topTheme = theme;
+                }
+            }
+            document.getElementById('kpi_val_top_theme').innerText = topTheme;
+
+            // 7. 마케팅 방어 성공률 (가상 연동)
+            const defenseRate = Math.min(98.5, 75.0 + state.defendedCustomers.size * 2.5);
+            document.getElementById('kpi_val_defense_rate').innerText = `${defenseRate.toFixed(1)}%`;
+
+            // 8. 이달 목표 달성률 (가상 연동)
+            const monthlyTarget = Math.min(100.0, 81.2 + state.defendedCustomers.size * 1.5);
+            document.getElementById('kpi_val_monthly_target').innerText = `${monthlyTarget.toFixed(1)}%`;
+        }
+
+        function renderTopTenTable() {
+            const tbody = document.getElementById('topTenTableBody');
+            tbody.innerHTML = '';
+
+            // 유출 우려 자산이 높은 순서로 정렬된 TOP 10
+            const sorted = [...state.filteredCustomers].sort((a, b) => {
+                const outflowA = a.Avg_Balance * a.Salary_Day_Transfer;
+                const outflowB = b.Avg_Balance * b.Salary_Day_Transfer;
+                return outflowB - outflowA;
+            }).slice(0, 10);
+
+            sorted.forEach(c => {
+                const tr = document.createElement('tr');
+                const riskLvl = getRiskLevel(c.Risk_Score);
+                let badgeClass = 'badge-low';
+                if (riskLvl === '고위험') badgeClass = 'badge-high';
+                else if (riskLvl === '중위험') badgeClass = 'badge-medium';
+
+                const outflow = c.Avg_Balance * c.Salary_Day_Transfer;
+
+                tr.innerHTML = `
+                    <td>${c.Customer_ID}</td>
+                    <td style="font-weight:700; color:#ffffff;">${c.Name}</td>
+                    <td>${c.Age}세</td>
+                    <td>${c.Job_Type}</td>
+                    <td>${Math.round(c.Avg_Balance).toLocaleString()}원</td>
+                    <td>${Math.round(c.Salary_Day_Transfer * 100)}%</td>
+                    <td style="font-weight:700; color:var(--accent-red);">${Math.round(outflow).toLocaleString()}원</td>
+                    <td><span class="product-chip" style="margin:0; border-color:rgba(0,189,167,0.3); font-size:10px;">${c.Main_Theme}</span></td>
+                    <td>${c.Risk_Score}%</td>
+                    <td><span class="badge ${badgeClass}">${riskLvl}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // ------------------ KPI 요약 연동 정밀 진단 차트 렌더링 ------------------
+        function selectKpi(kpi) {
+            state.selectedKpi = kpi;
+            
+            // 버튼들 활성 상태 해제 및 적용
+            document.querySelectorAll('.kpi-btn').forEach(btn => btn.classList.remove('active'));
+            
+            const mapping = {
+                'total_aum': 'btn_total_aum',
+                'avg_balance': 'btn_avg_balance',
+                'high_risk_count': 'btn_high_risk_count',
+                'potential_outflow': 'btn_potential_outflow',
+                'avg_age': 'btn_avg_age',
+                'top_theme': 'btn_top_theme',
+                'defense_rate': 'btn_defense_rate',
+                'monthly_target': 'btn_monthly_target'
+            };
+            document.getElementById(mapping[kpi]).classList.add('active');
+
+            renderKpiDetail();
+        }
+
+        function renderKpiDetail() {
+            const fc = state.filteredCustomers;
+            const kpi = state.selectedKpi;
+
+            const headerEmoji = {
+                'total_aum': '💰', 'avg_balance': '📊', 'high_risk_count': '🚨',
+                'potential_outflow': '💸', 'avg_age': '👥', 'top_theme': '⭐',
+                'defense_rate': '🛡️', 'monthly_target': '📈'
+            };
+            const headerNames = {
+                'total_aum': '총 관리 자산 (AUM)', 'avg_balance': '고객 평균 자산', 'high_risk_count': '누수 고위험 고객 수',
+                'potential_outflow': '월급날 유출 우려 자산', 'avg_age': '대상 고객 평균 연령', 'top_theme': '최다 관심 테마 (1위)',
+                'defense_rate': '마케팅 방어 성공률', 'monthly_target': '이달 마케팅 목표 달성률'
+            };
+
+            document.getElementById('detailKpiEmoji').innerText = headerEmoji[kpi];
+            document.getElementById('detailKpiName').innerText = headerNames[kpi];
+
+            const ctx = document.getElementById('kpiDetailChart').getContext('2d');
+            if (kpiDetailChartInstance) kpiDetailChartInstance.destroy();
+
+            let dandiComment = '';
+            
+            if (kpi === 'total_aum') {
+                // 자산 분포 히스토그램
+                const bins = [0, 20000000, 40000000, 60000000, 80000000, 100000000, 120000000, 150000000];
+                const labels = ['2천만 이하', '2-4천만', '4-6천만', '6-8천만', '8-1억', '1-1.2억', '1.2억 이상'];
+                const counts = new Array(labels.length).fill(0);
+                
+                fc.forEach(c => {
+                    for (let i = 0; i < bins.length - 1; i++) {
+                        if (c.Avg_Balance >= bins[i] && c.Avg_Balance < bins[i+1]) {
+                            counts[i]++;
+                            break;
+                        }
+                    }
+                });
+
+                kpiDetailChartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: '고객 수 (명)',
+                            data: counts,
+                            backgroundColor: '#00bda7',
+                            borderRadius: 6
+                        }]
+                    },
+                    options: getChartOptions()
+                });
+                dandiComment = "전체 자산의 분포를 보면 대다수 고객의 평잔 분포와 함께 VVIP 등급(로얄, 골드) 고객층이 차지하는 비중을 한눈에 볼 수 있어! 자산이 많은 VVIP 고객의 이탈을 특별히 신경 써야 해! 💰";
+
+            } else if (kpi === 'avg_balance') {
+                // 직군별 평균 자산 수평 바
+                const jobs = ['일반사무', '제조업', 'IT/개발', '전문직'];
+                const avgs = jobs.map(job => {
+                    const group = fc.filter(c => c.Job_Type === job);
+                    if (group.length === 0) return 0;
+                    return group.reduce((acc, c) => acc + c.Avg_Balance, 0) / group.length;
+                });
+
+                kpiDetailChartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: jobs,
+                        datasets: [{
+                            label: '평균 자산 (원)',
+                            data: avgs,
+                            backgroundColor: 'rgba(0, 189, 167, 0.75)',
+                            borderColor: '#00bda7',
+                            borderWidth: 1.5,
+                            borderRadius: 6
+                        }]
+                    },
+                    options: getChartOptions('x')
+                });
+                dandiComment = "각 직군별 평균 자산 규모를 분석해보니 전문직과 IT/개발자 직군의 평잔이 상대적으로 아주 두텁게 나오고 있어. 직군 특성에 맞는 자산 포트폴리오 랩을 적극 제안해보자구! 📊";
+
+            } else if (kpi === 'high_risk_count') {
+                // 위험 등급 비율 도넛
+                const high = fc.filter(c => getRiskLevel(c.Risk_Score) === "고위험").length;
+                const medium = fc.filter(c => getRiskLevel(c.Risk_Score) === "중위험").length;
+                const low = fc.filter(c => getRiskLevel(c.Risk_Score) === "저위험").length;
+
+                kpiDetailChartInstance = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['고위험', '중위험', '저위험'],
+                        datasets: [{
+                            data: [high, medium, low],
+                            backgroundColor: ['#f87171', '#fb923c', '#00bda7'],
+                            borderColor: '#0b131f',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: { color: '#94a3b8', font: { family: 'NanumSquareRound' } }
+                            }
+                        }
+                    }
+                });
+                dandiComment = "자산 누수 고위험군 고객의 비율을 항상 세심히 봐야 해! 이 비율이 높아진다면 즉각 마케팅 제안 발송(SMS, 이메일) 및 유선 약속 스케줄을 잡아야 지점 전체의 AUM 유출을 막을 수 있어! 🚨";
+
+            } else if (kpi === 'potential_outflow') {
+                // 관심 테마별 유출 우려 자산 합계
+                const themes = ['반도체', '항공/방산', '2차전지', '리츠/배당', '금융/은행'];
+                const sums = themes.map(theme => {
+                    const group = fc.filter(c => c.Main_Theme === theme);
+                    return group.reduce((acc, c) => acc + (c.Avg_Balance * c.Salary_Day_Transfer), 0);
+                });
+
+                kpiDetailChartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: themes,
+                        datasets: [{
+                            label: '유출 우려 자산 (원)',
+                            data: sums,
+                            backgroundColor: ['#f87171', '#fb923c', '#00bda7', '#60a5fa', '#a78bfa'],
+                            borderRadius: 6
+                        }]
+                    },
+                    options: getChartOptions()
+                });
+                dandiComment = "월급날 어떤 투자 테마로 자금이 빠져나갈 가능성이 높은지 보여주고 있어. 특정 테마 랩(Wrap) 상품을 선제 제안해 당행 자금으로 묶는 마케팅이 바로 Money Move 방어의 핵심이야! 💸";
+
+            } else if (kpi === 'avg_age') {
+                // 연령대 분포 및 평균 위험도
+                const ageGroups = ['30-34세', '35-39세', '40-44세', '45-49세'];
+                const groupCounts = [0, 0, 0, 0];
+                const groupRiskMeans = [0, 0, 0, 0];
+                const groupRiskSum = [0, 0, 0, 0];
+
+                fc.forEach(c => {
+                    let idx = 0;
+                    if (c.Age >= 45) idx = 3;
+                    else if (c.Age >= 40) idx = 2;
+                    else if (c.Age >= 35) idx = 1;
+                    
+                    groupCounts[idx]++;
+                    groupRiskSum[idx] += c.Risk_Score;
+                });
+
+                for (let i = 0; i < 4; i++) {
+                    groupRiskMeans[i] = groupCounts[i] > 0 ? (groupRiskSum[i] / groupCounts[i]) : 0;
+                }
+
+                kpiDetailChartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ageGroups,
+                        datasets: [
+                            {
+                                type: 'bar',
+                                label: '고객 수 (명)',
+                                data: groupCounts,
+                                backgroundColor: 'rgba(0, 189, 167, 0.2)',
+                                borderColor: 'rgba(0, 189, 167, 0.4)',
+                                borderWidth: 1,
+                                yAxisID: 'y1'
+                            },
+                            {
+                                type: 'line',
+                                label: '평균 위험 점수',
+                                data: groupRiskMeans,
+                                borderColor: '#f87171',
+                                borderWidth: 2,
+                                pointBackgroundColor: '#f87171',
+                                yAxisID: 'y2',
+                                tension: 0.1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: { grid: { display: false }, ticks: { color: '#94a3b8', font: { family: 'NanumSquareRound' } } },
+                            y1: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                grid: { color: 'rgba(255,255,255,0.05)' },
+                                ticks: { color: '#94a3b8' }
+                            },
+                            y2: {
+                                type: 'linear',
+                                display: true,
+                                position: 'right',
+                                grid: { drawOnChartArea: false },
+                                ticks: { color: '#f87171' },
+                                min: 0,
+                                max: 100
+                            }
+                        },
+                        plugins: {
+                            legend: { labels: { color: '#94a3b8', font: { family: 'NanumSquareRound' } } }
+                        }
+                    }
+                });
+                dandiComment = "연령대가 비교적 젊을수록 모바일 주식 거래 비중이 높기 때문에 이탈 위험 점수가 높게 책정되는 경향이 있어! 3040 세대를 대상으로는 스마트한 비대면 랩 솔루션을 권유해봐! 👥";
+
+            } else if (kpi === 'top_theme') {
+                // 5대 테마 선호도 평균
+                const themes = ['반도체', '항공/방산', '2차전지', '리츠/배당', '금융/은행'];
+                const avgs = themes.map(t => {
+                    return fc.reduce((acc, c) => acc + c[t], 0) / fc.length;
+                });
+
+                kpiDetailChartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: themes,
+                        datasets: [{
+                            label: '평균 관심도 (점)',
+                            data: avgs,
+                            backgroundColor: '#00bda7',
+                            borderRadius: 6
+                        }]
+                    },
+                    options: getChartOptions()
+                });
+                dandiComment = "지점 고객들의 5대 섹터 관심도 평균이야. 최근 트렌드에 따라 특정 테마 선호가 높지만, 자산 포트폴리오 다각화 차원에서 차순위 테마(예: 리츠/배당, 금융/은행)의 절세 랩 제안도 훌륭한 전략이야! ⭐";
+
+            } else if (kpi === 'defense_rate') {
+                // 마케팅 방어 성공률 추이 (가상 시계열 데이터)
+                const months = ["12월", "1월", "2월", "3월", "4월", "금월"];
+                const currRate = Math.min(98.5, 75.0 + state.defendedCustomers.size * 2.5);
+                const history = [72.5, 74.0, 71.8, 75.2, 76.8, currRate];
+
+                kpiDetailChartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: months,
+                        datasets: [{
+                            label: '방어 성공률 (%)',
+                            data: history,
+                            borderColor: '#00bda7',
+                            borderWidth: 3,
+                            pointBackgroundColor: '#00bda7',
+                            pointRadius: 5,
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: { grid: { display: false }, ticks: { color: '#94a3b8' } },
+                            y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' }, min: 60, max: 100 }
+                        },
+                        plugins: {
+                            legend: { display: false }
+                        }
+                    }
+                });
+                dandiComment = "우리가 SMS나 이메일을 발송하고 상담 약속을 잡을 때마다 금월 마케팅 방어 성공률이 실시간으로 반영되고 있어! 방어율이 지속 우상향하도록 CRM 이력을 적극 늘려줘! 🛡️";
+
+            } else { // monthly_target
+                // 게이지 차트 대안으로 가로 도넛/반고리 도넛 또는 도넛 차트
+                const val = Math.min(100.0, 81.2 + state.defendedCustomers.size * 1.5);
+                
+                kpiDetailChartInstance = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['달성', '미달성'],
+                        datasets: [{
+                            data: [val, 100 - val],
+                            backgroundColor: ['#00bda7', '#1e2e45'],
+                            borderColor: '#0b131f',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '75%',
+                        plugins: {
+                            legend: { display: false }
+                        }
+                    }
+                });
+                dandiComment = "이번 달 마케팅 달성도 현황이야. 100% 달성까지 얼마 남지 않았어! 유출 위험 TOP 10 고객들에게 집중적으로 당행 랩 상품을 가입시켜 성공적으로 목표를 돌파해보자구! 화이팅! 📈";
+            }
+
+            document.getElementById('dandiBriefText').innerText = dandiComment;
+        }
+
+        function getChartOptions(indexAxis = 'x') {
+            return {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: indexAxis,
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(255,255,255,0.04)' },
+                        ticks: { color: '#94a3b8', font: { family: 'NanumSquareRound', size: 10 } }
+                    },
+                    y: {
+                        grid: { color: 'rgba(255,255,255,0.04)' },
+                        ticks: { color: '#94a3b8', font: { family: 'NanumSquareRound', size: 10 } }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            };
+        }
+
+        // ------------------ 2x2 시각화 차트 렌더링 ------------------
+        function renderScatterChart() {
+            const ctx = document.getElementById('scatterChart').getContext('2d');
+            if (scatterChartInstance) scatterChartInstance.destroy();
+
+            // 산점도 (Scatter) 데이터
+            const dataPoints = state.filteredCustomers.map(c => {
+                let color = '#00bda7'; // 저위험
+                const risk = getRiskLevel(c.Risk_Score);
+                if (risk === '고위험') color = '#f87171';
+                else if (risk === '중위험') color = '#fb923c';
+
+                // 버블 크기: 최소 5, 최대 15
+                const size = 5 + (c.Risk_Score / 10);
+
+                return {
+                    x: c.Avg_Balance,
+                    y: c.Salary_Day_Transfer * 100,
+                    r: size,
+                    color: color,
+                    label: `${c.Name} (${c.Job_Type}, ${c.Age}세)`
+                };
+            });
+
+            scatterChartInstance = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        data: dataPoints,
+                        backgroundColor: dataPoints.map(d => d.color),
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            position: 'bottom',
+                            grid: { color: 'rgba(255,255,255,0.04)' },
+                            ticks: {
+                                color: '#94a3b8',
+                                callback: function(value) { return (value / 1000000) + '백만'; }
+                            },
+                            title: { display: true, text: '평균 잔액 (원)', color: '#64748b', font: { size: 10 } }
+                        },
+                        y: {
+                            grid: { color: 'rgba(255,255,255,0.04)' },
+                            ticks: { color: '#94a3b8', callback: function(value) { return value + '%'; } },
+                            title: { display: true, text: '이체 비중 (%)', color: '#64748b', font: { size: 10 } }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const d = context.raw;
+                                    return `${d.label}: 평잔 ${formatWon(d.x)}, 이체비 ${d.y.toFixed(1)}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderThemeBarChart() {
+            const ctx = document.getElementById('themeBarChart').getContext('2d');
+            if (themeBarChartInstance) themeBarChartInstance.destroy();
+
+            const themes = ['반도체', '항공/방산', '2차전지', '리츠/배당', '금융/은행'];
+            const data = themes.map(t => {
+                const group = state.filteredCustomers.filter(c => c.Main_Theme === t);
+                const sum = group.reduce((acc, c) => acc + c.Avg_Balance, 0);
+                return sum / 100000000; // 억 원 단위
+            });
+
+            themeBarChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: themes,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: ['#60a5fa', '#f87171', '#fb923c', '#34d399', '#a78bfa'],
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#94a3b8' } },
+                        y: {
+                            grid: { color: 'rgba(255,255,255,0.04)' },
+                            ticks: { color: '#94a3b8', callback: function(value) { return value + '억'; } }
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function renderJobStackChart() {
+            const ctx = document.getElementById('jobStackChart').getContext('2d');
+            if (jobStackChartInstance) jobStackChartInstance.destroy();
+
+            const jobs = ['일반사무', '제조업', 'IT/개발', '전문직'];
+            const highRisk = [];
+            const mediumRisk = [];
+            const lowRisk = [];
+
+            jobs.forEach(job => {
+                const group = state.filteredCustomers.filter(c => c.Job_Type === job);
+                highRisk.push(group.filter(c => getRiskLevel(c.Risk_Score) === '고위험').length);
+                mediumRisk.push(group.filter(c => getRiskLevel(c.Risk_Score) === '중위험').length);
+                lowRisk.push(group.filter(c => getRiskLevel(c.Risk_Score) === '저위험').length);
+            });
+
+            jobStackChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: jobs,
+                    datasets: [
+                        { label: '고위험', data: highRisk, backgroundColor: '#f87171' },
+                        { label: '중위험', data: mediumRisk, backgroundColor: '#fb923c' },
+                        { label: '저위험', data: lowRisk, backgroundColor: '#00bda7' }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { stacked: true, grid: { display: false }, ticks: { color: '#94a3b8' } },
+                        y: { stacked: true, grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#94a3b8' } }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#94a3b8', boxWidth: 10, font: { size: 10 } } }
+                    }
+                }
+            });
+        }
+
+        function renderThemePieChart() {
+            const ctx = document.getElementById('themePieChart').getContext('2d');
+            if (themePieChartInstance) themePieChartInstance.destroy();
+
+            const themes = ['반도체', '항공/방산', '2차전지', '리츠/배당', '금융/은행'];
+            const data = themes.map(t => state.filteredCustomers.filter(c => c.Main_Theme === t).length);
+
+            themePieChartInstance = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: themes,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: ['#60a5fa', '#f87171', '#fb923c', '#34d399', '#a78bfa'],
+                        borderColor: '#0b131f',
+                        borderWidth: 1.5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: { color: '#94a3b8', boxWidth: 10, font: { size: 10 } }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderDandiSummary() {
+            const fc = state.filteredCustomers;
+            if (fc.length === 0) return;
+
+            const potentialOutflow = fc.reduce((acc, c) => acc + (c.Avg_Balance * c.Salary_Day_Transfer), 0);
+            const outflowBillions = potentialOutflow / 100000000;
+
+            // 평균 위험 점수가 높은 직군 탐색
+            const jobRisks = {};
+            fc.forEach(c => {
+                if (!jobRisks[c.Job_Type]) jobRisks[c.Job_Type] = { sum: 0, count: 0 };
+                jobRisks[c.Job_Type].sum += c.Risk_Score;
+                jobRisks[c.Job_Type].count++;
+            });
+            let highestRiskJob = '일반사무';
+            let maxRiskMean = -1;
+            for (const [job, info] of Object.entries(jobRisks)) {
+                const mean = info.sum / info.count;
+                if (mean > maxRiskMean) {
+                    maxRiskMean = mean;
+                    highestRiskJob = job;
+                }
+            }
+
+            document.getElementById('dandiReportSummary').innerHTML = `
+                <p style="margin-top:0; font-weight:700;">🐧 은행 전체 브리핑:</p>
+                <p style="margin-top:5px; margin-bottom:8px;">글로벌 필터가 적용된 은행 전체 고객 자산 중 월급날 유출 예상액은 총 <b style="color:var(--accent-red); font-size:14px;">${outflowBillions.toFixed(2)}억 원</b>이라구! 🚨</p>
+                <p style="margin-bottom:8px;">평균적으로 <b style="color:var(--primary);">'${highestRiskJob}'</b> 직군 고객군에서 자산 누수 위험이 가장 높게 포착되고 있어!</p>
+                <p style="margin-bottom:0;">이체 한도가 큰 로얄/골드급 자산 누수 고위험 고객 TOP 10 목록을 참고해서 우선 상담 전화를 걸어줘! 💡</p>
+            `;
+        }
+
+        // ------------------ 탭 2: 고객 상세 콕핏 ------------------
+        function onSearchInput() {
+            const input = document.getElementById('customerSearchInput').value.trim();
+            const dropdown = document.getElementById('searchDropdown');
+            dropdown.innerHTML = '';
+
+            if (input.length === 0) {
+                dropdown.style.display = 'none';
+                return;
+            }
+
+            const matched = state.customers.filter(c => {
+                return c.Customer_ID.toLowerCase().includes(input.toLowerCase()) ||
+                       c.Name.includes(input);
+            }).slice(0, 10);
+
+            if (matched.length === 0) {
+                dropdown.style.display = 'none';
+                return;
+            }
+
+            matched.forEach(c => {
+                const item = document.createElement('div');
+                item.className = 'autocomplete-item';
+                item.innerText = `${c.Name} (${c.Customer_ID}) - ${c.Job_Type}`;
+                item.onclick = () => {
+                    selectCustomer(c);
+                    dropdown.style.display = 'none';
+                };
+                dropdown.appendChild(item);
+            });
+
+            dropdown.style.display = 'block';
+        }
+
+        function selectCustomer(cust) {
+            // 원본의 레퍼런스를 직접 가져오지 않고 state.customers에서 실시간으로 찾아 세팅
+            // 그래야 방어 성공 시 state.customers가 업데이트될 때 연동됨
+            const realCust = state.customers.find(c => c.Customer_ID === cust.Customer_ID);
+            state.selectedCustomer = realCust;
+
+            // 검색 인풋 세팅
+            document.getElementById('customerSearchInput').value = `${realCust.Name} (${realCust.Customer_ID})`;
+            document.getElementById('searchResultTag').innerText = `🔍 ${realCust.Name} 고객 조회 완료`;
+
+            // 콕핏 메인 노출
+            document.getElementById('cockpitMainArea').style.display = 'block';
+
+            // 1단계: 기본 정보 렌더링
+            const basicInfo = document.getElementById('custBasicInfo');
+            const vipLvl = getVipLevel(realCust.Avg_Balance);
+            basicInfo.innerHTML = `
+                <p style="margin-top:0;">👤 <b>고객명:</b> ${realCust.Name} (${realCust.Age}세)</p>
+                <p>🆔 <b>고객 ID:</b> ${realCust.Customer_ID}</p>
+                <p>🏅 <b>고객 등급:</b> ${vipLvl}</p>
+                <p style="margin-bottom:0;">🛠️ <b>직군 정보:</b> ${realCust.Job_Type}</p>
+            `;
+
+            // 5대 테마 관심도 그래프 렌더링
+            renderCustThemeRadar(realCust);
+
+            // 자산 누수율
+            renderCustLeakage(realCust);
+
+            // 2단계: 시뮬레이터 슬라이더 범위 세팅
+            const slider = document.getElementById('simSlider');
+            slider.max = realCust.Avg_Balance;
+            
+            // 기본 제안 금액을 월급날 유출 우려 자산으로 세팅
+            const outflowAsset = realCust.Avg_Balance * realCust.Salary_Day_Transfer;
+            slider.value = Math.round(outflowAsset);
+            
+            onSimSliderChange();
+
+            // 방어 버튼 및 플레이북 업데이트
+            updateDefendBtnAndPlaybook();
+
+            // PB 피칭 가이드
+            updatePitchingScript();
+        }
+
+        function renderCustThemeRadar(c) {
+            const ctx = document.getElementById('custThemeRadar').getContext('2d');
+            if (radarChartInstance) radarChartInstance.destroy();
+
+            const themes = ["반도체", "항공/방산", "2차전지", "리츠/배당", "금융/은행"];
+            const scores = themes.map(t => c[t]);
+
+            radarChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: themes,
+                    datasets: [{
+                        data: scores,
+                        backgroundColor: '#00bda7',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: {
+                        x: { display: false, max: 100 },
+                        y: { grid: { display: false }, ticks: { color: '#94a3b8', font: { family: 'NanumSquareRound', size: 10 } } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function renderCustLeakage(c) {
+            const div = document.getElementById('custLeakageInfo');
+            const riskLvl = getRiskLevel(c.Risk_Score);
+            
+            let color = '#34d399';
+            let riskClass = 'badge-low';
+            if (riskLvl === '고위험') { color = '#f87171'; riskClass = 'badge-high'; }
+            else if (riskLvl === '중위험') { color = '#fb923c'; riskClass = 'badge-medium'; }
+
+            div.innerHTML = `
+                <p style="margin-top:0; margin-bottom: 4px;">⚠️ <b>자산 누수율:</b> <span class="badge ${riskClass}">${c.Risk_Score}% (${riskLvl})</span></p>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: ${c.Risk_Score}%; background-color: ${color};"></div>
+                </div>
+                <p style="margin-top: 4px; margin-bottom: 0;">💸 <b>월급날 이체비:</b> ${Math.round(c.Salary_Day_Transfer * 100)}%</p>
+                <p style="margin-bottom:0;">⭐ <b>주력 관심 테마:</b> ${c.Main_Theme}</p>
+            `;
+        }
+
+        function onSimSliderChange() {
+            const c = state.selectedCustomer;
+            if (!c) return;
+
+            const slider = document.getElementById('simSlider');
+            const propWrap = parseInt(slider.value);
+            document.getElementById('simSliderVal').innerText = propWrap.toLocaleString() + '원';
+
+            // 세액 절감 효과 계산
+            const expectedTaxSaving = Math.round(propWrap * 0.075 * 0.154);
+            document.getElementById('simSavingVal').innerText = `연간 약 ₩${expectedTaxSaving.toLocaleString()} 절세 예상`;
+
+            // 수익률 비교 차트 렌더링
+            const currOutflow = c.Avg_Balance * c.Salary_Day_Transfer;
+            const currDeposit = c.Avg_Balance - currOutflow;
+            const currentExpectedYield = (currDeposit * 0.02) + (currOutflow * 0.015);
+
+            const propOutflow = Math.max(0, currOutflow - propWrap);
+            const propDeposit = c.Avg_Balance - propWrap - propOutflow;
+            const proposedExpectedYield = (propDeposit * 0.02) + (propOutflow * 0.015) + (propWrap * 0.075);
+
+            const ctx = document.getElementById('simChart').getContext('2d');
+            if (simChartInstance) simChartInstance.destroy();
+
+            simChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['연간 기대 수익'],
+                    datasets: [
+                        { label: '현재 포트폴리오', data: [currentExpectedYield], backgroundColor: '#475569', borderRadius: 4 },
+                        { label: '제안 포트폴리오', data: [proposedExpectedYield], backgroundColor: '#00bda7', borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: {
+                        x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#94a3b8' } },
+                        y: { display: false }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#94a3b8', boxWidth: 10, font: { size: 9 } } }
+                    }
+                }
+            });
+
+            // 플레이북 대본 내 세액 절감 텍스트 실시간 치환
+            const taxTextEls = document.querySelectorAll('.tax-saving-text-placeholder');
+            taxTextEls.forEach(el => {
+                el.innerText = expectedTaxSaving.toLocaleString();
+            });
+        }
+
+        function updateDefendBtnAndPlaybook() {
+            const c = state.selectedCustomer;
+            if (!c) return;
+
+            const isDefended = state.defendedCustomers.has(c.Customer_ID);
+            const btn = document.getElementById('defendBtn');
+            const card = document.getElementById('playbookCardContent');
+
+            if (isDefended) {
+                btn.innerText = '✅ 자산 안전 고정 완료 (방어 성공)';
+                btn.disabled = true;
+            } else {
+                btn.innerText = '🚀 마그넷 솔루션 가동 (방어 실행)';
+                btn.disabled = false;
+            }
+
+            // 플레이북 카드 채우기
+            const theme = c.Main_Theme;
+            const prodChips = products[theme].map(p => `<span class="product-chip">${p}</span>`).join('');
+            
+            let playbookTitle = '';
+            if (theme === '반도체') playbookTitle = '⚙️ 반도체 슈퍼사이클 랩 어카운트 제안 전략';
+            else if (theme === '2차전지') playbookTitle = '🔋 친환경 배터리 혁신 성장 랩 제안 전략';
+            else if (theme === '항공/방산') playbookTitle = '🚀 K-방산 글로벌 리더 랩 제안 전략';
+            else if (theme === '리츠/배당') playbookTitle = '🏢 비과세 월배당 리츠 랩 제안 전략';
+            else playbookTitle = '📈 밸류업 금융지주 배당 강화 랩 제안 전략';
+
+            card.innerHTML = `
+                <h5 class="playbook-header-title">${playbookTitle}</h5>
+                <div class="script-box">
+                    🗣 <b>상담 추천 제안 대본:</b><br>
+                    "고객님, 매달 월급날마다 직접 증권사로 자금(${(c.Salary_Day_Transfer*100).toFixed(0)}%)을 이체하여 ${theme} 개별 종목을 매매하시는 것보다, 위험 통제력이 입증되고 연간 약 ₩<span class="tax-saving-text-placeholder">0</span>의 절세 혜택도 가능한 당행의 특화 랩 상품을 제안합니다."
+                </div>
+                <div style="margin-top: 5px;">
+                    <span style="font-size:11px; color:#94a3b8; font-weight:600; display:block; margin-bottom:4px;">🧲 마그넷 솔루션 추천 상품:</span>
+                    <div class="product-chips-container">${prodChips}</div>
+                </div>
+            `;
+        }
+
+        function updatePitchingScript() {
+            const c = state.selectedCustomer;
+            if (!c) return;
+
+            const theme = c.Main_Theme;
+            const slider = document.getElementById('simSlider');
+            const expectedTaxSaving = Math.round(parseInt(slider.value) * 0.075 * 0.154);
+
+            let script = pitchingScripts[theme] || '고객 맞춤 제안 대본 준비 중...';
+            // 텍스트 매핑 변수 대입
+            script = script.replace('{taxSaving}', expectedTaxSaving.toLocaleString() + '원');
+
+            document.getElementById('pitchingScriptText').innerHTML = script;
+        }
+
+        function runDefendMagnet() {
+            const c = state.selectedCustomer;
+            if (!c) return;
+
+            const overlay = document.getElementById('loadingOverlay');
+            overlay.style.display = 'flex';
+
+            setTimeout(() => {
+                overlay.style.display = 'none';
+
+                // 상태 업데이트
+                state.defendedCustomers.add(c.Customer_ID);
+
+                // 실제 데이터 오버라이드 (방어 처리)
+                const targetIdx = state.customers.findIndex(cust => cust.Customer_ID === c.Customer_ID);
+                if (targetIdx !== -1) {
+                    state.customers[targetIdx].Risk_Score = 0.0;
+                    state.customers[targetIdx].Salary_Day_Transfer = 0.0;
+                    state.customers[targetIdx].Risk_Level = '저위험';
+                }
+
+                showToast(`${c.Name} 고객 머니무브 방어 성공! 자산이 iM뱅크 내로 고정되었습니다.`, '🛡️');
+
+                // UI 재반영
+                selectCustomer(c);
+                applyFilters();
+            }, 1500);
+        }
+
+        function triggerAction(actionType) {
+            const c = state.selectedCustomer;
+            if (!c) return;
+
+            const now = new Date().toLocaleTimeString();
+            let msg = '';
+            let toastIcon = '📧';
+
+            if (actionType === 'email') {
+                msg = `[${now}] ${c.Name}님께 '${c.Main_Theme}' 특화 랩 절세 혜택 시뮬레이션 보고서 메일 전송 완료.`;
+                showToast(`${c.Name} 고객님께 이메일 전송 완료!`, '📧');
+            } else if (actionType === 'sms') {
+                msg = `[${now}] ${c.Name}님께 '${c.Main_Theme}' 테마 랩 특화 제안 SMS 발송 완료.`;
+                showToast(`${c.Name} 고객님께 제안 문자 발송 완료!`, '💬');
+                toastIcon = '💬';
+            } else {
+                msg = `[${now}] ${c.Name}님 이탈 방어 유선 상담 약속 등록 완료.`;
+                showToast(`${c.Name} 고객님 유선 상담 스케줄 등록 완료!`, '📞');
+                toastIcon = '📞';
+            }
+
+            state.actionLogs.push(msg);
+            document.getElementById('recentActionLogText').innerText = `✨ 최근 기록: ${msg}`;
+
+            // CRM 로그에 추가
+            const logList = document.getElementById('crmLogList');
+            const today = new Date().toISOString().split('T')[0];
+            const newLog = document.createElement('div');
+            newLog.className = 'crm-log-item';
+            newLog.innerHTML = `🗓️ <b>${today}</b>: ${msg.split('] ')[1]}`;
+            logList.insertBefore(newLog, logList.firstChild);
+
+            // 전체 마케팅 성공 지표에 연동하기 위해 필터 리프레시
+            applyFilters();
+        }
+
+        // ------------------ 탭 3: 시장 인사이트 ------------------
+        function onSectorSelectChange() {
+            state.selectedSector = document.getElementById('sectorSelect').value;
+            renderSectorInsights();
+        }
+
+        function renderSectorInsights() {
+            const fc = state.filteredCustomers;
+            if (fc.length === 0) return;
+
+            const sector = state.selectedSector;
+
+            // 1. 평균 관심 점수
+            const sumScore = fc.reduce((acc, c) => acc + c[sector], 0);
+            const avgScore = sumScore / fc.length;
+            document.getElementById('sec_kpi1_title').innerText = `'${sector}' 평균 관심 점수`;
+            document.getElementById('sec_kpi1_val').innerText = `${avgScore.toFixed(1)} 점`;
+
+            // 2. 고관심 고객 수 (60점 이상)
+            const highCount = fc.filter(c => c[sector] >= 60).length;
+            const highRatio = (highCount / fc.length) * 100;
+            document.getElementById('sec_kpi2_title').innerText = `고관심 고객 수 (60점 이상)`;
+            document.getElementById('sec_kpi2_val').innerText = `${highCount}명 (${highRatio.toFixed(1)}%)`;
+
+            // 3. 선호군 자산 규모 (Main_Theme가 해당 섹터인 사람들의 AUM)
+            const themeAum = fc.filter(c => c.Main_Theme === sector).reduce((acc, c) => acc + c.Avg_Balance, 0);
+            document.getElementById('sec_kpi3_title').innerText = `'${sector}' 선호군 자산 규모`;
+            document.getElementById('sec_kpi3_val').innerText = formatWon(themeAum);
+
+            // 4. 히스토그램 차트 (이탈 등급별 섹터 관심도 점수 분포)
+            renderSectorHistogram(sector);
+
+            // 5. TOP 5 고관심 고객 테이블
+            renderSectorTopTable(sector);
+
+            // 6. 단디 코멘터리 & 상품 포트폴리오
+            renderSectorDandiContent(sector, highCount, themeAum, avgScore);
+        }
+
+        function renderSectorHistogram(sector) {
+            const ctx = document.getElementById('insightHistogramChart').getContext('2d');
+            if (insightHistogramChartInstance) insightHistogramChartInstance.destroy();
+
+            document.getElementById('insightChartTitle').innerText = `📊 이탈 등급별 ${sector} 관심도 점수 분포`;
+
+            // 위험군 분할 점수 배열 생성
+            const bins = [0, 20, 40, 60, 80, 100];
+            const labels = ['20점 미만', '20-40점', '40-60점', '60-80점', '80점 이상'];
+
+            const highCounts = new Array(5).fill(0);
+            const mediumCounts = new Array(5).fill(0);
+            const lowCounts = new Array(5).fill(0);
+
+            state.filteredCustomers.forEach(c => {
+                const risk = getRiskLevel(c.Risk_Score);
+                const score = c[sector];
+                let idx = 0;
+                if (score >= 80) idx = 4;
+                else if (score >= 60) idx = 3;
+                else if (score >= 40) idx = 2;
+                else if (score >= 20) idx = 1;
+
+                if (risk === '고위험') highCounts[idx]++;
+                else if (risk === '중위험') mediumCounts[idx]++;
+                else lowCounts[idx]++;
+            });
+
+            insightHistogramChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: '고위험', data: highCounts, backgroundColor: '#f87171' },
+                        { label: '중위험', data: mediumCounts, backgroundColor: '#fb923c' },
+                        { label: '저위험', data: lowCounts, backgroundColor: '#00bda7' }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { stacked: true, grid: { display: false }, ticks: { color: '#94a3b8' } },
+                        y: { stacked: true, grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#94a3b8' } }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#94a3b8', boxWidth: 10, font: { size: 9 } } }
+                    }
+                }
+            });
+        }
+
+        function renderSectorTopTable(sector) {
+            const tbody = document.getElementById('insightTopTableBody');
+            tbody.innerHTML = '';
+            document.getElementById('insightTableTitle').innerText = `🎯 ${sector} 최선호 고관심 고객 TOP 5`;
+
+            const sorted = [...state.filteredCustomers].sort((a, b) => b[sector] - a[sector]).slice(0, 5);
+
+            sorted.forEach(c => {
+                const tr = document.createElement('tr');
+                const riskLvl = getRiskLevel(c.Risk_Score);
+                let badgeClass = 'badge-low';
+                if (riskLvl === '고위험') badgeClass = 'badge-high';
+                else if (riskLvl === '중위험') badgeClass = 'badge-medium';
+
+                tr.innerHTML = `
+                    <td>${c.Customer_ID}</td>
+                    <td style="font-weight:700; color:#ffffff;">${c.Name}</td>
+                    <td>${c.Job_Type}</td>
+                    <td>${Math.round(c.Avg_Balance).toLocaleString()}원</td>
+                    <td>${Math.round(c.Salary_Day_Transfer * 100)}%</td>
+                    <td style="font-weight:700; color:var(--primary);">${c[sector]}점</td>
+                    <td><span class="badge ${badgeClass}">${riskLvl}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderSectorDandiContent(sector, highCount, themeAum, avgScore) {
+            document.getElementById('dandiInsightHeader').innerText = `📝 단디의 '${sector}' 섹터 종합 마케팅 코멘터리`;
+            
+            let comment = '';
+            if (sector === '반도체') {
+                comment = `<b>반도체</b> 업종은 하드웨어 HBM 및 AI 연산 수요 급증으로 IT/개발자 및 연구 전문직군 고객들의 관심 비중이 높게 탐지됩니다. 현재 고관심 고객은 <b>${highCount}명</b>이며, 이들의 자산 총액은 <b>${formatWon(themeAum)}</b>입니다. 자금 이탈율이 높은 고위험 성향에 대해서는 당행의 목표전환형 반도체 랩 상품 유치를 적극 추진하십시오.`;
+            } else if (sector === '2차전지') {
+                comment = `<b>2차전지</b> 업종은 친환경 모빌리티 보급에 따른 높은 성장에 베팅하는 주식 성향이 짙은 고객군이 많습니다. 평균 관심 점수는 <b>${avgScore.toFixed(1)}점</b>으로 활발한 편이나 개별 주식 변동성에 따른 최근 평가손실 리스크가 있을 수 있으니, 당행의 핵심 양극재/배터리 셀 분산 랩 상품 가입을 유도하여 안정성을 제고하는 마케팅이 유리합니다.`;
+            } else if (sector === '항공/방산') {
+                comment = `<b>항공/방산</b> 업종은 지정학적 불안 속에서 글로벌 국방 예산 확대에 힘입어 새로운 주도주로 정착하고 있습니다. 주로 안정적인 제조업 및 일반 사무직 성향의 자산 규모가 있는 고객군에서 고른 관심도를 보이고 있으며, 장기 성장이 명확한 당행 방산 매칭형 랩 어카운트로 자금을 방어하십시오.`;
+            } else if (sector === '리츠/배당') {
+                comment = `<b>리츠/배당</b> 업종은 자산의 고정적인 월 배당 현금 흐름 창출을 최우선으로 선호하는 보수적/은퇴기 자산가들의 비중이 높습니다. 유출 위험 고객 중 리츠 고관심군인 <b>${highCount}명</b>은 외부 증권사의 변동성이 높은 개별 배당주 매매보다, 세금 이연 혜택이 우수한 당행의 월배당 인컴 리츠 랩 가입을 적극 타겟팅하십시오.`;
+            } else { // 금융/은행
+                comment = `<b>금융/은행</b> 업종은 한국 증시 밸류업 프로그램 가시화 및 저PBR 금융 우량주의 정기 배당 매력으로 중장기 보수적 투자 가치가 증가하고 있습니다. 특히 안정 성향의 대형 자산가 고객층에서 안정적인 락인이 가능하며, 비과세 종합저축 최적화 및 밸류업 금융 연동 랩을 제안하는 것이 관계 락인에 효과적입니다.`;
+            }
+
+            document.getElementById('dandiInsightCommentary').innerHTML = comment;
+
+            // 상품 칩
+            const chipsContainer = document.getElementById('sectorRecommendChips');
+            chipsContainer.innerHTML = products[sector].map(p => `<span class="product-chip">${p}</span>`).join('');
+        }
+
+
+        // ------------------ 공통 네비게이션 제어 ------------------
+        function switchTab(tabId) {
+            // 탭 버튼 비활성/활성
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // 탭 콘텐츠 토글
+            document.querySelectorAll('.tab-pane').forEach(pane => {
+                pane.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+
+            // 탭 전환 시 차트 리디렉션 처리
+            setTimeout(() => {
+                if (tabId === 'tab1') {
+                    renderScatterChart();
+                    renderThemeBarChart();
+                    renderJobStackChart();
+                    renderThemePieChart();
+                    renderKpiDetail();
+                } else if (tabId === 'tab2' && state.selectedCustomer) {
+                    selectCustomer(state.selectedCustomer);
+                } else if (tabId === 'tab3') {
+                    renderSectorInsights();
+                }
+            }, 100);
+        }
+
+        // ------------------ 초기 바인딩 ------------------
+        window.addEventListener('DOMContentLoaded', () => {
+            // 필터 핸들러 바인딩
+            document.querySelectorAll('#jobFilterList input').forEach(el => el.addEventListener('change', applyFilters));
+            document.querySelectorAll('#themeFilterList input').forEach(el => el.addEventListener('change', applyFilters));
+            document.querySelectorAll('#riskFilterList input').forEach(el => el.addEventListener('change', applyFilters));
+            document.getElementById('balSlider').addEventListener('input', applyFilters);
+            document.getElementById('ratioSlider').addEventListener('input', applyFilters);
+
+            // 오늘 날짜 기입
+            const todayStr = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+            document.getElementById('currentDateSpan').innerText = todayStr;
+
+            // 초기 필터 실행 (첫 렌더링)
+            applyFilters();
+            
+            // 첫 진단 KPI 세팅
+            selectKpi('total_aum');
+
+            // 기본 타겟 고객 로드 (가장 유출 위험이 높은 고객 자동 세팅)
+            const defaultVip = [...state.customers].sort((a, b) => {
+                return (b.Avg_Balance * b.Salary_Day_Transfer) - (a.Avg_Balance * a.Salary_Day_Transfer);
+            })[0];
+            selectCustomer(defaultVip);
+        });
+
+        // 팝업 닫기 핸들러 (바깥 클릭 시 자동완성 닫기)
+        document.addEventListener('click', (e) => {
+            if (e.target.id !== 'customerSearchInput') {
+                document.getElementById('searchDropdown').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

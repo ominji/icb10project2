@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧲 Operation: Money Magnet - 자산 유출 방어 분석 리포트</title>
+    <meta name="description" content="iM뱅크 PB 고객들의 자산 유출 위험을 정밀 진단하고 자금 이동 방어 전략을 제시하는 프리미엄 보고서입니다.">
+    <!-- Google Fonts 및 Chart.js 연동 -->
+    <link rel="stylesheet" href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #00bda7;
+            --primary-light: #e2f1f0;
+            --primary-dark: #008f7e;
+            --bg-dark: #0b131f;
+            --card-bg: rgba(20, 32, 51, 0.65);
+            --card-border: rgba(0, 189, 167, 0.15);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-yellow: #fbbf24;
+            --accent-red: #f87171;
+            --accent-green: #34d399;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'NanumSquareRound', 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 10% 20%, rgba(0, 189, 167, 0.05) 0%, transparent 40%),
+                              radial-gradient(circle at 90% 80%, rgba(0, 143, 126, 0.05) 0%, transparent 40%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 헤더 / 히어로 섹션 */
+        .hero-banner {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 10px 30px rgba(0, 189, 167, 0.1);
+            background: linear-gradient(rgba(11, 19, 31, 0.3), rgba(11, 19, 31, 0.85)), url('../images/report_banner.png') no-repeat center center;
+            background-size: cover;
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            min-height: 280px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .hero-badge {
+            align-self: flex-start;
+            background: rgba(0, 189, 167, 0.2);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .hero-title h1 {
+            font-size: 38px;
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #ffffff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            font-size: 16px;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin-bottom: 20px;
+        }
+
+        .meta-info {
+            display: flex;
+            gap: 20px;
+            font-size: 13px;
+            color: var(--primary);
+            font-weight: 600;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 15px;
+        }
+
+        /* 요약 그리드 */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 24px;
+            backdrop-filter: blur(12px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--primary);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 189, 167, 0.4);
+            box-shadow: 0 8px 25px rgba(0, 189, 167, 0.08);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .card-icon {
+            font-size: 20px;
+            background: rgba(0, 189, 167, 0.1);
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: var(--primary);
+        }
+
+        .card-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 8px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .card-trend {
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .trend-up { color: var(--accent-red); }
+        .trend-down { color: var(--accent-green); }
+
+        /* 메인 콘텐츠 레이아웃 */
+        .content-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 992px) {
+            .content-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 768px) {
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 10px;
+        }
+
+        .section-title span {
+            color: var(--primary);
+        }
+
+        .chart-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(12px);
+            min-height: 320px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chart-container {
+            position: relative;
+            flex-grow: 1;
+            height: 220px;
+        }
+
+        /* 집중 케어 대상 테이블 */
+        .table-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 24px;
+            backdrop-filter: blur(12px);
+            overflow: hidden;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13.5px;
+        }
+
+        th {
+            padding: 14px 16px;
+            border-bottom: 2px solid rgba(0, 189, 167, 0.2);
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-weight: 500;
+        }
+
+        tr:hover td {
+            background-color: rgba(0, 189, 167, 0.03);
+            color: #ffffff;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .badge-high { background-color: rgba(248, 113, 113, 0.15); color: var(--accent-red); border: 1px solid rgba(248, 113, 113, 0.3); }
+        .badge-medium { background-color: rgba(251, 146, 60, 0.15); color: var(--accent-yellow); border: 1px solid rgba(251, 146, 60, 0.3); }
+        .badge-low { background-color: rgba(52, 211, 153, 0.15); color: var(--accent-green); border: 1px solid rgba(52, 211, 153, 0.3); }
+
+        /* 캐릭터 브리핑 카드 */
+        .brief-card {
+            background: linear-gradient(135deg, rgba(20, 32, 51, 0.8), rgba(11, 19, 31, 0.9));
+            border: 1.5px solid var(--primary);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-shadow: 0 8px 30px rgba(0, 189, 167, 0.05);
+            height: fit-content;
+        }
+
+        .brief-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .mascot-img {
+            width: 75px;
+            height: 75px;
+            object-fit: contain;
+            border-radius: 50%;
+            background: rgba(0, 189, 167, 0.1);
+            border: 2px solid var(--primary);
+            padding: 5px;
+        }
+
+        .brief-title h3 {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .brief-title p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .brief-content {
+            font-size: 14px;
+            line-height: 1.7;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 16px;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .brief-content p {
+            margin-bottom: 10px;
+        }
+
+        .brief-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .action-list {
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .action-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 13px;
+            color: var(--text-main);
+        }
+
+        .action-bullet {
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 15px;
+            margin-top: -2px;
+        }
+
+        /* 애니메이션 Keyframe */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 푸터 */
+        footer {
+            text-align: center;
+            padding: 40px 0 20px;
+            color: var(--text-muted);
+            font-size: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <!-- 히어로 배너 섹션 -->
+        <header class="hero-banner" id="mainHeader">
+            <div class="hero-badge">Secret Operations</div>
+            <div class="hero-title">
+                <h1>🧲 Operation: Money Magnet</h1>
+            </div>
+            <p class="hero-desc">증권사 및 타사 금융기관으로 향하는 iM뱅크 PB 고객의 자산 유출(Money Move) 방지 사령부 종합 전술 분석 보고서입니다.</p>
+            <div class="meta-info">
+                <span id="dateMeta">📅 분석 기준일: 2026년 06월 10일</span>
+                <span>🏦 작성 부서: 자산관리 솔루션부</span>
+                <span>🛡️ 보안 등급: 대외비 (Level 3)</span>
+            </div>
+        </header>
+
+        <!-- 핵심 KPI 요약 -->
+        <section class="summary-grid" id="kpiSummary">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">월급날 유출 우려 자산</span>
+                    <span class="card-icon">💸</span>
+                </div>
+                <div class="card-value">₩23,450,000,000</div>
+                <div class="card-trend trend-up">▲ 4.8% 전월 대비 증가</div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">누수 고위험 고객 수</span>
+                    <span class="card-icon">🚨</span>
+                </div>
+                <div class="card-value">128 명</div>
+                <div class="card-trend trend-up">▲ 12명 신규 감지</div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">마케팅 방어 성공률</span>
+                    <span class="card-icon">🛡️</span>
+                </div>
+                <div class="card-value">83.5%</div>
+                <div class="card-trend trend-down">▼ 1.2% 전월 대비 하락</div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">이달 목표 달성률</span>
+                    <span class="card-icon">📈</span>
+                </div>
+                <div class="card-value">91.8%</div>
+                <div class="card-trend trend-up">▲ 2.5% 목표 근접</div>
+            </div>
+        </section>
+
+        <!-- 분석 영역 및 사이드바 -->
+        <section class="content-layout">
+            <div class="main-reports">
+                <h2 class="section-title">📊 <span>다차원 데이터 시각화</span> 분석</h2>
+                
+                <div class="chart-grid">
+                    <!-- 도넛 차트 -->
+                    <article class="chart-card">
+                        <h3 class="card-title" style="margin-bottom:15px; color: #ffffff;">⚠️ 고객 자산 누수 위험 등급 비율</h3>
+                        <div class="chart-container">
+                            <canvas id="riskDoughnutChart"></canvas>
+                        </div>
+                    </article>
+
+                    <!-- 바 차트 -->
+                    <article class="chart-card">
+                        <h3 class="card-title" style="margin-bottom:15px; color: #ffffff;">📈 주력 관심 테마별 유출 우려 자산 (억 원)</h3>
+                        <div class="chart-container">
+                            <canvas id="themeBarChart"></canvas>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- 고위험 집중 케어 대상자 테이블 -->
+                <div class="table-card">
+                    <h3 class="card-title" style="margin-bottom: 20px; color: #ffffff;">🚨 유출 우려 자산 상위 집중 케어 대상 (TOP 5)</h3>
+                    <div class="table-wrapper">
+                        <table id="topCustomersTable">
+                            <thead>
+                                <tr>
+                                    <th>고객명</th>
+                                    <th>직군</th>
+                                    <th>평균 잔액</th>
+                                    <th>월급날 이체 비중</th>
+                                    <th>유출 우려 자산</th>
+                                    <th>주력 테마</th>
+                                    <th>자산 누수 등급</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>고객 23 (C00023)</td>
+                                    <td>의사</td>
+                                    <td>1,240,000,000원</td>
+                                    <td>75%</td>
+                                    <td>930,000,000원</td>
+                                    <td>반도체</td>
+                                    <td><span class="badge badge-high">고위험</span></td>
+                                </tr>
+                                <tr>
+                                    <td>고객 57 (C00057)</td>
+                                    <td>IT 개발자</td>
+                                    <td>980,000,000원</td>
+                                    <td>80%</td>
+                                    <td>784,000,000원</td>
+                                    <td>2차전지</td>
+                                    <td><span class="badge badge-high">고위험</span></td>
+                                </tr>
+                                <tr>
+                                    <td>고객 12 (C00012)</td>
+                                    <td>전문직</td>
+                                    <td>1,500,000,000원</td>
+                                    <td>45%</td>
+                                    <td>675,000,000원</td>
+                                    <td>리츠/배당</td>
+                                    <td><span class="badge badge-medium">중위험</span></td>
+                                </tr>
+                                <tr>
+                                    <td>고객 88 (C00088)</td>
+                                    <td>기업 임원</td>
+                                    <td>2,100,000,000원</td>
+                                    <td>30%</td>
+                                    <td>630,000,000원</td>
+                                    <td>금융/은행</td>
+                                    <td><span class="badge badge-medium">중위험</span></td>
+                                </tr>
+                                <tr>
+                                    <td>고객 04 (C00004)</td>
+                                    <td>공무원</td>
+                                    <td>450,000,000원</td>
+                                    <td>90%</td>
+                                    <td>405,000,000원</td>
+                                    <td>항공/방산</td>
+                                    <td><span class="badge badge-low">저위험</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 사이드바: 단디 코멘트 및 행동 가이드 -->
+            <aside class="side-brief">
+                <div class="brief-card" id="briefCard">
+                    <div class="brief-header">
+                        <img src="../dandi_mascot_2d.png" alt="단디 마스코트" class="mascot-img" onerror="this.src='https://via.placeholder.com/75/00bda7/ffffff?text=Dandi'">
+                        <div class="brief-title">
+                            <h3>🐧 단디의 긴급 작전 지령</h3>
+                            <p>실시간 Money Move 관제 요약</p>
+                        </div>
+                    </div>
+                    
+                    <div class="brief-content">
+                        <p><b>반갑습니다, PB 파트너 여러분!</b></p>
+                        <p>최근 빅테크 반도체 랠리와 리츠 배당주 매력 확대로 인해 고액 자산가들의 타사(증권사) 이체 비중이 가파르게 상승하고 있습니다. 🚨</p>
+                        <p>특히 급여일 전후로 일어나는 고액 이체 패턴은 증권사 위탁 계좌로 향하는 <b>머니 무브의 강력한 전조 현상</b>입니다. 바로 지금 방어 카드를 꺼내야 할 때입니다!</p>
+                    </div>
+
+                    <div class="action-list">
+                        <h4 style="font-size: 14px; font-weight:700; color: #ffffff; margin-bottom: 5px;">🛡️ PB Action Plan</h4>
+                        <div class="action-item">
+                            <span class="action-bullet">1</span>
+                            <p><b>유출 고위험 10인 우선 콜백:</b> 평잔 9억 원 이상의 IT/전문직 고위험 고객에게는 당행의 특정금전신탁 상품을 선제 제안하세요.</p>
+                        </div>
+                        <div class="action-item">
+                            <span class="action-bullet">2</span>
+                            <p><b>절세 포트폴리오 매칭:</b> 연령층 4050 세대에게는 리츠 및 고배당 프리미엄 신탁 결합 상품 가입을 강력하게 권유해 머니 마그넷 효과를 활성화해야 합니다.</p>
+                        </div>
+                        <div class="action-item">
+                            <span class="action-bullet">3</span>
+                            <p><b>상담 시나리오 숙지:</b> 고객용 360도 뷰 콕핏을 열어 관심 테마(예: 반도체, 2차전지) 관련 맞춤형 제안서와 대본을 활용해 보세요.</p>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 iM뱅크(대구은행) PB Money Move Control Center. All Rights Reserved. Confidential.</p>
+    </footer>
+
+    <!-- Chart.js 렌더링 스크립트 -->
+    <script>
+        // 1. 위험 등급 비율 도넛 차트
+        const ctxDoughnut = document.getElementById('riskDoughnutChart').getContext('2d');
+        new Chart(ctxDoughnut, {
+            type: 'doughnut',
+            data: {
+                labels: ['고위험 (🚨)', '중위험 (⚠️)', '저위험 (🛡️)'],
+                datasets: [{
+                    data: [35, 45, 20],
+                    backgroundColor: ['#f87171', '#fb923c', '#00bda7'],
+                    borderColor: '#0b131f',
+                    borderWidth: 2,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#94a3b8',
+                            font: {
+                                family: 'NanumSquareRound',
+                                size: 12
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 2. 테마별 유출 우려 자산 바 차트
+        const ctxBar = document.getElementById('themeBarChart').getContext('2d');
+        new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: ['반도체', '항공/방산', '2차전지', '리츠/배당', '금융/은행'],
+                datasets: [{
+                    label: '유출 우려 규모',
+                    data: [82.4, 45.1, 63.8, 71.5, 38.9],
+                    backgroundColor: 'rgba(0, 189, 167, 0.6)',
+                    borderColor: '#00bda7',
+                    borderWidth: 1.5,
+                    borderRadius: 6,
+                    hoverBackgroundColor: '#00bda7'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)'
+                        },
+                        ticks: {
+                            color: '#94a3b8',
+                            font: {
+                                family: 'NanumSquareRound'
+                            }
+                        }
+                    },
+                    y: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)'
+                        },
+                        ticks: {
+                            color: '#94a3b8',
+                            font: {
+                                family: 'NanumSquareRound'
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
