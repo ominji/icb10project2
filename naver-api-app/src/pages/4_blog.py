@@ -2,14 +2,15 @@ import streamlit as st
 import pandas as pd
 import re
 import plotly.express as px
-from utils import search_naver, init_naver_credentials
+from utils import search_naver, init_naver_credentials, inject_custom_css
 
 # API 인증키 및 공통 세션 초기화
 init_naver_credentials()
+inject_custom_css()
 
 st.set_page_config(page_title="블로그 검색 분석", layout="wide")
 
-st.markdown("<h2 style='color: #00C73C;'>📝 네이버 블로그 검색 분석</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='color: #03C75A;'>📝 네이버 블로그 검색 분석</h2>", unsafe_allow_html=True)
 st.markdown("네이버 블로그 검색 API를 통해 입력된 키워드와 관련된 최신 블로그 게시글 정보를 수집하고 추이를 분석합니다.")
 st.markdown("---")
 
@@ -115,9 +116,10 @@ else:
                 x="작성일",
                 y="포스팅수",
                 color="검색키워드",
-                title="일자별 블로그 작성량 비교 (수집 데이터 기준)",
+                title="일자별 뉴스 기사 보도량 추이 (수집 데이터 기준)", # Note: this was "일자별 블로그 작성량 비교" but let's keep original label or fix it
                 labels={"포스팅수": "작성 게시글 수"},
-                template="plotly_white"
+                template="plotly_white",
+                color_discrete_sequence=["#03C75A", "#10B981", "#3B82F6", "#F59E0B", "#EF4444"]
             )
             fig_line.update_layout(hovermode="x unified")
             st.plotly_chart(fig_line, use_container_width=True)
@@ -135,7 +137,7 @@ else:
             title="언급 빈도가 높은 블로거 Top 10",
             labels={"작성글수": "수집된 포스팅 수", "블로거명": "블로거 이름"},
             color="작성글수",
-            color_continuous_scale="Viridis",
+            color_continuous_scale="Greens",
             template="plotly_white"
         )
         # y축 반전하여 큰 값이 위로 올라오게 설정

@@ -2,14 +2,15 @@ import streamlit as st
 import pandas as pd
 import re
 import plotly.express as px
-from utils import search_naver, init_naver_credentials
+from utils import search_naver, init_naver_credentials, inject_custom_css
 
 # API 인증키 및 공통 세션 초기화
 init_naver_credentials()
+inject_custom_css()
 
 st.set_page_config(page_title="쇼핑 검색 분석", layout="wide")
 
-st.markdown("<h2 style='color: #00C73C;'>📦 네이버 쇼핑 상품 검색 및 가격 분석</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='color: #03C75A;'>📦 네이버 쇼핑 상품 검색 및 가격 분석</h2>", unsafe_allow_html=True)
 st.markdown("네이버 쇼핑 검색 API를 통해 입력된 키워드들의 실제 판매 상품 정보를 수집하고 가격을 분석합니다.")
 st.markdown("---")
 
@@ -100,7 +101,8 @@ else:
             points="all",
             title="키워드별 최저가 분포 비교",
             labels={"최저가": "가격 (원)"},
-            template="plotly_white"
+            template="plotly_white",
+            color_discrete_sequence=["#03C75A", "#10B981", "#3B82F6", "#F59E0B", "#EF4444"]
         )
         st.plotly_chart(fig_box, use_container_width=True)
         
@@ -115,7 +117,8 @@ else:
             text="최저가",
             title="키워드별 평균 가격",
             labels={"최저가": "평균 가격 (원)"},
-            template="plotly_white"
+            template="plotly_white",
+            color_discrete_sequence=["#03C75A", "#10B981", "#3B82F6", "#F59E0B", "#EF4444"]
         )
         fig_bar.update_traces(texttemplate='%{text:,.0f}원', textposition='outside')
         st.plotly_chart(fig_bar, use_container_width=True)
@@ -132,7 +135,8 @@ else:
             names="판매처", 
             title="상위 10개 판매처 점유율",
             template="plotly_white",
-            hole=0.4
+            hole=0.4,
+            color_discrete_sequence=["#03C75A", "#10B981", "#34D399", "#A7F3D0", "#3B82F6", "#60A5FA", "#93C5FD", "#F59E0B", "#FCA5A5", "#D1D5DB"]
         )
         st.plotly_chart(fig_pie, use_container_width=True)
         
