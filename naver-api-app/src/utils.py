@@ -214,3 +214,84 @@ def analyze_sentiment_and_keywords(openai_api_key, documents):
         return result_json, None
     except Exception as e:
         return None, f"OpenAI API 호출 또는 파싱 중 오류 발생: {str(e)}"
+
+
+def inject_custom_css():
+    """
+    대시보드 전반에 네이버 시그니처 룩앤필(그린 포인트 컬러, 그림자 카드 레이아웃, Noto Sans KR 폰트)을 주입합니다.
+    """
+    css_code = """
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+    
+    /* 글로벌 폰트 설정 */
+    html, body, [class*="css"], .stMarkdown {
+        font-family: 'Noto Sans KR', sans-serif !important;
+    }
+    
+    /* 메인 타이틀 및 헤더 강조 */
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Noto Sans KR', sans-serif !important;
+        font-weight: 700 !important;
+    }
+    
+    /* 네이버 그린 포인트 컬러 버튼 커스텀 */
+    div.stButton > button {
+        background-color: #03C75A !important;
+        color: white !important;
+        border-radius: 8px !important;
+        border: none !important;
+        font-weight: 700 !important;
+        padding: 0.5rem 1.5rem !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 2px 4px rgba(3, 199, 90, 0.2) !important;
+    }
+    
+    div.stButton > button:hover {
+        background-color: #02a84b !important;
+        box-shadow: 0 4px 12px rgba(3, 199, 90, 0.4) !important;
+        transform: translateY(-1px) !important;
+    }
+    
+    div.stButton > button:active {
+        transform: translateY(1px) !important;
+    }
+    
+    /* 사이드바 배경 및 테두리 */
+    [data-testid="stSidebar"] {
+        background-color: #f4f6f8 !important;
+        border-right: 1px solid #e5e7eb !important;
+    }
+    
+    /* 메트릭 및 컨테이너 카드화 디자인 */
+    [data-testid="metric-container"], .stDataFrame, .stTable, div.stAlert {
+        background-color: #ffffff !important;
+        border: 1px solid #e5e7eb !important;
+        border-radius: 12px !important;
+        padding: 15px !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.02) !important;
+    }
+    
+    /* 탭 스타일링 */
+    button[data-baseweb="tab"] {
+        font-size: 1rem !important;
+        font-weight: 500 !important;
+        color: #4b5563 !important;
+    }
+    
+    button[data-baseweb="tab"][aria-selected="true"] {
+        color: #03C75A !important;
+        border-bottom-color: #03C75A !important;
+        font-weight: 700 !important;
+    }
+    
+    /* 테이블 헤더 네이버 컬러 */
+    thead tr th {
+        background-color: #f9fafb !important;
+        color: #111827 !important;
+        font-weight: 600 !important;
+    }
+    </style>
+    """
+    st.markdown(css_code, unsafe_allow_html=True)
+

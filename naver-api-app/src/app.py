@@ -1,9 +1,10 @@
 import streamlit as st
 import datetime
-from utils import init_naver_credentials
+from utils import init_naver_credentials, inject_custom_css
 
 # API 인증키 및 공통 세션 초기화
 init_naver_credentials()
+inject_custom_css()
 
 # 페이지 기본 설정
 st.set_page_config(
@@ -12,6 +13,7 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
 
 # .env 파일에서 불러온 네이버 API 인증 정보 사용
 client_id = st.session_state["client_id"]
@@ -62,8 +64,9 @@ time_unit = st.sidebar.selectbox(
 st.session_state["time_unit"] = time_unit
 
 # 메인 페이지 화면
-st.markdown("<h1 style='text-align: center; color: #00C73C;'>📊 네이버 오픈 API 통합 분석 대시보드</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: #03C75A;'>📊 네이버 오픈 API 통합 분석 대시보드</h1>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; font-size: 1.2rem; color: #555;'>네이버 Datalab 트렌드 정보와 검색 서비스의 데이터를 한눈에 분석하고 시각화합니다.</p>", unsafe_allow_html=True)
+
 st.markdown("---")
 
 col1, col2 = st.columns([1, 1])
