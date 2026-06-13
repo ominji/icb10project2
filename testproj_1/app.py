@@ -130,11 +130,40 @@ st.markdown("""
 # 2. 데이터 로드 로직 (캐싱 처리)
 @st.cache_data
 def load_data():
-    file_path = os.path.join(os.path.dirname(__file__), "data", "식품의약품안전처_건강기능식품영양성분정보_20251230.csv")
-    if not os.path.exists(file_path):
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    data_dir = os.path.join(base_dir, "data")
+    
+    target_file = None
+    
+    # 1단계: 디렉토리 스캔을 통해 한글 자소 분리 파일명 우회 검색
+    if os.path.exists(data_dir):
+        for f in os.listdir(data_dir):
+            if f.endswith(".csv") and ("식품의약품안전처" in f or "영양성분" in f):
+                target_file = os.path.join(data_dir, f)
+                break
+                
+    # 2단계: 원래 매칭 확인
+    if target_file is None or not os.path.exists(target_file):
+        file_path = os.path.join(base_dir, "data", "식품의약품안전처_건강기능식품영양성분정보_20251230.csv")
+        if os.path.exists(file_path):
+            target_file = file_path
+            
+    # 3단계: 절대경로 직접 지정을 통한 최후 백업
+    if target_file is None or not os.path.exists(target_file):
+        abs_backup = r"c:\Users\user1\Desktop\icb10proj2\testproj_1\data\식품의약품안전처_건강기능식품영양성분정보_20251230.csv"
+        if os.path.exists(abs_backup):
+            target_file = abs_backup
+            
+    if target_file is None or not os.path.exists(target_file):
+        st.session_state.data_load_error = f"탐색 시도한 데이터 디렉토리: {data_dir} (존재: {os.path.exists(data_dir)})"
         return pd.DataFrame()
-    df = pd.read_csv(file_path, encoding="utf-8-sig")
-    return df
+        
+    try:
+        df = pd.read_csv(target_file, encoding="utf-8-sig")
+        return df
+    except Exception as e:
+        st.session_state.data_load_error = f"파일 읽기 중 예외 발생 (경로: {target_file}): {str(e)}"
+        return pd.DataFrame()
 
 df_raw = load_data()
 
@@ -165,6 +194,9 @@ st.markdown("""
 # 데이터가 비어 있는 경우 예외 처리
 if df_raw.empty:
     st.error("데이터셋 로드에 실패했습니다. 'data' 폴더 내의 CSV 파일 위치를 확인하세요.")
+    if "data_load_error" in st.session_state:
+        st.warning("상세 디버깅 정보:")
+        st.code(st.session_state.data_load_error, language="text")
     st.stop()
 
 # 탭 메뉴 구성
