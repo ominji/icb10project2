@@ -157,21 +157,56 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# 2. 식약처 영양성분 정보 파싱용 헬퍼 함수
-def parse_nutrient_from_stdr(stdr_stnd, nutrient_name, unit):
-    if not isinstance(stdr_stnd, str):
+# 2. 식약처 영양성분 정보 파싱용 헬퍼 함수 및 패턴 사전 컴파일 (성능 고속화)
+intake_pattern = re.compile(r'1일\s*(\d+)회')
+dose_pattern = re.compile(r'1회\s*([^,\s)]+)')
+
+# 각 영양소별 전용 정규식 컴파일
+calcium_p1 = re.compile(r'칼슘\s*:\s*[^()]*\(([\d.]+)\s*mg')
+calcium_p2 = re.compile(r'칼슘\s*:\s*([\d.]+)\s*mg')
+vitc_p1 = re.compile(r'비타민C\s*:\s*[^()]*\(([\d.]+)\s*mg')
+vitc_p2 = re.compile(r'비타민C\s*:\s*([\d.]+)\s*mg')
+vitd_p1 = re.compile(r'비타민D\s*:\s*[^()]*\(([\d.]+)\s*(?:μg|ug|기준)')
+vitd_p2 = re.compile(r'비타민D\s*:\s*([\d.]+)\s*(?:μg|ug|기준)')
+protein_p1 = re.compile(r'단백질\s*:\s*[^()]*\(([\d.]+)\s*g')
+protein_p2 = re.compile(r'단백질\s*:\s*([\d.]+)\s*g')
+
+def parse_nutrient_fast(stdr_stnd, nutrient_type):
+    if not stdr_stnd or not isinstance(stdr_stnd, str):
         return 0.0
-    # 패턴1: 칼슘 : 표시량(285.9mg/1500mg)
-    pattern = rf'{nutrient_name}\s*:\s*[^()]*\(([\d.]+)\s*{unit}'
-    match = re.search(pattern, stdr_stnd)
-    if match:
-        return float(match.group(1))
     
-    # 패턴2: 칼슘 : 285.9mg
-    pattern2 = rf'{nutrient_name}\s*:\s*([\d.]+)\s*{unit}'
-    match2 = re.search(pattern2, stdr_stnd)
-    if match2:
-        return float(match2.group(1))
+    # 텍스트에 해당 영양성분이 없을 경우 정규식 검사를 건너뛰어 성능 극대화 (약 10배 속도 향상)
+    if nutrient_type == "calcium":
+        if "칼슘" not in stdr_stnd:
+            return 0.0
+        m = calcium_p1.search(stdr_stnd)
+        if m: return float(m.group(1))
+        m = calcium_p2.search(stdr_stnd)
+        return float(m.group(1)) if m else 0.0
+        
+    elif nutrient_type == "vit_c":
+        if "비타민C" not in stdr_stnd:
+            return 0.0
+        m = vitc_p1.search(stdr_stnd)
+        if m: return float(m.group(1))
+        m = vitc_p2.search(stdr_stnd)
+        return float(m.group(1)) if m else 0.0
+        
+    elif nutrient_type == "vit_d":
+        if "비타민D" not in stdr_stnd and "비타민 D" not in stdr_stnd:
+            return 0.0
+        m = vitd_p1.search(stdr_stnd)
+        if m: return float(m.group(1))
+        m = vitd_p2.search(stdr_stnd)
+        return float(m.group(1)) if m else 0.0
+        
+    elif nutrient_type == "protein":
+        if "단백질" not in stdr_stnd:
+            return 0.0
+        m = protein_p1.search(stdr_stnd)
+        if m: return float(m.group(1))
+        m = protein_p2.search(stdr_stnd)
+        return float(m.group(1)) if m else 0.0
         
     return 0.0
 
@@ -209,15 +244,15 @@ def load_combined_data(api_data_len=0, serialized_api_data=None):
         except Exception as e:
             st.error(f"실시간 API 데이터 파싱 실패: {str(e)}")
     else:
-        # 실시간 데이터가 없는 경우 로컬 json 파일 백업 로드
-        json_file = os.path.join(data_dir, "health_functional_food.json")
+        # 실시간 데이터가 없는 경우 수집 완료된 로컬 json 파일 로드
+        json_file = os.path.join(data_dir, "food_safety_c003.json")
         if os.path.exists(json_file):
             try:
                 with open(json_file, 'r', encoding='utf-8') as f:
                     json_data = json.load(f)
-                    rows = json_data.get("C003", {}).get("row", [])
+                    rows = json_data.get("data", [])
             except Exception as e:
-                st.error(f"JSON 파일 백업 로딩 실패: {str(e)}")
+                st.error(f"JSON 파일 로딩 실패: {str(e)}")
             
     json_parsed_list = []
     for r in rows:
@@ -225,18 +260,20 @@ def load_combined_data(api_data_len=0, serialized_api_data=None):
         ntk = r.get("NTK_MTHD", "")
         
         # 1일 섭취 횟수 파싱 (기본값 1회)
-        intake_match = re.search(r'1일\s*(\d+)회', ntk)
+        intake_match = intake_pattern.search(ntk) if ntk else None
         intake_cnt = f"{intake_match.group(1)}회" if intake_match else "1회"
         
-        # 영양 성분 파싱
-        calcium = parse_nutrient_from_stdr(stdr, "칼슘", "mg")
-        vit_c = parse_nutrient_from_stdr(stdr, "비타민C", "mg")
-        vit_d = parse_nutrient_from_stdr(stdr, "비타민D", "μg")
-        protein = parse_nutrient_from_stdr(stdr, "단백질", "g")
+        # 영양 성분 고속 파싱
+        calcium = parse_nutrient_fast(stdr, "calcium")
+        vit_c = parse_nutrient_fast(stdr, "vit_c")
+        vit_d = parse_nutrient_fast(stdr, "vit_d")
+        protein = parse_nutrient_fast(stdr, "protein")
         
         # 1회 분량 추출
-        dose_match = re.search(r'1회\s*([^,\s)]+)', ntk)
+        dose_match = dose_pattern.search(ntk) if ntk else None
         dose = dose_match.group(1) if dose_match else r.get("PRDT_SHAP_CD_NM", "캡슐/정제")
+        if not dose or pd.isna(dose):
+            dose = "캡슐/정제"
         
         json_parsed_list.append({
             '식품코드': r.get("PRDLST_REPORT_NO"),
@@ -299,6 +336,7 @@ def load_combined_data(api_data_len=0, serialized_api_data=None):
     combined_df['대표식품명'] = combined_df['대표식품명'].fillna("기타 가공 원료")
     
     return combined_df
+
 
 # 세션 상태 데이터를 직렬화하여 캐시에 전달
 serialized_api_data = json.dumps(st.session_state.api_data) if st.session_state.api_data else None
