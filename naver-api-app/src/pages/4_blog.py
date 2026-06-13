@@ -125,7 +125,7 @@ else:
                 x="작성일",
                 y="포스팅수",
                 color="검색키워드",
-                title="일자별 뉴스 기사 보도량 추이 (수집 데이터 기준)", # Note: this was "일자별 블로그 작성량 비교" but let's keep original label or fix it
+                title="일자별 블로그 작성량 추이 (수집 데이터 기준)",
                 labels={"포스팅수": "작성 게시글 수"},
                 template="plotly_white",
                 color_discrete_sequence=["#03C75A", "#10B981", "#3B82F6", "#F59E0B", "#EF4444"]
