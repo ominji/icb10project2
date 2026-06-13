@@ -3,3 +3,6 @@ pandas
 plotly
 requests
 python-dotenv
+openai
+wordcloud
+matplotlib
