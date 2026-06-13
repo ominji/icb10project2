@@ -7,6 +7,7 @@ import os
 import hashlib
 import json
 import re
+import requests
 from datetime import datetime, date
 
 # 1. 페이지 설정 및 프리미엄 테마 적용
@@ -16,6 +17,12 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# 세션 상태 초기화 (실시간 API 데이터 저장용)
+if "api_data" not in st.session_state:
+    st.session_state.api_data = None
+if "api_end_no" not in st.session_state:
+    st.session_state.api_end_no = 10
 
 # 커스텀 CSS 스타일링 (다크 테마 및 유리모피즘 카드 적용)
 st.markdown("""
@@ -146,7 +153,6 @@ st.markdown("""
     .stTabs [aria-selected="true"] {
         background-color: #21262d !important;
         color: #58a6ff !important;
-        border-top: 3px solid #58a6ff !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -169,9 +175,9 @@ def parse_nutrient_from_stdr(stdr_stnd, nutrient_name, unit):
         
     return 0.0
 
-# 3. 데이터 로드 및 합산(통합) 로직 (캐싱 처리)
+# 3. 데이터 로드 및 합산(통합) 로직 (캐싱 처리 - api_data_len을 넘겨받아 갱신 감지)
 @st.cache_data
-def load_combined_data():
+def load_combined_data(api_data_len=0, serialized_api_data=None):
     base_dir = os.path.dirname(os.path.abspath(__file__))
     data_dir = os.path.join(base_dir, "data")
     
@@ -195,15 +201,23 @@ def load_combined_data():
             st.error(f"CSV 데이터 로딩 실패: {str(e)}")
             
     # --- 2단계: JSON 파일 로드 및 파싱 (국내건기식) ---
-    json_file = os.path.join(data_dir, "health_functional_food.json")
     rows = []
-    if os.path.exists(json_file):
+    # 실시간 API 호출 데이터가 있는 경우 우선 적용
+    if serialized_api_data is not None:
         try:
-            with open(json_file, 'r', encoding='utf-8') as f:
-                json_data = json.load(f)
-                rows = json_data.get("C003", {}).get("row", [])
+            rows = json.loads(serialized_api_data)
         except Exception as e:
-            st.error(f"JSON 데이터 로딩 실패: {str(e)}")
+            st.error(f"실시간 API 데이터 파싱 실패: {str(e)}")
+    else:
+        # 실시간 데이터가 없는 경우 로컬 json 파일 백업 로드
+        json_file = os.path.join(data_dir, "health_functional_food.json")
+        if os.path.exists(json_file):
+            try:
+                with open(json_file, 'r', encoding='utf-8') as f:
+                    json_data = json.load(f)
+                    rows = json_data.get("C003", {}).get("row", [])
+            except Exception as e:
+                st.error(f"JSON 파일 백업 로딩 실패: {str(e)}")
             
     json_parsed_list = []
     for r in rows:
@@ -242,7 +256,6 @@ def load_combined_data():
     df_json = pd.DataFrame(json_parsed_list)
     
     # --- 3단계: 일반식품 (구미/젤리 캔디류) 가상 데이터 추가 ---
-    # (PRD_plan.md 요구사항: 일반 캔디류인 '구미 제품'과 식약처 인증 '건강기능식품 구미'의 차이 분석용)
     general_food_list = [
         {
             '식품코드': 'GEN_GUMMY_01',
@@ -251,7 +264,7 @@ def load_combined_data():
             '원산지국명': '대한민국',
             '비타민 D(μg)': 0.0,
             '칼슘(mg)': 0.0,
-            '비타민 C(mg)': 0.2, # 함량 미달
+            '비타민 C(mg)': 0.2,
             '단백질(g)': 0.0,
             '1일섭취횟수': '1회',
             '1회분량중량/부피': '5개(15g)',
@@ -264,7 +277,7 @@ def load_combined_data():
             '대표식품명': '설탕, 물엿, 젤라틴, 산화칼슘 0.1%, 포도농축액',
             '원산지국명': '대한민국',
             '비타민 D(μg)': 0.0,
-            '칼슘(mg)': 3.0, # 함량 미달
+            '칼슘(mg)': 3.0,
             '비타민 C(mg)': 0.0,
             '단백질(g)': 0.0,
             '1일섭취횟수': '1회',
@@ -287,8 +300,12 @@ def load_combined_data():
     
     return combined_df
 
+# 세션 상태 데이터를 직렬화하여 캐시에 전달
+serialized_api_data = json.dumps(st.session_state.api_data) if st.session_state.api_data else None
+api_data_len = len(st.session_state.api_data) if st.session_state.api_data else 0
+
 # 통합 데이터셋 적재
-df_raw = load_combined_data()
+df_raw = load_combined_data(api_data_len=api_data_len, serialized_api_data=serialized_api_data)
 
 # 4. 헬퍼 함수 (재현 가능한 평점, 리뷰수, 가격 데이터 생성)
 def generate_pseudo_scores(food_code):
@@ -303,17 +320,54 @@ def generate_pseudo_scores(food_code):
     
     return rating, reviews, unit_price
 
-# 5. 메인 그라디언트 배너 렌더링
+# 5. 사이드바 왼쪽 하단 위젯 구현
+with st.sidebar:
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.markdown("---")
+    st.markdown("### 🔌 식약처 실시간 API 연동")
+    st.markdown("식품안전나라의 C003(품목제조신고) 오픈 API 데이터를 조회 끝번호를 변경하며 동적으로 호출합니다.")
+    
+    # 끝번호 입력기 생성 (사용자 요청: 1/10 포맷에서 10 부분 제어)
+    api_end_input = st.number_input(
+        "API 조회 끝번호 설정:", 
+        min_value=1, 
+        max_value=1000, 
+        value=st.session_state.api_end_no, 
+        step=5,
+        help="API URL의 마지막 조회 순번 범위입니다. 예: 10 설정 시 1번부터 10번까지 조회"
+    )
+    st.session_state.api_end_no = api_end_input
+    
+    # 호출 대상 API 주소 표시
+    api_url = f"http://openapi.foodsafetykorea.go.kr/api/be08162c9d464d6998a5/C003/json/1/{st.session_state.api_end_no}"
+    st.code(api_url, language="text")
+    
+    if st.button("⚡ API 데이터 동기화", use_container_width=True):
+        with st.spinner("오픈 API 동적 호출 중..."):
+            try:
+                response = requests.get(api_url, timeout=10)
+                if response.status_code == 200:
+                    res_json = response.json()
+                    row_data = res_json.get("C003", {}).get("row", [])
+                    if row_data:
+                        st.session_state.api_data = row_data
+                        st.success(f"동기화 성공: {len(row_data)}건 로드됨!")
+                        st.cache_data.clear() # 캐시 초기화하여 신규 데이터 즉시 강제 렌더링
+                        st.rerun()
+                    else:
+                        st.warning("API 응답이 수신되었으나 데이터(row)가 없습니다.")
+                else:
+                    st.error(f"API 호출 에러: 상태 코드 {response.status_code}")
+            except Exception as e:
+                st.error(f"API 호출 실패: {str(e)}")
+
+# 6. 메인 그라디언트 배너 렌더링
 st.markdown("""
 <div class="banner">
-    <h1>💊 NutriFit 2030 (고도화 버전)</h1>
+    <h1>💊 NutriFit 2030 (실시간 API 연동 버전)</h1>
     <p>식약처 국내/수입 건강기능식품 통합 데이터셋 및 2030 소비 트렌드 기반 맞춤형 영양 케어 대시보드</p>
 </div>
 """, unsafe_allow_html=True)
-
-if df_raw.empty:
-    st.error("데이터셋 로드에 실패했습니다. 'data' 폴더 내의 CSV 및 JSON 파일 위치를 확인하세요.")
-    st.stop()
 
 # 탭 메뉴 구성
 tab1, tab2, tab3 = st.tabs([
@@ -421,7 +475,7 @@ with tab1:
                 hover_name="식품명",
                 title="1회 섭취 단가 대비 만족도(평점) 분포 및 리뷰 볼륨",
                 labels={"단가": "제품 단가 (원)", "평점": "2030 만족 평점 (5점 만점)"},
-                color_discrete_sequence=["#58a6ff", "#bb86fc", "#f44336"]
+                color_discrete_sequence=["#bb86fc", "#58a6ff", "#f44336"]
             )
             fig.update_layout(
                 plot_bgcolor="#161b22",
@@ -430,13 +484,11 @@ with tab1:
                 title_font_color="#58a6ff"
             )
             st.plotly_chart(fig, use_container_width=True)
-            st.caption("💡 **차트 해석**: 국내/수입 정식 건강기능식품(파란색, 보라색)은 가격대가 높아도 높은 만족도 평점과 거대한 리뷰 수를 보이지만, 일반 기호 식품(빨간색)은 저렴한 가격대 위주에 형성되어 있어 2030 세대가 건강 기능성 및 신제형 편의성에 대한 프리미엄 가격 지불에 우호적임을 시사합니다.")
         else:
             st.info("시각화 데이터를 준비 중입니다.")
 
     st.write("---")
     
-    # 세부 연계성 차트: 제형별/성분별 구매 채널 비중
     col_t1_b1, col_t1_b2 = st.columns([1, 1])
     
     with col_t1_b1:
@@ -468,7 +520,6 @@ with tab1:
     with col_t1_b2:
         st.markdown("#### 📊 식약처 건강기능식품 통합 데이터셋 구조")
         
-        # 데이터구분 분포 파이차트
         data_counts = df_raw["데이터구분"].value_counts()
         fig_donut = px.pie(
             values=data_counts.values,
@@ -485,9 +536,9 @@ with tab1:
         )
         st.plotly_chart(fig_donut, use_container_width=True)
         st.markdown(f"""
-        - **수입 건강기능식품(CSV)**과 **국내 신고 건강기능식품(JSON)** 및 비교 분석용 **일반 캔디구미 제품**을 하나로 병합하였습니다.
+        - **수입 건강기능식품(CSV)**과 **국내 신고 건강기능식품(오픈 API/JSON)** 및 비교 분석용 **일반 캔디구미 제품**을 하나로 병합하였습니다.
         - **합산 완료 데이터셋**: 총 **{len(df_raw)}건**의 정식 등록 정보.
-        - 국내 제조 건기식의 경우 정식 제조사명(`BSSH_NM`) 및 주요 기능성(`PRIMARY_FNCLTY`) 메타데이터를 연계하여 동시 섭취 및 분석 성능을 확보하였습니다.
+        - 왼쪽 하단의 실시간 API 동기화 패널에서 끝번호를 조절하여 국내 건기식 실시간 API의 조회 레코드 수(1~1000)를 가변적으로 제어할 수 있습니다.
         """)
 
 
@@ -515,7 +566,7 @@ with tab2:
             glucose = st.number_input("공복 혈당 (mg/dL):", min_value=50, max_value=300, value=96)
         with col_med_2:
             alt = st.number_input("간수치 (ALT, U/L):", min_value=5, max_value=200, value=38)
-            user_sport = st.selectbox("주력 스포츠 유형:", ["러닝/마라톤", "테니스/스쿼시", "클라이밍/등산", "근육 웨이트 트레이닝", "일상 스트레스 케어"])
+            user_sport = st.selectbox("주력 스포츠 유형:", ["러닝/마라톤", "테니스/스쿼시", "클라이밍/등산", "근육 웨이트 트레이닝", "일상 스트레스 케어"], key="sports_care")
             
         # 건강검진 진단 로직 및 영양 성분 추천 알고리즘
         recommended_ingredients = []
@@ -578,7 +629,7 @@ with tab2:
                 </div>
                 """, unsafe_allow_html=True)
         else:
-            st.write("해당 성분을 보유한 정식 데이터가 입고되지 않았습니다.")
+            st.write("해당 성분을 보유한 정식 데이터가 아직 로드되지 않았습니다. 실시간 API 연동을 가동해 보세요.")
             
     with col_t2_r:
         st.markdown("""
@@ -588,24 +639,21 @@ with tab2:
         </div>
         """, unsafe_allow_html=True)
         
-        # 보유 영양제 검색
         st.markdown("##### 🛒 복용 중인 영양제 등록")
-        search_keyword = st.text_input("제품명 또는 함유 성분을 입력해 검색하세요:", "비타민")
+        search_keyword = st.text_input("제품명 또는 함유 성분을 입력해 검색하세요:", "비타민", key="vit_search")
         
         search_res = df_raw[df_raw['식품명'].str.contains(search_keyword, na=False, case=False) | df_raw['대표식품명'].str.contains(search_keyword, na=False, case=False)]
         
         if not search_res.empty:
-            select_p_name = st.selectbox("검색 결과 목록에서 추가할 제품을 선택하세요:", search_res['식품명'].unique()[:15])
+            select_p_name = st.selectbox("검색 결과 목록에서 추가할 제품을 선택하세요:", search_res['식품명'].unique()[:15], key="basket_sel")
             selected_row = search_res[search_res['식품명'] == select_p_name].iloc[0]
             
-            # 유효기간 입력 도구 추가 (PRD_plan.md 요구사항)
-            expiry_date = st.date_input("영양제 유효기간 만료일을 등록하세요:", date.today() + pd.Timedelta(days=180))
+            expiry_date = st.date_input("영양제 유효기간 만료일을 등록하세요:", date.today() + pd.Timedelta(days=180), key="exp_input")
             
-            # 장바구니에 담기
-            if "my_vit_basket" not in st.session_state:
-                st.session_state.my_vit_basket = []
-                
-            if st.button("➕ 복용 장바구니에 추가"):
+            if st.button("➕ 복용 장바구니에 추가", key="basket_add_btn"):
+                if "my_vit_basket" not in st.session_state:
+                    st.session_state.my_vit_basket = []
+                    
                 if select_p_name not in [item['식품명'] for item in st.session_state.my_vit_basket]:
                     st.session_state.my_vit_basket.append({
                         "식품명": selected_row['식품명'],
@@ -622,13 +670,11 @@ with tab2:
         else:
             st.warning("일치하는 검색 결과가 없습니다.")
             
-        # 장바구니 리스트 및 실시간 유효기간 상태 표시
         st.markdown("##### 📦 나의 스마트 복용 장바구니")
         if "my_vit_basket" in st.session_state and st.session_state.my_vit_basket:
             for idx, item in enumerate(st.session_state.my_vit_basket):
                 col_i1, col_i2 = st.columns([5, 1])
                 
-                # 유효기간 남은 일수 계산
                 days_left = (item['만료일'] - date.today()).days
                 if days_left <= 0:
                     status_text = f"<span style='color:#f44336; font-weight:700;'>[⚠️ 유효기간 만료 - 즉시 폐기!]</span>"
@@ -645,13 +691,12 @@ with tab2:
                 else:
                     badge_lbl = '<span class="badge-general-food" style="padding:1px 4px; font-size:0.7rem;">일반식품</span>'
                 
-                col_i1.markdown(f"▪️ {badge_lbl} **{item['식품명']}** (원재료: {item['대표식품명'][:30]}...) <br> &nbsp;&nbsp;&nbsp;&nbsp; 📅 만료일: {item['만료일']} {status_text}", unsafe_allow_html=True)
+                col_i1.markdown(f"▪&nbsp;{badge_lbl} **{item['식품명']}** (원재료: {item['대표식품명'][:30]}...) <br> &nbsp;&nbsp;&nbsp;&nbsp; 📅 만료일: {item['만료일']} {status_text}", unsafe_allow_html=True)
                 
                 if col_i2.button("삭제", key=f"del_{idx}"):
                     st.session_state.my_vit_basket.pop(idx)
                     st.rerun()
             
-            # 실시간 안전 진단 및 일반식품 과대광고 필터링 뱃지 시스템
             st.markdown("##### 🚨 실시간 위해성 및 과대광고 필터링 진단 결과")
             
             total_vitd = sum([float(item['비타민 D(μg)']) for item in st.session_state.my_vit_basket])
@@ -660,7 +705,7 @@ with tab2:
             
             has_warning = False
             
-            # 1. 일반 식품 뱃지 경고 시스템 (과대광고 필터링)
+            # 1. 일반 식품 뱃지 경고 시스템
             has_general_food = any([item['데이터구분'] == '일반식품 (캔디류)' for item in st.session_state.my_vit_basket])
             if has_general_food:
                 st.markdown("""
@@ -732,11 +777,10 @@ with tab2:
             for prod, time_slot, desc in timeline_items:
                 st.write(f"- **{time_slot}** ➡️ `{prod}` : *{desc}*")
                 
-            # 6. 유효기간 알림 체크
             st.markdown("##### 📌 보관 안전성 자가 점검표")
-            st.checkbox("유산균 제품의 '보장균수(유통기한 종료 시점까지 살아남는 마릿수)'를 확인하고 구매하셨나요?")
-            st.checkbox("일반 캔디류가 아닌 건강기능식품 정식 문구를 마크로 매칭 확인하셨나요?")
-            st.checkbox("임박하거나 만료된 제품은 장바구니에서 안전하게 폐기하셨나요?")
+            st.checkbox("유산균 제품의 '보장균수(유통기한 종료 시점까지 살아남는 마릿수)'를 확인하고 구매하셨나요?", key="check_p1")
+            st.checkbox("일반 캔디류가 아닌 건강기능식품 정식 문구를 마크로 매칭 확인하셨나요?", key="check_p2")
+            st.checkbox("임박하거나 만료된 제품은 장바구니에서 안전하게 폐기하셨나요?", key="check_p3")
             
         else:
             st.info("검색 창을 활용하여 현재 복용 중인 영양제들을 장바구니에 담아 실시간 안전 평가를 가동해 보세요.")
@@ -757,7 +801,8 @@ with tab3:
     
     target_sel = st.radio(
         "선물 받으실 대상을 설정하세요:",
-        ["🧓 부모님 세대 (실버 노화 예방 및 관절/혈관)", "💻 피로 누적 동료 (야근 스트레스 & 눈 피로)", "🏃 활동적 운동 애호가 (근육 피로 회복 & 활력)"]
+        ["🧓 부모님 세대 (실버 노화 예방 및 관절/혈관)", "💻 피로 누적 동료 (야근 스트레스 & 눈 피로)", "🏃 활동적 운동 애호가 (근육 피로 회복 & 활력)"],
+        key="gift_target_sel"
     )
     
     cur_ingredients = []
@@ -773,7 +818,6 @@ with tab3:
         
     st.info(f"🧬 **추천 영양 설계 매커니즘**: {cur_desc}")
     
-    # 큐레이션 영양제 매칭 (통합 데이터셋)
     cur_p = pd.DataFrame()
     for ing in cur_ingredients[:3]:
         temp = df_raw[df_raw['대표식품명'].str.contains(ing, na=False, case=False) | df_raw['식품명'].str.contains(ing, na=False, case=False)]
@@ -781,7 +825,6 @@ with tab3:
     cur_p = cur_p.drop_duplicates(subset=['식품코드'])
     
     if not cur_p.empty:
-        # 가상 스코어 생성
         cur_p[['평점', '리뷰수', '단가']] = cur_p.apply(
             lambda row: pd.Series(generate_pseudo_scores(row['식품코드'])), axis=1
         )
