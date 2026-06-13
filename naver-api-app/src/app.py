@@ -1,5 +1,13 @@
 import streamlit as st
 import datetime
+import sys
+import os
+
+# 모듈 검색 경로 동적 추가
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.append(current_dir)
+
 from utils import init_naver_credentials, inject_custom_css
 
 # API 인증키 및 공통 세션 초기화
