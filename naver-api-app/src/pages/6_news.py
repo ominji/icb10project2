@@ -4,14 +4,15 @@ import re
 import html
 from urllib.parse import urlparse
 import plotly.express as px
-from utils import search_naver, init_naver_credentials
+from utils import search_naver, init_naver_credentials, inject_custom_css
 
 # API 인증키 및 공통 세션 초기화
 init_naver_credentials()
+inject_custom_css()
 
 st.set_page_config(page_title="뉴스 검색 분석", layout="wide")
 
-st.markdown("<h2 style='color: #00C73C;'>📰 네이버 뉴스 검색 분석</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='color: #03C75A;'>📰 네이버 뉴스 검색 분석</h2>", unsafe_allow_html=True)
 st.markdown("네이버 뉴스 검색 API를 통해 입력된 키워드와 관련된 언론 기사를 수집하고 뉴스 보도 추이 및 주요 채널을 분석합니다.")
 st.markdown("---")
 
@@ -125,7 +126,8 @@ else:
                 color="검색키워드",
                 title="일자별 뉴스 기사 보도량 추이 (수집 데이터 기준)",
                 labels={"기사수": "보도된 기사 수", "보도일": "보도 날짜"},
-                template="plotly_white"
+                template="plotly_white",
+                color_discrete_sequence=["#03C75A", "#10B981", "#3B82F6", "#F59E0B", "#EF4444"]
             )
             fig_line.update_layout(hovermode="x unified")
             st.plotly_chart(fig_line, use_container_width=True)
@@ -143,7 +145,7 @@ else:
             title="기사를 많이 보도한 상위 도메인 Top 10",
             labels={"기사수": "보도된 기사 수", "출처도메인": "도메인"},
             color="기사수",
-            color_continuous_scale="Purples",
+            color_continuous_scale="Greens",
             template="plotly_white"
         )
         fig_bar.update_layout(yaxis={'categoryorder':'total ascending'})
