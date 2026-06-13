@@ -22,7 +22,7 @@ if st.button("🔄 식약처 전체 데이터 가져오기 (무제한 연동)"):
                 
                 if SERVICE_ID in recon_data:
                     # API가 영수증처럼 보내준 진짜 전체 데이터 개수(끝번호) 추출
-                    total_count = int(recon_data[SERVICE_ID]['list_total_count'])
+                    total_count = int(recon_data[SERVICE_ID]['total_count'])
                     st.info(f"📊 현재 식약처 창고에 등록된 데이터는 총 {total_count:,}건입니다.")
                     
                     # [Step 2] 반복 수집을 위한 바구니 및 게이지 바 준비
