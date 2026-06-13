@@ -672,21 +672,21 @@ with tab2:
         
         if sbp >= 130:
             diagnoses.append("⚠️ **혈압 수치 경계/높음**: 코엔자임Q10, 오메가3(EPA/DHA) 섭취 권장.")
-            recommended_ingredients.extend(["코엔자임Q10", "오메가3"])
+            recommended_ingredients.extend(["코엔자임Q10", "오메가3", "레시틴"])
         if glucose >= 100:
             diagnoses.append("⚠️ **공복혈당 경계/높음**: 바나바잎 추출물(코로솔산), 식이섬유 권장.")
-            recommended_ingredients.extend(["바나바잎", "식이섬유"])
+            recommended_ingredients.extend(["바나바잎", "식이섬유", "구아검"])
         if alt >= 40:
             diagnoses.append("⚠️ **간수치 경계/높음**: 밀크씨슬(실리마린), 헛개나무추출물 권장.")
-            recommended_ingredients.extend(["밀크씨슬", "실리마린"])
+            recommended_ingredients.extend(["밀크씨슬", "실리마린", "홍삼"])
             
         # 운동 목적별 추가 성분 매핑
         if "러닝" in user_sport or "테니스" in user_sport:
-            recommended_ingredients.extend(["엠에스엠", "MSM", "칼슘"])
+            recommended_ingredients.extend(["엠에스엠", "MSM", "칼슘", "글루코사민"])
         elif "등산" in user_sport:
-            recommended_ingredients.extend(["비타민 D", "아스타잔틴"])
+            recommended_ingredients.extend(["비타민 D", "아스타잔틴", "칼슘"])
         elif "웨이트" in user_sport:
-            recommended_ingredients.extend(["단백질", "마그네슘"])
+            recommended_ingredients.extend(["단백질", "마그네슘", "아미노산"])
             
         recommended_ingredients = list(set(recommended_ingredients))
         
@@ -703,7 +703,8 @@ with tab2:
         # 데이터베이스 매칭 추천 제품 출력
         st.markdown("#### 🔬 식약처 데이터베이스 매칭 추천 제품 (국내/수입 통합)")
         rec_products = pd.DataFrame()
-        for ing in recommended_ingredients[:3]:  # 상위 3개 키워드 매칭
+        # 상위 3개 키워드에 부합하는 제품들 검색
+        for ing in recommended_ingredients[:3]:
             temp = df_raw[df_raw['대표식품명'].str.contains(ing, na=False, case=False) | df_raw['식품명'].str.contains(ing, na=False, case=False)]
             rec_products = pd.concat([rec_products, temp])
         rec_products = rec_products.drop_duplicates(subset=['식품코드'])
@@ -743,7 +744,7 @@ with tab2:
         search_res = df_raw[df_raw['식품명'].str.contains(search_keyword, na=False, case=False) | df_raw['대표식품명'].str.contains(search_keyword, na=False, case=False)]
         
         if not search_res.empty:
-            select_p_name = st.selectbox("검색 결과 목록에서 추가할 제품을 선택하세요:", search_res['식품명'].unique()[:15], key="basket_sel")
+            select_p_name = st.selectbox("검색 결과 목록에서 추가할 제품을 선택하세요:", search_res['식품명'].unique()[:20], key="basket_sel")
             selected_row = search_res[search_res['식품명'] == select_p_name].iloc[0]
             
             expiry_date = st.date_input("영양제 유효기간 만료일을 등록하세요:", date.today() + pd.Timedelta(days=180), key="exp_input")
@@ -763,6 +764,7 @@ with tab2:
                         "만료일": expiry_date
                     })
                     st.toast(f"'{select_p_name}'이 복용 장바구니에 추가되었습니다!", icon="✅")
+                    st.rerun()
                 else:
                     st.warning("이미 장바구니에 추가된 제품입니다.")
         else:
@@ -803,14 +805,14 @@ with tab2:
             
             has_warning = False
             
-            # 1. 일반 식품 뱃지 경고 시스템
+            # 1. 일반 식품 뱃지 경고 시스템 (과대광고 필터링)
             has_general_food = any([item['데이터구분'] == '일반식품 (캔디류)' for item in st.session_state.my_vit_basket])
             if has_general_food:
                 st.markdown("""
                 <div class="card" style="border-left: 5px solid #f44336; background-color: rgba(244, 67, 54, 0.07);">
                     <span class="badge-general-food">미인증 식품 검출</span> <b>일반 기호식품(캔디류) 감지됨</b>
                     <p style="font-size:0.9rem; margin-top:5px; margin-bottom:0;">
-                    장바구니에 담긴 제품 중 <b>식약처 인증을 받지 않은 일반 식품(캔디류)</b>이 포함되어 있습니다. 일반 구미/젤리 제품은 비타민이나 칼슘의 함량이 매우 낮으며 식약처가 인정한 건강 효능이 유효하지 않습니다. 마케팅성 광고문구에 현혹되지 마시고, 건강 목적의 영양 보충 시에는 반드시 '건강기능식품' 인증 마크를 확인하세요.
+                    장바구니에 담긴 제품 중 <b>식약처 건강기능식품 인증을 받지 않은 일반 식품(캔디류)</b>이 포함되어 있습니다. 일반 구미/젤리 제품은 영양 성분 함량이 기준 이하로 매우 낮으며 식약처에서 공식 인정한 기능성 효과를 보장할 수 없습니다. 건강 관리를 위한 영양 섭취 목적이라면, 반드시 패키지의 <b>'건강기능식품' 인증 마크</b>를 확인하세요.
                     </p>
                 </div>
                 """, unsafe_allow_html=True)
@@ -822,7 +824,7 @@ with tab2:
                 <div class="card" style="border-left: 5px solid #ffc107; background-color: rgba(255, 193, 7, 0.05);">
                     <span class="badge-warning">경고</span> <b>비타민 D 일일 복용량 초과</b>
                     <p style="font-size:0.9rem; margin-top:5px; margin-bottom:0;">
-                    현재 장바구니에 복용 등록된 영양소 중 비타민 D 총량이 일일 상한섭취량인 <span style="color:#ffc107; font-weight:700;">100 μg</span>을 초과하여 <b>{:.1f} μg</b>입니다. 고칼슘혈증 및 변비, 신장 결석 등의 위험이 있으므로 함량 복용량의 자발적인 축소를 권장합니다.
+                    현재 장바구니에 복용 등록된 영양소 중 비타민 D 총량이 일일 상한섭취량인 <span style="color:#ffc107; font-weight:700;">100 μg</span>을 초과하여 <b>{:.1f} μg</b>입니다. 고칼슘혈증 및 신장 결석, 변비 등의 부작용 위험이 있으므로 복용 함량을 줄이시는 것을 권장합니다.
                     </p>
                 </div>
                 """.format(total_vitd), unsafe_allow_html=True)
@@ -834,22 +836,34 @@ with tab2:
                 <div class="card" style="border-left: 5px solid #ffc107; background-color: rgba(255, 193, 7, 0.05);">
                     <span class="badge-warning">경고</span> <b>칼슘 일일 복용량 초과</b>
                     <p style="font-size:0.9rem; margin-top:5px; margin-bottom:0;">
-                    일일 복용 칼슘 총량이 <span style="color:#ffc107; font-weight:700;">2,500 mg</span>을 초과하여 <b>{:.1f} mg</b>에 도달했습니다. 위장 장애 유발 및 심혈관 칼슘 석회화를 예방하기 위해 조절이 권장됩니다.
+                    일일 복용 칼슘 총량이 <span style="color:#ffc107; font-weight:700;">2,500 mg</span>을 초과하여 <b>{:.1f} mg</b>에 도달했습니다. 과도한 칼슘 섭취는 심혈관의 석회화 및 위장 장애를 유발할 수 있으므로 섭취 조절이 필요합니다.
                     </p>
                 </div>
                 """.format(total_calcium), unsafe_allow_html=True)
                 has_warning = True
+
+            # 4. 비타민 C 일일 상한섭취량 진단 (상한 2000 mg)
+            if total_vitc > 2000:
+                st.markdown("""
+                <div class="card" style="border-left: 5px solid #ffc107; background-color: rgba(255, 193, 7, 0.05);">
+                    <span class="badge-warning">경고</span> <b>비타민 C 메가도스 초과 경고</b>
+                    <p style="font-size:0.9rem; margin-top:5px; margin-bottom:0;">
+                    일일 복용 비타민 C 총량이 권장 상한 섭취량인 <span style="color:#ffc107; font-weight:700;">2,000 mg</span>을 초과하여 <b>{:.1f} mg</b>입니다. 일시적인 설사, 구토 및 수면 장애, 결석 발생 위험이 증가할 수 있습니다.
+                    </p>
+                </div>
+                """.format(total_vitc), unsafe_allow_html=True)
+                has_warning = True
                 
-            # 4. 철분과 칼슘의 흡수 방해 조합 진단
-            has_iron = any(["철" in item['대표식품명'] or "철분" in item['대표식품명'] for item in st.session_state.my_vit_basket])
-            has_cal = any(["칼슘" in item['대표식품명'] or item['칼슘(mg)'] > 0 for item in st.session_state.my_vit_basket])
+            # 5. 철분과 칼슘의 흡수 방해 조합 진단
+            has_iron = any(["철" in item['대표식품명'] or "철분" in item['대표식품명'] or "철" in item['식품명'] for item in st.session_state.my_vit_basket])
+            has_cal = any(["칼슘" in item['대표식품명'] or item['칼슘(mg)'] > 0 or "칼슘" in item['식품명'] for item in st.session_state.my_vit_basket])
             
             if has_iron and has_cal:
                 st.markdown("""
                 <div class="card" style="border-left: 5px solid #ff9800; background-color: rgba(255, 152, 0, 0.05);">
                     <span style="background-color:rgba(255, 152, 0, 0.15); color:#ff9800; border:1px solid #ff9800; border-radius:4px; padding:2px 8px; font-size:0.8rem; font-weight:600; display:inline-block; margin-right:5px;">흡수 방해 조합</span> <b>철분 & 칼슘 동시 복용 감지</b>
                     <p style="font-size:0.9rem; margin-top:5px; margin-bottom:0;">
-                    칼슘과 철분은 체내 세포 흡수 과정에서 동일한 흡수 통로를 사용합니다. 두 성분을 동시에 복용하시면 효율이 크게 떨어지므로, <b>철분은 아침 기상 직후 공복</b>에 복용하시고, <b>칼슘은 흡수 촉진을 돕는 저녁 식사 직후</b> 복용으로 시간대를 분리하는 것을 추천합니다.
+                    칼슘과 철분은 체내 세포 흡수 통로가 겹쳐서 동시에 복용할 경우 상호 흡수를 방해하여 효율이 크게 저하됩니다. <b>철분은 아침 공복(식전)</b>에 복용하시고, <b>칼슘은 흡수가 잘 되는 저녁 식후</b>에 복용하시는 방향으로 복용 시간대를 철저히 분리하세요.
                     </p>
                 </div>
                 """, unsafe_allow_html=True)
@@ -858,30 +872,31 @@ with tab2:
             if not has_warning:
                 st.success("✅ **영양성분 중복 과잉 복용이나 동시 흡수 방해 조합이 발견되지 않았습니다.** 올바른 성분 설계를 유지 중입니다.")
                 
-            # 5. 복용 타임라인 가이드 노출
+            # 6. 복용 타임라인 가이드 노출
             st.markdown("##### 📅 최적 흡수율 보장 복용 타임라인 배치")
             timeline_items = []
             for item in st.session_state.my_vit_basket:
                 raw_name = item['대표식품명'] + " " + item['식품명']
-                if "프로바이오틱스" in raw_name or "유산균" in raw_name:
+                if "프로바이오틱스" in raw_name or "유산균" in raw_name or "비피더스" in raw_name:
                     timeline_items.append((item['식품명'], "🌅 아침 식전 (공복)", "유산균이 위산에 노출되는 시간을 줄여 소화관 하부까지 보장균수가 많이 생존하게 돕습니다."))
                 elif "비타민 D" in raw_name or "오메가" in raw_name or "칼슘" in raw_name:
                     timeline_items.append((item['식품명'], "☀️ 점심/저녁 식후 (지용성/미네랄)", "지용성 영양소는 음식물 내 지질 분비물에 녹아 장관 흡수율이 크게 상승합니다."))
-                elif "철" in raw_name:
+                elif "철" in raw_name or "철분" in raw_name:
                     timeline_items.append((item['식품명'], "🌅 아침 공복 또는 취침 전", "철분은 위장 내 공복 조건에서 생체이용률이 높으나, 속쓰림 시 비타민 C와 함께 섭취하세요."))
                 else:
-                    timeline_items.append((item['식품명'], "⏰ 식후 아무때나 복용", "식사와 함께 섭취하면 빈속에 유발되는 일시적 위장 장애를 최소화할 수 있습니다."))
+                    timeline_items.append((item['식품명'], "⏰ 식후 복용", "식사와 함께 섭취하면 빈속에 유발되는 일시적 위장 장애를 최소화할 수 있습니다."))
                     
             for prod, time_slot, desc in timeline_items:
                 st.write(f"- **{time_slot}** ➡️ `{prod}` : *{desc}*")
                 
-            st.markdown("##### 📌 보관 안전성 자가 점검표")
-            st.checkbox("유산균 제품의 '보장균수(유통기한 종료 시점까지 살아남는 마릿수)'를 확인하고 구매하셨나요?", key="check_p1")
-            st.checkbox("일반 캔디류가 아닌 건강기능식품 정식 문구를 마크로 매칭 확인하셨나요?", key="check_p2")
-            st.checkbox("임박하거나 만료된 제품은 장바구니에서 안전하게 폐기하셨나요?", key="check_p3")
+            st.markdown("##### 📌 원료 팁 & 페인포인트 체크리스트")
+            st.checkbox("유산균(프로바이오틱스) 제품의 경우 '투입균수' 외에 유통기한까지 살아있는 '보장균수'를 확인하셨나요?", key="check_p1")
+            st.checkbox("콘드로이친 구매 시 식약처 인증 마크 및 개별인정형 기능성 원료 인증 제품인지 확인하셨나요?", key="check_p2")
+            st.checkbox("영양제 유효기간 만료 알림(D-Day)을 시각적으로 확인하고 기한을 넘긴 제품은 안전하게 폐기하셨나요?", key="check_p3")
             
         else:
             st.info("검색 창을 활용하여 현재 복용 중인 영양제들을 장바구니에 담아 실시간 안전 평가를 가동해 보세요.")
+
 
 
 # ==========================================
