@@ -1,14 +1,15 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from utils import get_shopping_trend, init_naver_credentials
+from utils import get_shopping_trend, init_naver_credentials, inject_custom_css
 
 # API 인증키 및 공통 세션 초기화
 init_naver_credentials()
+inject_custom_css()
 
 st.set_page_config(page_title="쇼핑 트렌드 분석", layout="wide")
 
-st.markdown("<h2 style='color: #00C73C;'>🛍️ 네이버 쇼핑인사이트 트렌드 분석</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='color: #03C75A;'>🛍️ 네이버 쇼핑인사이트 트렌드 분석</h2>", unsafe_allow_html=True)
 st.markdown("네이버 데이터랩 쇼핑인사이트 API를 통해 특정 카테고리 내 입력 키워드들의 쇼핑 클릭 트렌드를 비교합니다.")
 st.markdown("---")
 
@@ -115,7 +116,8 @@ else:
                 color="키워드",
                 title=f"[{selected_cat}] 쇼핑 클릭 추이 ({start_str} ~ {end_str})",
                 labels={"period": "날짜"},
-                template="plotly_white"
+                template="plotly_white",
+                color_discrete_sequence=["#03C75A", "#10B981", "#3B82F6", "#F59E0B", "#EF4444"]
             )
             fig.update_layout(hovermode="x unified")
             st.plotly_chart(fig, use_container_width=True)

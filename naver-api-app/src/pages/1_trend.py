@@ -1,14 +1,15 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from utils import get_search_trend, init_naver_credentials
+from utils import get_search_trend, init_naver_credentials, inject_custom_css
 
 # API 인증키 및 공통 세션 초기화
 init_naver_credentials()
+inject_custom_css()
 
 st.set_page_config(page_title="검색어 트렌드 분석", layout="wide")
 
-st.markdown("<h2 style='color: #00C73C;'>📈 네이버 검색어 트렌드 분석</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='color: #03C75A;'>📈 네이버 검색어 트렌드 분석</h2>", unsafe_allow_html=True)
 st.markdown("네이버 통합 검색어 트렌드 API를 통해 입력된 키워드들의 검색 추이를 비교합니다.")
 st.markdown("---")
 
@@ -91,7 +92,8 @@ else:
                 color="키워드",
                 title=f"검색 트렌드 추이 ({start_str} ~ {end_str})",
                 labels={"period": "날짜"},
-                template="plotly_white"
+                template="plotly_white",
+                color_discrete_sequence=["#03C75A", "#10B981", "#3B82F6", "#F59E0B", "#EF4444"]
             )
             fig.update_layout(hovermode="x unified")
             st.plotly_chart(fig, use_container_width=True)
