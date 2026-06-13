@@ -1,6 +1,15 @@
 import streamlit as st
 import pandas as pd
 import re
+import sys
+import os
+
+# 부모 폴더(src)를 모듈 검색 경로에 추가
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+if parent_dir not in sys.path:
+    sys.path.append(parent_dir)
+
 import plotly.express as px
 from utils import search_naver, init_naver_credentials, inject_custom_css
 
