@@ -908,7 +908,7 @@ with tab3:
     st.markdown("""
     <div class="card">
         <h3>🎁 센스 있는 영양제 선물을 위한 타깃별 큐레이션</h3>
-        <p>선물 대상자의 성별, 연령, 라이프스타일에 따라 필요한 식약처 보장 기능성 성분을 맞춤 연계합니다.</p>
+        <p>선물 대상자의 생활 패턴과 연령대, 신체적 페인포인트를 고려하여 식약처가 인증한 기능성 원료 기반의 최적의 선물을 제안합니다.</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -921,17 +921,22 @@ with tab3:
     cur_ingredients = []
     if "부모님" in target_sel:
         cur_ingredients = ["루테인", "칼슘", "비타민 D", "코엔자임Q10", "프로바이오틱스"]
-        cur_desc = "노화 안구 질환 예방용 루테인, 골감소 방지용 칼슘 및 비타민 D, 심혈관 관리용 코엔자임Q10 조합입니다."
+        cur_desc = "노화로 인한 안구 황반 변성 예방용 루테인, 골다공증 예방을 위한 칼슘 및 비타민 D, 혈압 조절을 돕는 코엔자임Q10 조합입니다."
+        gift_tip = "💡 **선물 팁**: 부모님께 칼슘을 선물할 때는 위장 장애가 적고 흡수율이 높은 <b>해조칼슘</b>이나 <b>유청칼슘</b> 원료인지 확인하세요."
     elif "동료" in target_sel:
         cur_ingredients = ["비타민 B", "밀크씨슬", "실리마린", "루테인", "아연"]
-        cur_desc = "장시간 근무로 손상된 간 세포 보호용 밀크씨슬 및 실리마린, 피로 개선용 활성 비타민 B군 위주의 포뮬러입니다."
+        cur_desc = "잦은 야근과 모니터 주시로 피로한 직장 동료를 위해, 간 건강을 돕는 실리마린(밀크씨슬)과 피로 회복용 활성 비타민 B군, 안구 건조용 루테인을 추천합니다."
+        gift_tip = "💡 **선물 팁**: 활성 비타민 B군은 고함량일 경우 빈속에 복용 시 속쓰림을 유발할 수 있으므로 <b>식후 복용 가이드</b>를 함께 전하세요."
     else:
-        cur_ingredients = ["마그네슘", "오메가", "단백질", "아미노산"]
-        cur_desc = "근력 강화 및 관절 안정성을 확보해 주는 스포츠 복합 보조 원료 위주의 큐레이션입니다."
+        cur_ingredients = ["단백질", "마그네슘", "오메가", "아미노산", "글루코사민"]
+        cur_desc = "러닝, 헬스 등 활발한 스포츠 활동 후 손상된 근육 합성용 단백질/아미노산과 근육 꼬임(쥐) 예방용 마그네슘, 관절을 보강하는 글루코사민 조합입니다."
+        gift_tip = "💡 **선물 팁**: 유당불내증이 있는 운동 애호가에게 단백질을 선물할 때는 유당을 제거한 <b>분리유청단백(WPI)</b> 성분인지 확인해보세요."
         
     st.info(f"🧬 **추천 영양 설계 매커니즘**: {cur_desc}")
+    st.markdown(f"<div style='background-color:#1c2128; padding:12px; border-radius:8px; border-left:4px solid #3fb950; margin-bottom:20px;'>{gift_tip}</div>", unsafe_allow_html=True)
     
     cur_p = pd.DataFrame()
+    # 상위 3개 키워드 매칭 제품 탐색
     for ing in cur_ingredients[:3]:
         temp = df_raw[df_raw['대표식품명'].str.contains(ing, na=False, case=False) | df_raw['식품명'].str.contains(ing, na=False, case=False)]
         cur_p = pd.concat([cur_p, temp])
@@ -941,11 +946,14 @@ with tab3:
         cur_p[['평점', '리뷰수', '단가']] = cur_p.apply(
             lambda row: pd.Series(generate_pseudo_scores(row['식품코드'])), axis=1
         )
-        cur_show = cur_p.sample(min(4, len(cur_p)), random_state=42)
+        # 평점 및 리뷰수가 우수한 순서대로 상위 4개 제품 샘플링 노출
+        cur_p['가중치'] = cur_p['평점'] * 0.6 + np.log1p(cur_p['리뷰수']) * 0.4
+        cur_show = cur_p.sort_values(by='가중치', ascending=False).head(4)
+        
         cols_gift = st.columns(4)
         for idx, (_, row) in enumerate(cur_show.iterrows()):
             badge_html = ""
-            if row['데이터구분'] == '건강기능식품 (수입)':
+            if row['データ구분'] == '건강기능식품 (수입)':
                 badge_html = '<span class="badge-import">수입건기식</span>'
             elif row['데이터구분'] == '건강기능식품 (국내)':
                 badge_html = '<span class="badge-domestic">국내건기식</span>'
@@ -954,21 +962,22 @@ with tab3:
                 
             with cols_gift[idx]:
                 st.markdown(f"""
-                <div style="background-color:#161b22; border-radius:10px; padding:15px; border:1px solid #30363d; min-height: 290px; display: flex; flex-direction: column; justify-content: space-between;">
+                <div style="background-color:#161b22; border-radius:10px; padding:15px; border:1px solid #30363d; min-height: 300px; display: flex; flex-direction: column; justify-content: space-between;">
                     <div>
                         <div style="display:flex; justify-content:space-between; align-items:center;">
                             {badge_html}
-                            <span style="font-size:0.7rem; color:#8b949e;">⭐ {row['평점']} ({row['리뷰수']}건)</span>
+                            <span style="font-size:0.75rem; color:#ffc107; font-weight:700;">⭐ {row['평점']} <span style="color:#8b949e; font-weight:400;">({row['리뷰수']}건)</span></span>
                         </div>
                         <h4 style="color:#58a6ff; font-size:1.0rem; margin:8px 0; min-height: 48px;">{row['식품명'][:26]}</h4>
-                        <p style="font-size:0.75rem; color:#8b949e; margin-bottom:2px;">제조/수입: {row['원산지국명']}</p>
-                        <p style="font-size:0.75rem; color:#8b949e; margin-bottom:2px; min-height: 32px;">주성분: {row['대표식품명'][:20]}...</p>
+                        <p style="font-size:0.75rem; color:#8b949e; margin-bottom:2px;">원산지/수입: {row['원산지국명']}</p>
+                        <p style="font-size:0.75rem; color:#8b949e; margin-bottom:2px; min-height: 36px;">원료: {row['대표식품명'][:25]}...</p>
                     </div>
                     <div style="border-top:1px solid #30363d; padding-top:8px; display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
-                        <span style="font-size:1.0rem; color:#3fb950; font-weight:700;">{int(row['단가']):,}원</span>
+                        <span style="font-size:1.05rem; color:#3fb950; font-weight:700;">{int(row['단가']):,}원</span>
                         <span style="font-size:0.75rem; color:#8b949e;">{row['1회분량중량/부피']}</span>
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
     else:
-        st.write("선택된 타깃에 일치하는 추천 상품이 현재 존재하지 않습니다.")
+        st.write("선택된 타깃에 일치하는 추천 상품이 현재 존재하지 않습니다. 실시간 API 연동을 조절해 보세요.")
+
