@@ -6,3 +6,6 @@ python-dotenv
 openai
 wordcloud
 matplotlib
+koreanize-matplotlib
+seaborn
+scikit-learn
