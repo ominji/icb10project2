@@ -16,6 +16,7 @@ ENV/
 
 # Data files
 *.csv
+!testproj_1/data/*.csv
 *.tsv
 *.dat
 *.out
