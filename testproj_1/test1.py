@@ -953,7 +953,7 @@ with tab3:
         cols_gift = st.columns(4)
         for idx, (_, row) in enumerate(cur_show.iterrows()):
             badge_html = ""
-            if row['データ구분'] == '건강기능식품 (수입)':
+            if row['데이터구분'] == '건강기능식품 (수입)':
                 badge_html = '<span class="badge-import">수입건기식</span>'
             elif row['데이터구분'] == '건강기능식품 (국내)':
                 badge_html = '<span class="badge-domestic">국내건기식</span>'
