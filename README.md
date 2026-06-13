@@ -1,3 +1,31 @@
+# 🏦 iM뱅크 PB Money Move 방어 대시보드 프로젝트
+
+이 프로젝트는 iM뱅크 PB를 위한 **Money Move(자산 유출) 방어 대시보드 v2**와 **네이버 API 연동 모듈**로 구성되어 있습니다.
+
+## 🔗 Streamlit 서비스 접속 주소
+- **바로가기:** [https://icb10project2-mg6qetkpk9xj88e6khuekr.streamlit.app/](https://icb10project2-mg6qetkpk9xj88e6khuekr.streamlit.app/)
+
+---
+
+## 🛠️ 현재 프로젝트 작업 내역 (Current Status)
+
+### 1. iM뱅크 PB Money Move 방어 대시보드 v2 ([bank ai](file:///C:/Users/user1/Desktop/icb10proj2/bank%20ai))
+- **실시간 리스크 대시보드**: `customer_data_v2.csv` 데이터를 로드하여 고객의 자산 규모(AUM), 위험 자산 규모, 리스크 지수를 실시간으로 분석합니다.
+- **고객 위험 등급 분류**: Risk Score 기준 고/중/저위험군을 분류하고 유출 위험 자산을 연동 계산합니다.
+- **방어 성공 시뮬레이션**: Money Magnet 기능으로 방어 성공 시 리스크 스코어 및 유출 자산이 실시간으로 0으로 감소하는 인터랙션(Session State)을 구현했습니다.
+- **PB 맞춤형 Playbook & Script**: 고객 등급별로 제공되는 최적의 제언, 대본(Script), CRM 로그 뷰를 구현하였습니다.
+- **맞춤형 추천 상품 추천**: 반도체, 2차전지, 항공/방산 등 투자 테마별 펀드 및 특정금전신탁 추천 상품을 매칭합니다.
+
+### 2. Naver API 연동 어플리케이션 ([naver-api-app](file:///C:/Users/user1/Desktop/icb10proj2/naver-api-app))
+- API 키 연동을 위한 `.env` 템플릿 제공 및 Git 배제 설정 완료.
+- 모듈화된 프로젝트 구조 설계 완료 (`src/`에 소스코드 배치 및 `data/`, `report/` 디렉토리 연동).
+
+### 3. 개발 인프라 & 자동화 스크립트
+- Streamlit 클라우드 배포 구성 파일 및 Secrets 연동 완료.
+- 파워쉘 기반의 변경 사항 실시간 감시 및 자동 커밋 스크립트 ([watch_changes.ps1](file:///C:/Users/user1/Desktop/icb10proj2/watch_changes.ps1)) 구축.
+
+---
+
 ## STEP 0. 팀 구성 및 협업 환경 세팅
 
 ### 슬랙 세팅
