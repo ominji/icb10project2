@@ -2,6 +2,11 @@
 
 이 프로젝트는 네이버 API를 통해 정보를 검색하고 분석을 진행하는 **네이버 API 연동 모듈**입니다.
 
+## 🔗 Streamlit 서비스 접속 주소
+- **바로가기:** [https://icb10project2-mg6qetkpk9xj88e6khuekr.streamlit.app/](https://icb10project2-mg6qetkpk9xj88e6khuekr.streamlit.app/)
+
+---
+
 ## 🛠️ 주요 기능 (Key Features)
 - **네이버 API 연동**: 블로그, 뉴스 등 다양한 네이버 검색 결과를 수집합니다.
 - **OpenAI API 연동**: 검색 결과를 바탕으로 LLM을 활용한 스마트 요약 및 리포트 생성을 지원합니다.
