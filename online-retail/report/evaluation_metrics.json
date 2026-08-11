@@ -1,0 +1,18 @@
+{
+  "tfidf": {
+    "Average_Similarity": 0.3201,
+    "Intra_List_Diversity": 0.7494,
+    "Novelty": 13.2633,
+    "Catalog_Coverage_Pct": 48.74,
+    "Total_Recommended_Unique_Items": 1909,
+    "Sample_Queries_Evaluated": 300
+  },
+  "embedding": {
+    "Average_Similarity": 0.6535,
+    "Intra_List_Diversity": 0.4184,
+    "Novelty": 13.2808,
+    "Catalog_Coverage_Pct": 49.63,
+    "Total_Recommended_Unique_Items": 1944,
+    "Sample_Queries_Evaluated": 300
+  }
+}

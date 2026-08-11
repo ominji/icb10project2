@@ -1,0 +1,69 @@
+1) HTTP 요청정보
+Request URL
+https://www.coupang.com/np/campaigns/6585?page=3
+Request Method
+GET
+Status Code
+200 OK
+Remote Address
+[64:ff9b::3d6f:3aa4]:443
+Referrer Policy
+strict-origin-when-cross-origin
+
+
+2) HTTP 헤더정보
+:authority
+www.coupang.com
+:method
+GET
+:path
+/np/campaigns/6585?page=3
+:scheme
+https
+accept
+text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cache-control
+no-cache
+cookie
+PCID=17821327940073318719488; MARKETID=17821327940073318719488; x-coupang-target-market=KR; x-coupang-accept-language=ko-KR; sid=732f13e3e1814824ab9e081f5849bec55e7e5a20; bm_ss=ab8e18ef4e; bm_so=B4683FDF5C7C7D259B5A01E9B89C0F8B592CC202C2945F5D900906D4BF6550E4~YAAQXSPJFzwVDdqeAQAAJeC8+QiGLTO/sjqW7OaPTUSLClakkd3Rxi8duy6v2PdufQk3zXu0jlKWjGNM+CLU3hyowgC2CUD9uwIo0xnX3lmFwdtPB3n1ydwhj8AxNHIS5ZBhYt0gygDl7OGe2dyZTdO0xcDupZuJyceaUUPHDS2BTq4inFEZ408/dUPu+ACRVI7t7iGY1qXU1LrNGqLbEUa7RTuPAbkYN9Jy3U/uCoTLA0CtvKwXG5LF8H84Ld7ty12jE8T5S5ISKEsi0XRouAlHgT+VW9tw8M0sSpVCVSI2kyoHn2aPovQnULWdG0JZmZkr9j+LDw/7fgAxnycODinrYqQu9nmd2MojJl3FjssuTo2nZAYfp3ajRvoiCJWH0Ybbat4vnrBtefyVAbaUR3qt+omD/85l4KubDaOvrYc//HjiFe5/CYfTFhH4LZxHd/nrUniJtc5VVKphe0QZpvUnI7c=; bm_sz=3BDD741A113E866FA21F4C765E8D362D~YAAQXSPJFz0VDdqeAQAAJeC8+QCiGJYKc7su4EpQ3Kj7brKb+Ec3/Oq2U9z/HaU5SuXb8PjT3zW+8iHXs0bv+LoPacZqz/gDnNe5RSK7QrHNbt5xk1yIAKOuY1og1gmAztEIsH7rLQP6XpIIcDnWRblXEMMdcVad9rq0RV6739Z96QAGJEscdysyWH/finJB4YPRL+1EXnvYC4AGoYLEVK1NFyzPPfJny4hg+JAjAW+Q9LFdkGKegE2rnR2pRdB3lwihKUYP3FROInPElZi+H7iDGAzmvOWvKnHRF/9a3FgJhu3Z1Za8cHu4S6yY4jsObbw9njwcAZQ9n4Pm21yDx3teSB6ryV8ekm/Qywongd01XAhW2/0tuW+vuPQb5XDqB5Yt4PSGUiEqAggTMp/ryw==~4471109~3551813; ak_bmsc=06BB815E95AC012F5C536D8E73EC9A72~000000000000000000000000000000~YAAQXSPJF+8VDdqeAQAAduW8+QClJ0Up2EEhvIbvhrNaQEat4xG+lQYnORRa5DmPGp0Ppy4dKO0bFG9xxvFfJ3hmFVbne0R8GoQTF0O3/FUPz0ytjOLhnswIoll7My4lhcjBFmrOuC0CqdQVPi20I1brqYvW4Ttyo6tlocynx6mH2FBRP6Zq+CiUst8LWAMM+tw07iOIMPg1e1hpPqhv787ZuEgffBMnwFgF1lJjc6Y0OXLq1V5NVeL/bVVA6fP6bkik6x+itqo8wos/R9hvI6/PtedF/XtrP6zGeyanlXZ2kAbmvP6rk2/3YGaGcJFkWut5wCgRN471tA0sfoHQNRSJfqRWE7m8aRxQEttYCIr1UTJGFseaIa+5wyXgi00RwAD2QoIv6SarXdSNeJ0Xhb/vqiaqA7y/D8Z6brv92ZdnjuhwrLRIcnVSP51J9RpPpK6SGDIFbjn/1g==; bm_lso=B4683FDF5C7C7D259B5A01E9B89C0F8B592CC202C2945F5D900906D4BF6550E4~YAAQXSPJFzwVDdqeAQAAJeC8+QiGLTO/sjqW7OaPTUSLClakkd3Rxi8duy6v2PdufQk3zXu0jlKWjGNM+CLU3hyowgC2CUD9uwIo0xnX3lmFwdtPB3n1ydwhj8AxNHIS5ZBhYt0gygDl7OGe2dyZTdO0xcDupZuJyceaUUPHDS2BTq4inFEZ408/dUPu+ACRVI7t7iGY1qXU1LrNGqLbEUa7RTuPAbkYN9Jy3U/uCoTLA0CtvKwXG5LF8H84Ld7ty12jE8T5S5ISKEsi0XRouAlHgT+VW9tw8M0sSpVCVSI2kyoHn2aPovQnULWdG0JZmZkr9j+LDw/7fgAxnycODinrYqQu9nmd2MojJl3FjssuTo2nZAYfp3ajRvoiCJWH0Ybbat4vnrBtefyVAbaUR3qt+omD/85l4KubDaOvrYc//HjiFe5/CYfTFhH4LZxHd/nrUniJtc5VVKphe0QZpvUnI7c=~1782306369144; bm_mi=440F199193DBBCCBB4F525CB99BA2DAC~YAAQXSPJF2QWDdqeAQAA1+i8+QCDZ5Z7hV27IDyKz/Z0T1n8zxiyI0KbhNBqGnRlE0a2fNlRN6Lt67C4IQt+YHiNZ96sSSjLNARFWH4BhQyebnez7Xrv7OG2TchJhflwihmRAckq00rxzyAyLkR91CS8i5BJx2zEUhnl8RxfFSA+TTBYdFwIv+sYOw6VLNTZ8ilvg6S9/J6ud+RzR9Lc+EwoOnG9ewzJAUsdqkAzsfjRI033k2ioSiA3OZ/P+GDSf+HXM1b/9NnaEjTQRJNXIl5q7x9jQTiZ5+ToHP6Fpq6SvpOAgcPr6v/l18x4ZnktFv54w7RH6gL2UUEZHXWTmjillx043A==~1; bm_sv=2CE9FBA25E8481DD64E66667CB21E165~YAAQXSPJF2YWDdqeAQAA1+i8+QAxS/ajaNF1dbvHZQW5VDN/kz+pbB8pcnLRrC+2q5RjxytZw7OjdOkcQ67tRXEmYnk1MMtBCMzBXg06D6dj+kYOEZvMkEW0Sq1/JTgl1psmyBLA+QCdcH+08dTLvccKa2pA8RSoLYUhaeiq6oQ766i5nqMbcgqkIg/0TxdpU2TmBvc9kczncpPoFxZSDdTZPGmxFUclNIv+p0P1/Ht/wqJLMok/ZzFqPOoqg3n5uw==~1; _abck=145D20247191BAEFDD27C987B14F5334~0~YAAQXSPJF/wYDdqeAQAA5AG9+RAEmDEk0NHOfBiZgk9/rU6G5Y3v8tU0pEaBj/A2+79Y+bmvCsKDckJxlCdiEtjQSD4aLpoKCixZS6HIWWYkb9LMMIAdam4+QXWf5y1vhtWmDSrpxFpxvLxfd0jjibkrmaRVydE4EkzcyXueu01kUAol23wV72UTym8QJND98bzYhEOyB9V0DpGreRZIvxqkM+zDCgVbajq7PE/EOUTjM9ur3ksH4a4NiSYSrluzqF/nsi4Y2T/f1uWgoIvnNRnZWXWXU5mgpcM+VYFPsP1ri6vmgVw+25qjDikokilyeZRNMTEPssHwCjgKJy/H3Ib6W1z3LHHV7Ps+ek900giqS2JilAUJWZjL6KG1U1599s01FlkELk+nY0v96yggqmVzAxe2XyAvHIWMaKGCGAkANq2cFSqCvPT2wjvkgbTseKAa1Ew/YQdv+ofCd01oXy0IFMQTLOK1ZSXwfHO0IUCeMXHBfNzah7CoiBND6444xmYyGKfQ/0AfAnNBp2fXNyTazpO37qpMDinNixUy0SficOSp3EJSleDP+nZrYPDzV3xvVvP4sc94L2FiUQ2AvNCA25Qa3VlJyICPt2ZovIraGP8M+KjhcV57C567UJjj3DjSoQpLekrDoIdSsjfD53I=~-1~-1~1782309966~AAQAAAAF%2f%2f%2f%2f%2fz1iz2GKTXW+hHVu99zd5Ya8Z2SD6vUEYQAdioYgLZHyUA4jQ18BHHbzbzUWpnfOttE9SKCfbXIiFSs0z0UoI6sFmr4CtKK+j+7c~-1; bm_s=YAAQXSPJFxIZDdqeAQAACgO9+QWZrL7gLc89XUw0IRbAWIPeEJTTDP2wwOsElhogiYGK15At0oHZviS+uamphIhZZyah2mvcTA6PdEBb0oiMwyDn1UWVvVomhub5EYjyVvCzOYc1G1fxwXxnO0PGDMWS3FmUiSisMYKDb0lmwjDo+0MQK14kKERraofndOt7iVVKv0EQlb3Yxu5RjdrCmV7ile7mOmn2gustsMZRrK7Vdlz3xrMuee8bL3BKodDwxpOXO6AA2Yioj0Pt3i84TbO0A+S7vWDYqHxp4+mh67LR/AzDQYUPYoeUEkLkSr/fx/L0ETCtjrc74vN3xlJYT8tnpdauo/CN/8/F5tbSmCBnx/fM666uE/9AqVbRrkuz/95x1XyUwDYt9O5ZRmZ51SQXqDuL7yNmrs4Sm4PmkVMoIU0AbSwU/X+D8yvBIttoPGJUyCb7DlzmOVJpy3/2lrluBBADmlBDN0qraGHCpKUDQ5MGlea/G9SThm+5aRfs65F/aT8bPh4KoNMxmLqQKHFOTnZOw8FKLrew8Ez0rclSpekSoG5k/LgigirTb4zLgRVb6jw1O/rQvA3+2pQaXkMI3uh0LVIpWa/HqCa3BcXCW9XRpBVSErWNFLI3a0re4VFvy6qPIVS6hhUDGW69Y5OQk5xvpSzh7WPQb6xwOgnuV6b39Q8QYnPzKUJNaYQu383e+qXjkxcpbYL7/7iL8Wb9Q+Oi64tcPN2sHD7E38JwujgRhgEZXT281FtyWPHzGvsqctwOvoimIXg8cVZm6s0QTeLD6Frq1pJMPWmky2i+0cgabiLVMUdDJs5XeoRd+vtUZWr2pcYQvFeb9D3sGH0dJKiKyWEwOQmXsN1JumQBe2X1xqNKXy1a7fkZQi/PReFKfVilj0Q+7jDrNBLyjnHzqWNMfPKE6w9RCd+A0MgPbrX8cpL9r4r5Gj5oApOvtbk6TrRQNtYnbp9RaUeZ08i43//z3zXauaQmB9z2ew==; x-cp-s=YzE9MyZjMj0xLjAuMCZjMz0xNzgyMzA2NDI4MzQyJmM0PWJVNW9LMmhKY1VWNGJVSXdNRTFUWVRkSGFWazNjamRyY0hSTE5GUk1OMlYwVG1sakswOTVLeTl1UzBsdWFqUm5TME54SzJ0TmFrbG5jV0pGYms5SksydHlZbFYxUVZOUFRuWTJZeloyV1VkMlNtSjNjblZTYzBWbmIyTk1hMEYxSzBWdldVZEJOVFpNVUdjNGQwaFNRMlpGYnpKaGFWSnZaR2RaTWt4b2FIZExjMmM5JmM1PWNvbS5jb3VwYW5nLndlYiZjNj0mYzc9JmM4PTc0YWE3YjRlYmQxODQzODg5NWQ1NzlmMGY5NzZlYTA3JmM5PTMmczE9dFFUSmRDZjlOTEt5R1hVVmdyQ3daY0JBVFg2MnArN2VoZk1pOWZtakdSOD0mczI9MS4wLjA=
+pragma
+no-cache
+priority
+u=0, i
+referer
+https://www.coupang.com/np/campaigns/6585?page=2
+sec-ch-ua
+"Google Chrome";v="149", "Chromium";v="149", "Not)A;Brand";v="24"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Windows"
+sec-fetch-dest
+document
+sec-fetch-mode
+navigate
+sec-fetch-site
+same-origin
+upgrade-insecure-requests
+1
+user-agent
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36
+
+
+3) Payload 정보
+page=3
+
+4) 응답의 일부를 Response 에서 일부를 복사해서 넣어주기 (전체는 토큰 수 제한으로 어렵습니다.)
+<!DOCTYPE html>
+<html lang="ko-KR">
+    <head>
+        <meta charSet="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+
+        
+5) 한페이지가 성공적으로 수집되는지 확인하고 csv 파일로 저장할 것

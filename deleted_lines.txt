@@ -1,0 +1,1330 @@
+﻿
+--- a/bank ai/report/money_magnet_dashboard.html	
+-    <link rel="stylesheet" href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css">
+-            --primary: #00bda7;
+-            --primary-light: #e2f1f0;
+-            --primary-dark: #008f7e;
+-            --bg-dark: #080f19;
+-            --sidebar-bg: #0c1625;
+-            --card-bg: rgba(15, 27, 46, 0.7);
+-            --card-border: rgba(0, 189, 167, 0.12);
+-            --text-main: #f8fafc;
+-            --text-muted: #94a3b8;
+-            --accent-yellow: #fbbf24;
+-            --accent-red: #f87171;
+-            --accent-green: #34d399;
+-            --input-bg: #111e30;
+-            --input-border: #1e2e45;
+-            font-family: 'NanumSquareRound', 'Outfit', sans-serif;
+-            background-image: radial-gradient(circle at 10% 20%, rgba(0, 189, 167, 0.04) 0%, transparent 40%),
+-                              radial-gradient(circle at 90% 80%, rgba(0, 143, 126, 0.03) 0%, transparent 40%);
+-        .sidebar {
+-            width: 320px;
+-            background-color: var(--sidebar-bg);
+-            border-right: 1px solid var(--card-border);
+-            padding: 24px;
+-            display: flex;
+-            flex-direction: column;
+-            gap: 20px;
+-            flex-shrink: 0;
+-            overflow-y: auto;
+-        }
+-            border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+-            font-family: 'Outfit', sans-serif;
+-        .main-content {
+-            background: linear-gradient(45deg, #ffffff, var(--primary));
+-            font-family: 'Outfit', sans-serif;
+-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+-            font-family: 'NanumSquareRound', sans-serif;
+-            color: #ffffff;
+-            backdrop-filter: blur(10px);
+-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+-            border-color: rgba(0, 189, 167, 0.4);
+-            background-color: rgba(0, 189, 167, 0.15);
+-            font-family: 'Outfit', sans-serif;
+-            color: #ffffff;
+-            backdrop-filter: blur(10px);
+-            color: #ffffff;
+-            background-color: rgba(0, 189, 167, 0.04);
+-            border: 1.5px solid rgba(0, 189, 167, 0.2);
+-            border-radius: 12px;
+-            background: rgba(0, 189, 167, 0.1);
+-            backdrop-filter: blur(10px);
+-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+-            background: linear-gradient(135deg, rgba(15, 27, 46, 0.95), rgba(8, 15, 25, 0.98));
+-            box-shadow: 0 4px 20px rgba(0, 189, 167, 0.05);
+-            background: rgba(0, 189, 167, 0.15);
+-            background: rgba(0, 0, 0, 0.25);
+-            backdrop-filter: blur(10px);
+-            color: #ffffff;
+-            border-bottom: 2px solid rgba(0, 189, 167, 0.15);
+-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+-            background-color: rgba(0, 189, 167, 0.02);
+-            color: #ffffff;
+-            backdrop-filter: blur(10px);
+-            color: #ffffff;
+-            box-shadow: 0 0 0 2px rgba(0, 189, 167, 0.15);
+-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+-            background-color: rgba(0, 189, 167, 0.1);
+-            backdrop-filter: blur(10px);
+-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+-            border: 1px solid rgba(255, 255, 255, 0.05);
+-            height: 100%;
+-            border-radius: 12px;
+-            color: #ffffff;
+-            background-color: rgba(0, 189, 167, 0.05);
+-            border: 1px solid rgba(255, 255, 255, 0.03);
+-            background-color: rgba(0, 189, 167, 0.02);
+-            background-color: rgba(255, 255, 255, 0.02);
+-            backdrop-filter: blur(10px);
+-            font-family: 'Outfit', sans-serif;
+-            backdrop-filter: blur(5px);
+-            border: 5px solid rgba(0, 189, 167, 0.2);
+-            color: #ffffff;
+-            color: #ffffff;
+-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+-            color: #ffffff;
+-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+-    </style>
+-        <aside class="sidebar">
+-            <div class="sidebar-logo">
+-                <img src="../im_bank_logo.png" alt="iM諭낇겕 濡쒓퀬" class="logo-img" onerror="this.src='https://via.placeho
+lder.com/140x30/00bda7/ffffff?text=iM+Bank'">
+-                <p class="sidebar-subtitle">怨듭떇 ?먯궛 愿由?愿????쒕낫??/p>
+-            <section class="sidebar-section">
+-                <div class="sidebar-title">?뵇 湲濡쒕쾶 ?꾪꽣</div>
+-            </section>
+-        </aside>
+-        <!-- 2. 硫붿씤 肄섑뀗痢?-->
+-        <main class="main-content">
+-            <header class="main-header">
+-                <div class="header-title-container">
+-                    <span class="header-title">?㎠ Operation: Money Magnet</span>
+-                    <span class="header-subtitle">(癒몃땲臾대툕 諛⑹뼱 ?щ졊遺)</span>
+-                <div class="header-meta">
+-                    ?뱟 湲곗??쇱옄: <span id="currentDateSpan">2026??06??10??/span>
+-            <div style="font-size: 13.5px; color: var(--text-muted); margin-top: -15px; font-weight: 500;">
+-                ?섍????덈룄 ?ㅼ떆 蹂댁옄! 利앷텒?щ줈 ?ν븯???먭툑???먯꽍泥섎읆 ?뚯뼱?밴린??PB 愿?쒗깙
+-            </div>
+-            <nav class="tabs-container">
+-                <button class="tab-btn active" onclick="switchTab('tab1')">?뱤 ????꾩껜 ?듦퀎</button>
+-                <button class="tab-btn" onclick="switchTab('tab2')">?렞 怨좉컼 ?곸꽭 遺꾩꽍</button>
+-                <button class="tab-btn" onclick="switchTab('tab3')">?뱢 ?쒖옣 ?몄궗?댄듃</button>
+-            </nav>
+-            <section class="tab-pane active" id="tab1">
+-            <section class="tab-pane" id="tab2">
+-                            <!-- 5? ?뚮쭏 愿?щ룄 -->
+-                            <div class="cockpit-card">
+-                                <div class="cockpit-card-title">?㎚ 5? ?뚮쭏 ?뱁꽣蹂?愿?щ룄 遺꾪룷 <span style="font-size:16px;
+">?뱤</span></div>
+-                                <div class="cockpit-chart-wrapper">
+-                                    <canvas id="custThemeRadar"></canvas>
+-                                </div>
+-                            </div>
+-                            <!-- ?먯궛 ?꾩닔??遺꾩꽍 -->
+-                            <div class="cockpit-card">
+-                                <div class="cockpit-card-title">?좑툘 ?먯궛 ?꾩닔??Leakage Rate) 遺꾩꽍 <span style="font-size:
+16px;">?슚</span></div>
+-                                <div class="cockpit-info-list" id="custLeakageInfo">
+-                                    <!-- ?숈쟻 ?뚮뜑留?-->
+-                                </div>
+-                            </div>
+-                        </div>
+-                    </div>
+-                    <!-- 2?④퀎: ?쒖뼵 ?쒕??덉씠??諛?Playbook -->
+-                    <div>
+-                        <div class="cockpit-step-title">?뮕 2?④퀎: ?먯궛 諛⑹뼱 ?쒕??덉씠??諛?留덉????꾨왂 ?쒖뼵</div>
+-                        <div class="cockpit-row-2">
+-                            <!-- ?쒕??덉씠??-->
+-                                <div class="cockpit-card-title">?럾截??ы듃?대━???먯궛 諛⑹뼱 ?쒕??덉씠??<span style="font-size:16p
+x;">??/span></div>
+-                                
+-                                <div class="filter-group" style="gap:5px;">
+-                                    <div class="filter-label">?뚮쭏 ?뱁솕 ??媛???쒖븞 湲덉븸 (??</div>
+-                                    <input type="range" class="range-slider" id="simSlider" min="0" max="100000000" st
+ep="1000000" value="0" oninput="onSimSliderChange()">
+-                                    <div class="range-values" id="simSliderVal" style="font-size:13px; font-weight:800
+;">0??/div>
+-                                </div>
+-
+-                                <div class="sim-expected-saving-box">
+-                                    <div class="sim-saving-title">?뮕 ?쒖븞 ?ы듃?대━?ㅼ쓽 ?곌컙 ?몄븸 ?덇컧 ?④낵</div>
+-                                    <div class="sim-saving-value" id="simSavingVal">?곌컙 ???? ?덉꽭 ?덉긽</div>
+-                                </div>
+-
+-                                <div class="cockpit-chart-wrapper" style="height:120px;">
+-                                    <canvas id="simChart"></canvas>
+-                                </div>
+-                            </div>
+-
+-                            <!-- ?⑤뵒 異붿쿇 ?뚮젅?대턿 -->
+-                            <div class="cockpit-card">
+-                                <div class="cockpit-card-title">?썳截??⑤뵒???㎠ 留덇렇???붾（??異붿쿇 <span style="font-size:16px;
+">?맕</span></div>
+-                                <div style="display:flex; gap:15px; align-items:flex-start;">
+-                                    <img src="../dandi_mascot_2d.png" alt="?⑤뵒" style="width:65px; height:65px; object
+-fit:contain; background:rgba(0,189,167,0.1); border-radius:50%; border:1.5px solid var(--primary); padding:3px;">
+-                                    <div style="flex-grow:1; display:flex; flex-direction:column; gap:10px;">
+-                                        <div class="playbook-card" id="playbookCardContent">
+-                                            <!-- ?숈쟻 ?쒗뵆由?濡쒕뱶 -->
+-                                        </div>
+-                                        <button class="btn-large" id="defendBtn" onclick="runDefendMagnet()">?? 留덇렇???
+붾（??媛??(諛⑹뼱 ?ㅽ뻾)</button>
+-                        </div>
+-                    </div>
+-
+-                    <!-- 3?④퀎: CRM 諛??≪뀡 -->
+-                    <div>
+-                        <div class="cockpit-step-title">?뱛 3?④퀎: CRM ?대젰 愿由?諛?留덉????ㅽ뻾</div>
+-                        <div class="cockpit-row-3">
+-                            <!-- CRM ?대젰 -->
+-                            <div class="cockpit-card">
+-                                <div class="cockpit-card-title">?뱚 ?곷떞 諛?留덉????대젰 (CRM) <span style="font-size:16px;">
+?뱠</span></div>
+-                                <div id="crmLogList">
+-                                    <div class="crm-log-item">?뿎截?<b>2026-05-15</b>: ?곷컲湲?VIP ?몃Т/?곸냽 1:1 ?곷떞 珥덉껌??諛쒖넚
+ ?꾨즺 (PB ?대떦??</div>
+-                                    <div class="crm-log-item">?뿎截?<b>2026-04-10</b>: 1遺꾧린 ?뺢린 ?덇툑 留뚭린 ?ъ쑀移??깃났 (AUM 諛⑹
+뼱 ??,000留?</div>
+-                                    <div class="crm-log-item">?뿎截?<b>2026-03-02</b>: ?좊뀈 留욎씠 VIP 紐낆젅 ?밸퀎 媛먯궗 湲고봽???명듃 
+?앸같 ?꾨떖 ?꾨즺</div>
+-                                </div>
+-                            </div>
+-                            <!-- PB ?ㅼ떆媛?留덉????≪뀡 -->
+-                            <div class="cockpit-card">
+-                                <div class="cockpit-card-title">???ㅼ떆媛?PB 留덉????≪뀡 <span style="font-size:16px;">?숋툘</
+span></div>
+-                                <div class="action-btns-grid">
+-                                    <button class="action-sub-btn" onclick="triggerAction('email')">?벁 ?대찓??諛쒖넚</butto
+n>
+-                                    <button class="action-sub-btn" onclick="triggerAction('sms')">?뮠 SMS ?쒖븞</button>
+-                                    <button class="action-sub-btn" onclick="triggerAction('call')">?뱸 ?좎꽑 ?덉빟</button>
+-                                </div>
+-                                <div class="action-recent-log" id="recentActionLogText">?꾩옱 ?몄뀡??湲곕줉??留덉???濡쒓렇媛 ?놁뒿?덈
+떎.</div>
+-
+-                                <div class="pitch-guide-card">
+-                                    <div style="font-size:11px; font-weight:700; color:var(--primary); margin-bottom:4
+px;">?럺截?PB ?ㅼ쟾 ?쇱묶 媛?대뱶 (Script Generator)</div>
+-                                    <p class="pitch-guide-text" id="pitchingScriptText">...</p>
+-                                </div>
+-                            </div>
+-                        </div>
+-                    </div>
+-                </div>
+-            </section>
+-
+-            <!-- ------------------ ??3: ?쒖옣 ?몄궗?댄듃 ------------------ -->
+-            <section class="tab-pane" id="tab3">
+-                <div class="cockpit-step-title">?뱢 ?쒖옣 ?뱁꽣蹂?怨좉컼 遺꾩꽍 諛?留덉????몄궗?댄듃</div>
+-                <div style="font-size:12.5px; color: var(--text-muted); margin-top:-15px; margin-bottom:10px;">
+-                    吏???꾩껜 怨좉컼??吏??5? 硫붿씠? ?뚮쭏 ?뱁꽣?????愿?щ룄瑜?諛뷀깢?쇰줈 ?뱁꽣 ?뱁솕 ?듦퀎 諛?留덉????쒕굹由ъ삤瑜??쒓났?⑸땲??
+-                </div>
+-
+-                <!-- ?뱁꽣 ?좏깮 -->
+-                <div class="search-container" style="grid-template-columns: 1fr;">
+-                    <div class="filter-group">
+-                        <label class="filter-label" style="font-weight:700;">遺꾩꽍 諛?留덉????쒖븞???앹꽦???뱁꽣瑜??좏깮?섏꽭??/label>
+-                        <select class="styled-select" id="sectorSelect" onchange="onSectorSelectChange()">
+-                            <option value="諛섎룄泥?>諛섎룄泥?/option>
+-                            <option value="??났/諛⑹궛">??났/諛⑹궛</option>
+-                            <option value="2李⑥쟾吏">2李⑥쟾吏</option>
+-                            <option value="由ъ툩/諛곕떦">由ъ툩/諛곕떦</option>
+-                            <option value="湲덉쑖/???>湲덉쑖/???/option>
+-                        </select>
+-                    </div>
+-                </div>
+-
+-                <!-- ?뱁꽣 KPI 3??-->
+-                <div class="insights-kpis">
+-                    <div class="insight-kpi-card">
+-                        <div class="insight-kpi-title" id="sec_kpi1_title">'諛섎룄泥? ?됯퇏 愿???먯닔</div>
+-                        <div class="insight-kpi-value" id="sec_kpi1_val">0.0 ??/div>
+-                    </div>
+-                    <div class="insight-kpi-card">
+-                        <div class="insight-kpi-title" id="sec_kpi2_title">怨좉???怨좉컼 ??(60???댁긽)</div>
+-                        <div class="insight-kpi-value" id="sec_kpi2_val">0紐?(0.0%)</div>
+-                    </div>
+-                    <div class="insight-kpi-card">
+-                        <div class="insight-kpi-title" id="sec_kpi3_title">'諛섎룄泥? ?좏샇援??먯궛 洹쒕え</div>
+-                        <div class="insight-kpi-value" id="sec_kpi3_val">??</div>
+-                    </div>
+-                </div>
+-
+-                <!-- 遺꾩꽍 李⑦듃 諛?怨좉컼 由ъ뒪??-->
+-                <div class="insights-row-2">
+-                    <div class="grid-chart-card" style="min-height:300px;">
+-                        <div class="grid-chart-title" id="insightChartTitle">?뱤 ?댄깉 ?깃툒蹂??뱁꽣 愿?щ룄 ?먯닔 遺꾪룷</div>
+-                        <div class="kpi-chart-wrapper" style="height:220px;">
+-                            <canvas id="insightHistogramChart"></canvas>
+-                        </div>
+-                    </div>
+-
+-                    <div class="table-card">
+-                        <div class="table-header" id="insightTableTitle">
+-                            ?렞 ?뱁꽣 理쒖꽑??怨좉???怨좉컼 TOP 5
+-                        </div>
+-                        <div class="table-wrapper">
+-                            <table id="insightTopTable">
+-                                <thead>
+-                                    <tr>
+-                                        <th>怨좉컼 ID</th>
+-                                        <th>怨좉컼紐?/th>
+-                                        <th>吏곴뎔</th>
+-                                        <th>?됯퇏 ?붿븸</th>
+-                                        <th>?붽툒???댁껜 鍮꾩쨷</th>
+-                                        <th>?뱁꽣 愿?щ룄</th>
+-                                        <th>?꾩닔 ?깃툒</th>
+-                                    </tr>
+-                                </thead>
+-                                <tbody id="insightTopTableBody">
+-                                    <!-- ?숈쟻 -->
+-                                </tbody>
+-                            </table>
+-                        </div>
+-                    </div>
+-                </div>
+-
+-                <!-- 醫낇빀 肄붾찘?곕━ 諛??곹뭹 ?ы듃?대━??-->
+-                <div class="dandi-brief-box" style="padding:20px; align-items:center;">
+-                    <img src="../dandi_mascot_2d.png" alt="?⑤뵒" style="width:70px; height:70px; object-fit:contain; ba
+ckground:rgba(0,189,167,0.1); border-radius:50%; border:2px solid var(--primary); padding:4px; flex-shrink:0;">
+-                    <div style="display:flex; flex-direction:column; gap:12px; flex-grow:1;">
+-                        <h4 style="font-size:15px; font-weight:800; color:var(--primary);" id="dandiInsightHeader">?뱷 
+?⑤뵒???뱁꽣 醫낇빀 留덉???肄붾찘?곕━</h4>
+-                        <div style="font-size:13px; line-height:1.7; color:#e2e8f0;" id="dandiInsightCommentary">
+-                            肄붾찘???앹꽦 以?..
+-                        </div>
+-                        <div style="margin-top:5px; border-top:1px solid rgba(255,255,255,0.08); padding-top:12px;">
+-                            <div style="font-size:12px; font-weight:700; color:#ffffff; margin-bottom:6px;" id="dandiP
+roductHeader">?벀 ?뱁꽣 異붿쿇 ?곹뭹 ?ы듃?대━??/div>
+-                            <div class="product-chips-container" id="sectorRecommendChips">
+-                                <!-- Chips -->
+-                            </div>
+-                        </div>
+-                    </div>
+-                </div>
+-            </section>
+-
+-            <!-- ?명꽣 -->
+-            <footer>
+-                <p>짤 2026 iM諭낇겕(?援ъ??? PB Money Move Control Center. All Rights Reserved. Confidential.</p>
+-            </footer>
+-        </main>
+-    </div>
+-
+-    <!-- 濡쒕뵫 ?붾㈃ -->
+-    <div class="loading-overlay" id="loadingOverlay">
+-        <div class="spinner"></div>
+-        <div class="loading-text" id="loadingText">癒몃땲 留덇렇???꾩옄湲곗옣 媛??以?..</div>
+-    </div>
+-
+-    <!-- ?좎뒪??而⑦뀒?대꼫 -->
+-    <div class="toast-container" id="toastContainer"></div>
+-
+-    <!-- 3. ?곗씠??諛??숈옉 濡쒖쭅 ?ㅽ겕由쏀듃 -->
+-    <script>
+-        // 異붿텧??160紐낆쓽 怨좉컼 ?곗씠??-        const originalCustomers = [{"Customer_ID": "C00025", "Name": "怨좉컼25", "Age": 
+48, "Job_Type": "?쇰컲?щТ", "Avg_Balance": 119542838, "Salary_Day_Transfer": 0.1312, "諛섎룄泥?: 21, "??났/諛⑹궛": 82, "2李⑥쟾吏":
+ 45, "由ъ툩/諛곕떦": 39, "湲덉쑖/???: 84, "Risk_Score": 21.07, "Main_Theme": "湲덉쑖/???, "Risk_Level": "??꾪뿕"}, {"Customer_ID"
+: "C00045", "Name": "怨좉컼45", "Age": 44, "Job_Type": "IT/媛쒕컻", "Avg_Balance": 133391447, "Salary_Day_Transfer": 0.4411, 
+"諛섎룄泥?: 85, "??났/諛⑹궛": 92, "2李⑥쟾吏": 92, "由ъ툩/諛곕떦": 10, "湲덉쑖/???: 73, "Risk_Score": 61.87, "Main_Theme": "??났/諛⑹궛", "R
+isk_Level": "怨좎쐞??}, {"Customer_ID": "C00056", "Name": "怨좉컼56", "Age": 33, "Job_Type": "?꾨Ц吏?, "Avg_Balance": 111705651
+, "Salary_Day_Transfer": 0.3708, "諛섎룄泥?: 49, "??났/諛⑹궛": 17, "2李⑥쟾吏": 58, "由ъ툩/諛곕떦": 59, "湲덉쑖/???: 48, "Risk_Score": 4
+3.65, "Main_Theme": "由ъ툩/諛곕떦", "Risk_Level": "以묒쐞??}, {"Customer_ID": "C00092", "Name": "怨좉컼92", "Age": 38, "Job_Type":
+ "IT/媛쒕컻", "Avg_Balance": 124697724, "Salary_Day_Transfer": 0.2901, "諛섎룄泥?: 66, "??났/諛⑹궛": 14, "2李⑥쟾吏": 94, "由ъ툩/諛곕떦":
+ 82, "湲덉쑖/???: 55, "Risk_Score": 49.41, "Main_Theme": "2李⑥쟾吏", "Risk_Level": "以묒쐞??}, {"Customer_ID": "C00197", "Name
+": "怨좉컼197", "Age": 32, "Job_Type": "?쇰컲?щТ", "Avg_Balance": 124299882, "Salary_Day_Transfer": 0.8604, "諛섎룄泥?: 66, "??났
+/諛⑹궛": 86, "2李⑥쟾吏": 3, "由ъ툩/諛곕떦": 49, "湲덉쑖/???: 69, "Risk_Score": 65.43, "Main_Theme": "??났/諛⑹궛", "Risk_Level": "怨좎쐞?
+?}, {"Customer_ID": "C00268", "Name": "怨좉컼268", "Age": 41, "Job_Type": "IT/媛쒕컻", "Avg_Balance": 104204232, "Salary_Day_
+Transfer": 0.6814, "諛섎룄泥?: 48, "??났/諛⑹궛": 97, "2李⑥쟾吏": 86, "由ъ툩/諛곕떦": 28, "湲덉쑖/???: 96, "Risk_Score": 67.68, "Main_Th
+eme": "??났/諛⑹궛", "Risk_Level": "怨좎쐞??}, {"Customer_ID": "C00356", "Name": "怨좉컼356", "Age": 49, "Job_Type": "IT/媛쒕컻", "A
+vg_Balance": 122522512, "Salary_Day_Transfer": 0.1197, "諛섎룄泥?: 26, "??났/諛⑹궛": 45, "2李⑥쟾吏": 50, "由ъ툩/諛곕떦": 92, "湲덉쑖/??
+?: 4, "Risk_Score": 22.38, "Main_Theme": "由ъ툩/諛곕떦", "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C00457", "Name": "怨좉컼457",
+ "Age": 47, "Job_Type": "?쒖“??, "Avg_Balance": 112117823, "Salary_Day_Transfer": 0.4333, "諛섎룄泥?: 11, "??났/諛⑹궛": 32, "2李
+⑥쟾吏": 15, "由ъ툩/諛곕떦": 55, "湲덉쑖/???: 68, "Risk_Score": 31.2, "Main_Theme": "湲덉쑖/???, "Risk_Level": "??꾪뿕"}, {"Custome
+r_ID": "C00491", "Name": "怨좉컼491", "Age": 36, "Job_Type": "IT/媛쒕컻", "Avg_Balance": 122435378, "Salary_Day_Transfer": 0.
+7499, "諛섎룄泥?: 88, "??났/諛⑹궛": 5, "2李⑥쟾吏": 37, "由ъ툩/諛곕떦": 35, "湲덉쑖/???: 11, "Risk_Score": 70.0, "Main_Theme": "諛섎룄泥?, "
+Risk_Level": "怨좎쐞??}, {"Customer_ID": "C00494", "Name": "怨좉컼494", "Age": 36, "Job_Type": "?쒖“??, "Avg_Balance": 1306082
+64, "Salary_Day_Transfer": 0.2977, "諛섎룄泥?: 92, "??났/諛⑹궛": 45, "2李⑥쟾吏": 10, "由ъ툩/諛곕떦": 79, "湲덉쑖/???: 93, "Risk_Score":
+ 38.26, "Main_Theme": "湲덉쑖/???, "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C00530", "Name": "怨좉컼530", "Age": 35, "Job_Ty
+pe": "?쒖“??, "Avg_Balance": 107468374, "Salary_Day_Transfer": 0.8062, "諛섎룄泥?: 47, "??났/諛⑹궛": 31, "2李⑥쟾吏": 48, "由ъ툩/諛곕떦
+": 92, "湲덉쑖/???: 32, "Risk_Score": 67.37, "Main_Theme": "由ъ툩/諛곕떦", "Risk_Level": "怨좎쐞??}, {"Customer_ID": "C00542", "N
+ame": "怨좉컼542", "Age": 37, "Job_Type": "?쇰컲?щТ", "Avg_Balance": 103053877, "Salary_Day_Transfer": 0.7037, "諛섎룄泥?: 64, "
+??났/諛⑹궛": 38, "2李⑥쟾吏": 49, "由ъ툩/諛곕떦": 71, "湲덉쑖/???: 33, "Risk_Score": 64.82, "Main_Theme": "由ъ툩/諛곕떦", "Risk_Level": "
+怨좎쐞??}, {"Customer_ID": "C00591", "Name": "怨좉컼591", "Age": 45, "Job_Type": "?꾨Ц吏?, "Avg_Balance": 107210923, "Salary_Da
+y_Transfer": 0.288, "諛섎룄泥?: 37, "??났/諛⑹궛": 75, "2李⑥쟾吏": 15, "由ъ툩/諛곕떦": 72, "湲덉쑖/???: 62, "Risk_Score": 27.68, "Main_T
+heme": "??났/諛⑹궛", "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C00604", "Name": "怨좉컼604", "Age": 34, "Job_Type": "?꾨Ц吏?, "A
+vg_Balance": 112455536, "Salary_Day_Transfer": 0.1065, "諛섎룄泥?: 4, "??났/諛⑹궛": 84, "2李⑥쟾吏": 36, "由ъ툩/諛곕떦": 71, "湲덉쑖/???
+: 0, "Risk_Score": 14.39, "Main_Theme": "??났/諛⑹궛", "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C00617", "Name": "怨좉컼617", 
+"Age": 30, "Job_Type": "?꾨Ц吏?, "Avg_Balance": 137457485, "Salary_Day_Transfer": 0.6698, "諛섎룄泥?: 19, "??났/諛⑹궛": 37, "2李⑥
+쟾吏": 11, "由ъ툩/諛곕떦": 11, "湲덉쑖/???: 94, "Risk_Score": 46.19, "Main_Theme": "湲덉쑖/???, "Risk_Level": "以묒쐞??}, {"Customer
+_ID": "C00624", "Name": "怨좉컼624", "Age": 32, "Job_Type": "?쒖“??, "Avg_Balance": 105472463, "Salary_Day_Transfer": 0.625
+1, "諛섎룄泥?: 32, "??났/諛⑹궛": 40, "2李⑥쟾吏": 27, "由ъ툩/諛곕떦": 52, "湲덉쑖/???: 38, "Risk_Score": 49.31, "Main_Theme": "由ъ툩/諛곕떦",
+ "Risk_Level": "以묒쐞??}, {"Customer_ID": "C00629", "Name": "怨좉컼629", "Age": 48, "Job_Type": "?꾨Ц吏?, "Avg_Balance": 12757
+5689, "Salary_Day_Transfer": 0.5414, "諛섎룄泥?: 78, "??났/諛⑹궛": 86, "2李⑥쟾吏": 3, "由ъ툩/諛곕떦": 28, "湲덉쑖/???: 69, "Risk_Score"
+: 48.68, "Main_Theme": "??났/諛⑹궛", "Risk_Level": "以묒쐞??}, {"Customer_ID": "C00667", "Name": "怨좉컼667", "Age": 47, "Job_Ty
+pe": "?쒖“??, "Avg_Balance": 133181752, "Salary_Day_Transfer": 0.2753, "諛섎룄泥?: 10, "??났/諛⑹궛": 0, "2李⑥쟾吏": 4, "由ъ툩/諛곕떦":
+ 29, "湲덉쑖/???: 54, "Risk_Score": 19.32, "Main_Theme": "湲덉쑖/???, "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C00706", "Na
+me": "怨좉컼706", "Age": 48, "Job_Type": "IT/媛쒕컻", "Avg_Balance": 101806647, "Salary_Day_Transfer": 0.7134, "諛섎룄泥?: 53, "?
+?났/諛⑹궛": 80, "2李⑥쟾吏": 99, "由ъ툩/諛곕떦": 98, "湲덉쑖/???: 79, "Risk_Score": 73.2, "Main_Theme": "2李⑥쟾吏", "Risk_Level": "怨좎쐞
+??}, {"Customer_ID": "C00760", "Name": "怨좉컼760", "Age": 42, "Job_Type": "?쇰컲?щТ", "Avg_Balance": 115787472, "Salary_Day
+_Transfer": 0.4598, "諛섎룄泥?: 41, "??났/諛⑹궛": 1, "2李⑥쟾吏": 16, "由ъ툩/諛곕떦": 43, "湲덉쑖/???: 4, "Risk_Score": 38.99, "Main_The
+me": "由ъ툩/諛곕떦", "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C00782", "Name": "怨좉컼782", "Age": 49, "Job_Type": "?꾨Ц吏?, "Avg
+_Balance": 112632435, "Salary_Day_Transfer": 0.1564, "諛섎룄泥?: 36, "??났/諛⑹궛": 27, "2李⑥쟾吏": 78, "由ъ툩/諛곕떦": 40, "湲덉쑖/???:
+ 41, "Risk_Score": 32.19, "Main_Theme": "2李⑥쟾吏", "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C00803", "Name": "怨좉컼803", "
+Age": 33, "Job_Type": "?꾨Ц吏?, "Avg_Balance": 109784260, "Salary_Day_Transfer": 0.853, "諛섎룄泥?: 80, "??났/諛⑹궛": 60, "2李⑥쟾吏
+": 67, "由ъ툩/諛곕떦": 3, "湲덉쑖/???: 27, "Risk_Score": 80.58, "Main_Theme": "諛섎룄泥?, "Risk_Level": "怨좎쐞??}, {"Customer_ID": 
+"C00837", "Name": "怨좉컼837", "Age": 47, "Job_Type": "IT/媛쒕컻", "Avg_Balance": 114464054, "Salary_Day_Transfer": 0.2515, "
+諛섎룄泥?: 28, "??났/諛⑹궛": 10, "2李⑥쟾吏": 2, "由ъ툩/諛곕떦": 94, "湲덉쑖/???: 71, "Risk_Score": 21.09, "Main_Theme": "由ъ툩/諛곕떦", "Ris
+k_Level": "??꾪뿕"}, {"Customer_ID": "C00843", "Name": "怨좉컼843", "Age": 42, "Job_Type": "?쇰컲?щТ", "Avg_Balance": 1223045
+99, "Salary_Day_Transfer": 0.4716, "諛섎룄泥?: 72, "??났/諛⑹궛": 16, "2李⑥쟾吏": 23, "由ъ툩/諛곕떦": 35, "湲덉쑖/???: 22, "Risk_Score":
+ 47.3, "Main_Theme": "諛섎룄泥?, "Risk_Level": "以묒쐞??}, {"Customer_ID": "C00863", "Name": "怨좉컼863", "Age": 31, "Job_Type": 
+"IT/媛쒕컻", "Avg_Balance": 115050348, "Salary_Day_Transfer": 0.3178, "諛섎룄泥?: 97, "??났/諛⑹궛": 96, "2李⑥쟾吏": 87, "由ъ툩/諛곕떦": 
+71, "湲덉쑖/???: 6, "Risk_Score": 55.87, "Main_Theme": "諛섎룄泥?, "Risk_Level": "以묒쐞??}, {"Customer_ID": "C00879", "Name": "
+怨좉컼879", "Age": 33, "Job_Type": "?쒖“??, "Avg_Balance": 126050297, "Salary_Day_Transfer": 0.3625, "諛섎룄泥?: 4, "??났/諛⑹궛": 
+62, "2李⑥쟾吏": 65, "由ъ툩/諛곕떦": 89, "湲덉쑖/???: 43, "Risk_Score": 35.55, "Main_Theme": "由ъ툩/諛곕떦", "Risk_Level": "??꾪뿕"}, {
+"Customer_ID": "C00884", "Name": "怨좉컼884", "Age": 37, "Job_Type": "?쇰컲?щТ", "Avg_Balance": 119699192, "Salary_Day_Trans
+fer": 0.4853, "諛섎룄泥?: 2, "??났/諛⑹궛": 67, "2李⑥쟾吏": 47, "由ъ툩/諛곕떦": 33, "湲덉쑖/???: 1, "Risk_Score": 38.92, "Main_Theme": "
+??났/諛⑹궛", "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C00927", "Name": "怨좉컼927", "Age": 35, "Job_Type": "?쇰컲?щТ", "Avg_Bal
+ance": 118445693, "Salary_Day_Transfer": 0.7385, "諛섎룄泥?: 44, "??났/諛⑹궛": 99, "2李⑥쟾吏": 88, "由ъ툩/諛곕떦": 15, "湲덉쑖/???: 61,
+ "Risk_Score": 70.71, "Main_Theme": "??났/諛⑹궛", "Risk_Level": "怨좎쐞??}, {"Customer_ID": "C00953", "Name": "怨좉컼953", "Age"
+: 37, "Job_Type": "?쇰컲?щТ", "Avg_Balance": 106715080, "Salary_Day_Transfer": 0.4189, "諛섎룄泥?: 68, "??났/諛⑹궛": 66, "2李⑥쟾吏
+": 10, "由ъ툩/諛곕떦": 39, "湲덉쑖/???: 65, "Risk_Score": 40.74, "Main_Theme": "諛섎룄泥?, "Risk_Level": "以묒쐞??}, {"Customer_ID": 
+"C01023", "Name": "怨좉컼1023", "Age": 46, "Job_Type": "?쒖“??, "Avg_Balance": 117297781, "Salary_Day_Transfer": 0.3039, "諛
+섎룄泥?: 13, "??났/諛⑹궛": 64, "2李⑥쟾吏": 25, "由ъ툩/諛곕떦": 51, "湲덉쑖/???: 12, "Risk_Score": 25.83, "Main_Theme": "??났/諛⑹궛", "Ris
+k_Level": "??꾪뿕"}, {"Customer_ID": "C01073", "Name": "怨좉컼1073", "Age": 40, "Job_Type": "?꾨Ц吏?, "Avg_Balance": 12594704
+3, "Salary_Day_Transfer": 0.8982, "諛섎룄泥?: 42, "??났/諛⑹궛": 51, "2李⑥쟾吏": 66, "由ъ툩/諛곕떦": 49, "湲덉쑖/???: 87, "Risk_Score": 
+75.49, "Main_Theme": "湲덉쑖/???, "Risk_Level": "怨좎쐞??}, {"Customer_ID": "C01137", "Name": "怨좉컼1137", "Age": 31, "Job_Typ
+e": "?꾨Ц吏?, "Avg_Balance": 118117472, "Salary_Day_Transfer": 0.3124, "諛섎룄泥?: 11, "??났/諛⑹궛": 37, "2李⑥쟾吏": 95, "由ъ툩/諛곕떦"
+: 22, "湲덉쑖/???: 16, "Risk_Score": 39.94, "Main_Theme": "2李⑥쟾吏", "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C01171", "Na
+me": "怨좉컼1171", "Age": 33, "Job_Type": "?쇰컲?щТ", "Avg_Balance": 129499090, "Salary_Day_Transfer": 0.829, "諛섎룄泥?: 77, "?
+?났/諛⑹궛": 45, "2李⑥쟾吏": 76, "由ъ툩/諛곕떦": 51, "湲덉쑖/???: 37, "Risk_Score": 80.34, "Main_Theme": "諛섎룄泥?, "Risk_Level": "怨좎쐞?
+?}, {"Customer_ID": "C01177", "Name": "怨좉컼1177", "Age": 40, "Job_Type": "?꾨Ц吏?, "Avg_Balance": 113645623, "Salary_Day_T
+ransfer": 0.2788, "諛섎룄泥?: 77, "??났/諛⑹궛": 61, "2李⑥쟾吏": 93, "由ъ툩/諛곕떦": 81, "湲덉쑖/???: 19, "Risk_Score": 50.73, "Main_The
+me": "2李⑥쟾吏", "Risk_Level": "以묒쐞??}, {"Customer_ID": "C01186", "Name": "怨좉컼1186", "Age": 37, "Job_Type": "?꾨Ц吏?, "Avg_
+Balance": 104683660, "Salary_Day_Transfer": 0.479, "諛섎룄泥?: 75, "??났/諛⑹궛": 49, "2李⑥쟾吏": 87, "由ъ툩/諛곕떦": 83, "湲덉쑖/???: 3
+5, "Risk_Score": 61.14, "Main_Theme": "2李⑥쟾吏", "Risk_Level": "怨좎쐞??}, {"Customer_ID": "C01306", "Name": "怨좉컼1306", "Ag
+e": 34, "Job_Type": "?쒖“??, "Avg_Balance": 122460762, "Salary_Day_Transfer": 0.3777, "諛섎룄泥?: 74, "??났/諛⑹궛": 16, "2李⑥쟾吏
+": 17, "由ъ툩/諛곕떦": 23, "湲덉쑖/???: 45, "Risk_Score": 40.86, "Main_Theme": "諛섎룄泥?, "Risk_Level": "以묒쐞??}, {"Customer_ID": 
+"C01393", "Name": "怨좉컼1393", "Age": 45, "Job_Type": "?꾨Ц吏?, "Avg_Balance": 113575176, "Salary_Day_Transfer": 0.5001, "諛
+섎룄泥?: 26, "??났/諛⑹궛": 65, "2李⑥쟾吏": 6, "由ъ툩/諛곕떦": 80, "湲덉쑖/???: 94, "Risk_Score": 36.41, "Main_Theme": "湲덉쑖/???, "Risk
+_Level": "??꾪뿕"}, {"Customer_ID": "C01434", "Name": "怨좉컼1434", "Age": 39, "Job_Type": "IT/媛쒕컻", "Avg_Balance": 1149161
+51, "Salary_Day_Transfer": 0.4161, "諛섎룄泥?: 25, "??났/諛⑹궛": 58, "2李⑥쟾吏": 32, "由ъ툩/諛곕떦": 71, "湲덉쑖/???: 6, "Risk_Score": 
+36.37, "Main_Theme": "由ъ툩/諛곕떦", "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C01438", "Name": "怨좉컼1438", "Age": 34, "Job_Ty
+pe": "?쒖“??, "Avg_Balance": 119135194, "Salary_Day_Transfer": 0.6754, "諛섎룄泥?: 41, "??났/諛⑹궛": 16, "2李⑥쟾吏": 92, "由ъ툩/諛곕떦
+": 11, "湲덉쑖/???: 1, "Risk_Score": 67.12, "Main_Theme": "2李⑥쟾吏", "Risk_Level": "怨좎쐞??}, {"Customer_ID": "C01462", "Nam
+e": "怨좉컼1462", "Age": 44, "Job_Type": "IT/媛쒕컻", "Avg_Balance": 104916630, "Salary_Day_Transfer": 0.4661, "諛섎룄泥?: 71, "?
+?났/諛⑹궛": 27, "2李⑥쟾吏": 21, "由ъ툩/諛곕떦": 30, "湲덉쑖/???: 41, "Risk_Score": 46.37, "Main_Theme": "諛섎룄泥?, "Risk_Level": "以묒쐞?
+?}, {"Customer_ID": "C01466", "Name": "怨좉컼1466", "Age": 31, "Job_Type": "IT/媛쒕컻", "Avg_Balance": 104962002, "Salary_Day
+_Transfer": 0.8561, "諛섎룄泥?: 13, "??났/諛⑹궛": 70, "2李⑥쟾吏": 93, "由ъ툩/諛곕떦": 26, "湲덉쑖/???: 21, "Risk_Score": 72.56, "Main_T
+heme": "2李⑥쟾吏", "Risk_Level": "怨좎쐞??}, {"Customer_ID": "C01476", "Name": "怨좉컼1476", "Age": 40, "Job_Type": "?쒖“??, "Av
+g_Balance": 105418890, "Salary_Day_Transfer": 0.3815, "諛섎룄泥?: 2, "??났/諛⑹궛": 44, "2李⑥쟾吏": 20, "由ъ툩/諛곕떦": 0, "湲덉쑖/???: 
+66, "Risk_Score": 27.29, "Main_Theme": "湲덉쑖/???, "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C01478", "Name": "怨좉컼1478", 
+"Age": 31, "Job_Type": "?쒖“??, "Avg_Balance": 98403919, "Salary_Day_Transfer": 0.4425, "諛섎룄泥?: 24, "??났/諛⑹궛": 85, "2李⑥쟾
+吏": 72, "由ъ툩/諛곕떦": 91, "湲덉쑖/???: 42, "Risk_Score": 45.75, "Main_Theme": "由ъ툩/諛곕떦", "Risk_Level": "以묒쐞??}, {"Customer_
+ID": "C01559", "Name": "怨좉컼1559", "Age": 30, "Job_Type": "?쒖“??, "Avg_Balance": 133385155, "Salary_Day_Transfer": 0.675
+6, "諛섎룄泥?: 42, "??났/諛⑹궛": 43, "2李⑥쟾吏": 61, "由ъ툩/諛곕떦": 43, "湲덉쑖/???: 13, "Risk_Score": 61.14, "Main_Theme": "2李⑥쟾吏", 
+"Risk_Level": "怨좎쐞??}, {"Customer_ID": "C01579", "Name": "怨좉컼1579", "Age": 37, "Job_Type": "IT/媛쒕컻", "Avg_Balance": 111
+605503, "Salary_Day_Transfer": 0.256, "諛섎룄泥?: 78, "??났/諛⑹궛": 8, "2李⑥쟾吏": 71, "由ъ툩/諛곕떦": 97, "湲덉쑖/???: 90, "Risk_Score
+": 45.16, "Main_Theme": "由ъ툩/諛곕떦", "Risk_Level": "以묒쐞??}, {"Customer_ID": "C01584", "Name": "怨좉컼1584", "Age": 35, "Job_
+Type": "?쒖“??, "Avg_Balance": 101681421, "Salary_Day_Transfer": 0.7187, "諛섎룄泥?: 35, "??났/諛⑹궛": 92, "2李⑥쟾吏": 87, "由ъ툩/諛
+곕떦": 28, "湲덉쑖/???: 27, "Risk_Score": 67.52, "Main_Theme": "??났/諛⑹궛", "Risk_Level": "怨좎쐞??}, {"Customer_ID": "C01587", 
+"Name": "怨좉컼1587", "Age": 38, "Job_Type": "?꾨Ц吏?, "Avg_Balance": 113389668, "Salary_Day_Transfer": 0.8883, "諛섎룄泥?: 97, 
+"??났/諛⑹궛": 99, "2李⑥쟾吏": 42, "由ъ툩/諛곕떦": 26, "湲덉쑖/???: 62, "Risk_Score": 81.1, "Main_Theme": "??났/諛⑹궛", "Risk_Level": "
+怨좎쐞??}, {"Customer_ID": "C01624", "Name": "怨좉컼1624", "Age": 38, "Job_Type": "IT/媛쒕컻", "Avg_Balance": 101821705, "Salary
+_Day_Transfer": 0.8218, "諛섎룄泥?: 8, "??났/諛⑹궛": 96, "2李⑥쟾吏": 1, "由ъ툩/諛곕떦": 24, "湲덉쑖/???: 87, "Risk_Score": 51.11, "Main
+_Theme": "??났/諛⑹궛", "Risk_Level": "以묒쐞??}, {"Customer_ID": "C01642", "Name": "怨좉컼1642", "Age": 38, "Job_Type": "IT/媛쒕컻"
+, "Avg_Balance": 105847413, "Salary_Day_Transfer": 0.447, "諛섎룄泥?: 70, "??났/諛⑹궛": 9, "2李⑥쟾吏": 81, "由ъ툩/諛곕떦": 71, "湲덉쑖/?
+??: 31, "Risk_Score": 57.02, "Main_Theme": "2李⑥쟾吏", "Risk_Level": "以묒쐞??}, {"Customer_ID": "C01665", "Name": "怨좉컼1665
+", "Age": 45, "Job_Type": "?쇰컲?щТ", "Avg_Balance": 121030543, "Salary_Day_Transfer": 0.2469, "諛섎룄泥?: 71, "??났/諛⑹궛": 84,
+ "2李⑥쟾吏": 81, "由ъ툩/諛곕떦": 63, "湲덉쑖/???: 95, "Risk_Score": 45.21, "Main_Theme": "湲덉쑖/???, "Risk_Level": "以묒쐞??}, {"Cus
+tomer_ID": "C01669", "Name": "怨좉컼1669", "Age": 43, "Job_Type": "?꾨Ц吏?, "Avg_Balance": 123248193, "Salary_Day_Transfer":
+ 0.5199, "諛섎룄泥?: 91, "??났/諛⑹궛": 51, "2李⑥쟾吏": 18, "由ъ툩/諛곕떦": 79, "湲덉쑖/???: 14, "Risk_Score": 52.99, "Main_Theme": "諛섎룄
+泥?, "Risk_Level": "以묒쐞??}, {"Customer_ID": "C01682", "Name": "怨좉컼1682", "Age": 35, "Job_Type": "?쇰컲?щТ", "Avg_Balance":
+ 106159898, "Salary_Day_Transfer": 0.1333, "諛섎룄泥?: 58, "??났/諛⑹궛": 76, "2李⑥쟾吏": 85, "由ъ툩/諛곕떦": 58, "湲덉쑖/???: 12, "Risk
+_Score": 36.6, "Main_Theme": "2李⑥쟾吏", "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C01712", "Name": "怨좉컼1712", "Age": 34, 
+"Job_Type": "?쒖“??, "Avg_Balance": 148226379, "Salary_Day_Transfer": 0.1718, "諛섎룄泥?: 63, "??났/諛⑹궛": 6, "2李⑥쟾吏": 43, "由
+ъ툩/諛곕떦": 60, "湲덉쑖/???: 47, "Risk_Score": 31.51, "Main_Theme": "諛섎룄泥?, "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C01738"
+, "Name": "怨좉컼1738", "Age": 48, "Job_Type": "?쒖“??, "Avg_Balance": 124012573, "Salary_Day_Transfer": 0.8082, "諛섎룄泥?: 51
+, "??났/諛⑹궛": 31, "2李⑥쟾吏": 28, "由ъ툩/諛곕떦": 9, "湲덉쑖/???: 60, "Risk_Score": 64.29, "Main_Theme": "湲덉쑖/???, "Risk_Level":
+ "怨좎쐞??}, {"Customer_ID": "C01779", "Name": "怨좉컼1779", "Age": 37, "Job_Type": "?쒖“??, "Avg_Balance": 126672630, "Salary
+_Day_Transfer": 0.6425, "諛섎룄泥?: 84, "??났/諛⑹궛": 12, "2李⑥쟾吏": 11, "由ъ툩/諛곕떦": 55, "湲덉쑖/???: 41, "Risk_Score": 57.55, "Ma
+in_Theme": "諛섎룄泥?, "Risk_Level": "以묒쐞??}, {"Customer_ID": "C01808", "Name": "怨좉컼1808", "Age": 48, "Job_Type": "?쇰컲?щТ",
+ "Avg_Balance": 112277356, "Salary_Day_Transfer": 0.2345, "諛섎룄泥?: 79, "??났/諛⑹궛": 80, "2李⑥쟾吏": 37, "由ъ툩/諛곕떦": 57, "湲덉쑖/
+???: 42, "Risk_Score": 37.27, "Main_Theme": "??났/諛⑹궛", "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C01841", "Name": "怨좉컼1
+841", "Age": 37, "Job_Type": "?쒖“??, "Avg_Balance": 111217706, "Salary_Day_Transfer": 0.252, "諛섎룄泥?: 93, "??났/諛⑹궛": 65,
+ "2李⑥쟾吏": 17, "由ъ툩/諛곕떦": 28, "湲덉쑖/???: 47, "Risk_Score": 37.12, "Main_Theme": "諛섎룄泥?, "Risk_Level": "??꾪뿕"}, {"Custo
+mer_ID": "C01898", "Name": "怨좉컼1898", "Age": 39, "Job_Type": "?꾨Ц吏?, "Avg_Balance": 111496125, "Salary_Day_Transfer": 0
+.6908, "諛섎룄泥?: 59, "??났/諛⑹궛": 57, "2李⑥쟾吏": 21, "由ъ툩/諛곕떦": 58, "湲덉쑖/???: 82, "Risk_Score": 57.45, "Main_Theme": "湲덉쑖/?
+??, "Risk_Level": "以묒쐞??}, {"Customer_ID": "C01917", "Name": "怨좉컼1917", "Age": 46, "Job_Type": "?쇰컲?щТ", "Avg_Balance"
+: 127769857, "Salary_Day_Transfer": 0.2686, "諛섎룄泥?: 30, "??났/諛⑹궛": 87, "2李⑥쟾吏": 56, "由ъ툩/諛곕떦": 80, "湲덉쑖/???: 71, "Ris
+k_Score": 33.31, "Main_Theme": "??났/諛⑹궛", "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C01937", "Name": "怨좉컼1937", "Age": 3
+0, "Job_Type": "?쇰컲?щТ", "Avg_Balance": 103829870, "Salary_Day_Transfer": 0.5721, "諛섎룄泥?: 2, "??났/諛⑹궛": 57, "2李⑥쟾吏": 6
+0, "由ъ툩/諛곕떦": 27, "湲덉쑖/???: 18, "Risk_Score": 46.72, "Main_Theme": "2李⑥쟾吏", "Risk_Level": "以묒쐞??}, {"Customer_ID": "C
+01987", "Name": "怨좉컼1987", "Age": 35, "Job_Type": "?쇰컲?щТ", "Avg_Balance": 107447182, "Salary_Day_Transfer": 0.6856, "諛
+섎룄泥?: 74, "??났/諛⑹궛": 82, "2李⑥쟾吏": 26, "由ъ툩/諛곕떦": 86, "湲덉쑖/???: 12, "Risk_Score": 61.13, "Main_Theme": "由ъ툩/諛곕떦", "Ris
+k_Level": "怨좎쐞??}, {"Customer_ID": "C02008", "Name": "怨좉컼2008", "Age": 45, "Job_Type": "?꾨Ц吏?, "Avg_Balance": 113040782
+, "Salary_Day_Transfer": 0.8118, "諛섎룄泥?: 36, "??났/諛⑹궛": 36, "2李⑥쟾吏": 86, "由ъ툩/諛곕떦": 96, "湲덉쑖/???: 22, "Risk_Score": 7
+3.11, "Main_Theme": "由ъ툩/諛곕떦", "Risk_Level": "怨좎쐞??}, {"Customer_ID": "C02019", "Name": "怨좉컼2019", "Age": 42, "Job_Type
+": "?쇰컲?щТ", "Avg_Balance": 104387271, "Salary_Day_Transfer": 0.5299, "諛섎룄泥?: 85, "??났/諛⑹궛": 9, "2李⑥쟾吏": 30, "由ъ툩/諛곕떦"
+: 7, "湲덉쑖/???: 57, "Risk_Score": 54.79, "Main_Theme": "諛섎룄泥?, "Risk_Level": "以묒쐞??}, {"Customer_ID": "C02031", "Name":
+ "怨좉컼2031", "Age": 36, "Job_Type": "?꾨Ц吏?, "Avg_Balance": 119185359, "Salary_Day_Transfer": 0.1261, "諛섎룄泥?: 71, "??났/諛⑹
+궛": 84, "2李⑥쟾吏": 33, "由ъ툩/諛곕떦": 69, "湲덉쑖/???: 10, "Risk_Score": 28.37, "Main_Theme": "??났/諛⑹궛", "Risk_Level": "??꾪뿕"
+}, {"Customer_ID": "C02044", "Name": "怨좉컼2044", "Age": 38, "Job_Type": "IT/媛쒕컻", "Avg_Balance": 137942028, "Salary_Day_
+Transfer": 0.8258, "諛섎룄泥?: 30, "??났/諛⑹궛": 6, "2李⑥쟾吏": 10, "由ъ툩/諛곕떦": 23, "湲덉쑖/???: 75, "Risk_Score": 57.55, "Main_The
+me": "湲덉쑖/???, "Risk_Level": "以묒쐞??}, {"Customer_ID": "C02076", "Name": "怨좉컼2076", "Age": 38, "Job_Type": "IT/媛쒕컻", "A
+vg_Balance": 105494294, "Salary_Day_Transfer": 0.366, "諛섎룄泥?: 40, "??났/諛⑹궛": 8, "2李⑥쟾吏": 22, "由ъ툩/諛곕떦": 19, "湲덉쑖/???:
+ 21, "Risk_Score": 34.36, "Main_Theme": "諛섎룄泥?, "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C02080", "Name": "怨좉컼2080", "A
+ge": 31, "Job_Type": "IT/媛쒕컻", "Avg_Balance": 121309247, "Salary_Day_Transfer": 0.7686, "諛섎룄泥?: 17, "??났/諛⑹궛": 39, "2李⑥
+쟾吏": 26, "由ъ툩/諛곕떦": 60, "湲덉쑖/???: 96, "Risk_Score": 54.72, "Main_Theme": "湲덉쑖/???, "Risk_Level": "以묒쐞??}, {"Customer
+_ID": "C02103", "Name": "怨좉컼2103", "Age": 31, "Job_Type": "IT/媛쒕컻", "Avg_Balance": 109172924, "Salary_Day_Transfer": 0.
+3073, "諛섎룄泥?: 1, "??났/諛⑹궛": 33, "2李⑥쟾吏": 29, "由ъ툩/諛곕떦": 51, "湲덉쑖/???: 39, "Risk_Score": 24.44, "Main_Theme": "由ъ툩/諛곕떦
+", "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C02151", "Name": "怨좉컼2151", "Age": 49, "Job_Type": "IT/媛쒕컻", "Avg_Balance":
+ 133576208, "Salary_Day_Transfer": 0.49, "諛섎룄泥?: 80, "??났/諛⑹궛": 8, "2李⑥쟾吏": 50, "由ъ툩/諛곕떦": 81, "湲덉쑖/???: 63, "Risk_Sc
+ore": 55.4, "Main_Theme": "由ъ툩/諛곕떦", "Risk_Level": "以묒쐞??}, {"Customer_ID": "C02153", "Name": "怨좉컼2153", "Age": 36, "Jo
+b_Type": "?쒖“??, "Avg_Balance": 119232182, "Salary_Day_Transfer": 0.6164, "諛섎룄泥?: 99, "??났/諛⑹궛": 36, "2李⑥쟾吏": 59, "由ъ툩
+/諛곕떦": 97, "湲덉쑖/???: 38, "Risk_Score": 68.58, "Main_Theme": "諛섎룄泥?, "Risk_Level": "怨좎쐞??}, {"Customer_ID": "C02196", "
+Name": "怨좉컼2196", "Age": 31, "Job_Type": "?꾨Ц吏?, "Avg_Balance": 109308611, "Salary_Day_Transfer": 0.1224, "諛섎룄泥?: 70, "
+??났/諛⑹궛": 11, "2李⑥쟾吏": 41, "由ъ툩/諛곕떦": 92, "湲덉쑖/???: 22, "Risk_Score": 29.54, "Main_Theme": "由ъ툩/諛곕떦", "Risk_Level": "
+??꾪뿕"}, {"Customer_ID": "C02235", "Name": "怨좉컼2235", "Age": 48, "Job_Type": "?쇰컲?щТ", "Avg_Balance": 117219766, "Salar
+y_Day_Transfer": 0.8227, "諛섎룄泥?: 42, "??났/諛⑹궛": 90, "2李⑥쟾吏": 70, "由ъ툩/諛곕떦": 21, "湲덉쑖/???: 87, "Risk_Score": 71.76, "M
+ain_Theme": "??났/諛⑹궛", "Risk_Level": "怨좎쐞??}, {"Customer_ID": "C02262", "Name": "怨좉컼2262", "Age": 37, "Job_Type": "?꾨Ц吏
+?, "Avg_Balance": 129805221, "Salary_Day_Transfer": 0.7555, "諛섎룄泥?: 16, "??났/諛⑹궛": 71, "2李⑥쟾吏": 97, "由ъ툩/諛곕떦": 16, "湲덉
+쑖/???: 54, "Risk_Score": 67.93, "Main_Theme": "2李⑥쟾吏", "Risk_Level": "怨좎쐞??}, {"Customer_ID": "C02285", "Name": "怨좉컼2
+285", "Age": 46, "Job_Type": "IT/媛쒕컻", "Avg_Balance": 112782408, "Salary_Day_Transfer": 0.4595, "諛섎룄泥?: 12, "??났/諛⑹궛": 
+83, "2李⑥쟾吏": 82, "由ъ툩/諛곕떦": 62, "湲덉쑖/???: 89, "Risk_Score": 46.37, "Main_Theme": "湲덉쑖/???, "Risk_Level": "以묒쐞??}, {"
+Customer_ID": "C02318", "Name": "怨좉컼2318", "Age": 44, "Job_Type": "?꾨Ц吏?, "Avg_Balance": 113113905, "Salary_Day_Transfe
+r": 0.403, "諛섎룄泥?: 7, "??났/諛⑹궛": 27, "2李⑥쟾吏": 4, "由ъ툩/諛곕떦": 91, "湲덉쑖/???: 45, "Risk_Score": 26.38, "Main_Theme": "由ъ툩
+/諛곕떦", "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C02332", "Name": "怨좉컼2332", "Age": 31, "Job_Type": "?꾨Ц吏?, "Avg_Balance
+": 120120938, "Salary_Day_Transfer": 0.1708, "諛섎룄泥?: 41, "??났/諛⑹궛": 71, "2李⑥쟾吏": 27, "由ъ툩/諛곕떦": 30, "湲덉쑖/???: 72, "Ri
+sk_Score": 23.85, "Main_Theme": "湲덉쑖/???, "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C02372", "Name": "怨좉컼2372", "Age": 
+49, "Job_Type": "?쇰컲?щТ", "Avg_Balance": 107931478, "Salary_Day_Transfer": 0.3172, "諛섎룄泥?: 85, "??났/諛⑹궛": 71, "2李⑥쟾吏":
+ 4, "由ъ툩/諛곕떦": 93, "湲덉쑖/???: 58, "Risk_Score": 36.83, "Main_Theme": "由ъ툩/諛곕떦", "Risk_Level": "??꾪뿕"}, {"Customer_ID":
+ "C02445", "Name": "怨좉컼2445", "Age": 35, "Job_Type": "?꾨Ц吏?, "Avg_Balance": 128047803, "Salary_Day_Transfer": 0.1405, "
+諛섎룄泥?: 86, "??났/諛⑹궛": 80, "2李⑥쟾吏": 87, "由ъ툩/諛곕떦": 1, "湲덉쑖/???: 0, "Risk_Score": 43.03, "Main_Theme": "2李⑥쟾吏", "Risk_
+Level": "以묒쐞??}, {"Customer_ID": "C02468", "Name": "怨좉컼2468", "Age": 42, "Job_Type": "?꾨Ц吏?, "Avg_Balance": 111112038, 
+"Salary_Day_Transfer": 0.767, "諛섎룄泥?: 36, "??났/諛⑹궛": 57, "2李⑥쟾吏": 47, "由ъ툩/諛곕떦": 40, "湲덉쑖/???: 51, "Risk_Score": 62.6
+2, "Main_Theme": "??났/諛⑹궛", "Risk_Level": "怨좎쐞??}, {"Customer_ID": "C02557", "Name": "怨좉컼2557", "Age": 41, "Job_Type": 
+"IT/媛쒕컻", "Avg_Balance": 127758291, "Salary_Day_Transfer": 0.4563, "諛섎룄泥?: 20, "??났/諛⑹궛": 4, "2李⑥쟾吏": 66, "由ъ툩/諛곕떦": 8
+1, "湲덉쑖/???: 78, "Risk_Score": 44.58, "Main_Theme": "由ъ툩/諛곕떦", "Risk_Level": "以묒쐞??}, {"Customer_ID": "C02578", "Name"
+: "怨좉컼2578", "Age": 38, "Job_Type": "?쇰컲?щТ", "Avg_Balance": 117940919, "Salary_Day_Transfer": 0.4817, "諛섎룄泥?: 51, "??났
+/諛⑹궛": 22, "2李⑥쟾吏": 94, "由ъ툩/諛곕떦": 55, "湲덉쑖/???: 97, "Risk_Score": 57.9, "Main_Theme": "湲덉쑖/???, "Risk_Level": "以묒쐞?
+?}, {"Customer_ID": "C02587", "Name": "怨좉컼2587", "Age": 35, "Job_Type": "IT/媛쒕컻", "Avg_Balance": 124970572, "Salary_Day
+_Transfer": 0.7625, "諛섎룄泥?: 22, "??났/諛⑹궛": 63, "2李⑥쟾吏": 22, "由ъ툩/諛곕떦": 8, "湲덉쑖/???: 92, "Risk_Score": 54.55, "Main_Th
+eme": "湲덉쑖/???, "Risk_Level": "以묒쐞??}, {"Customer_ID": "C02604", "Name": "怨좉컼2604", "Age": 40, "Job_Type": "?꾨Ц吏?, "Av
+g_Balance": 125171479, "Salary_Day_Transfer": 0.2693, "諛섎룄泥?: 34, "??났/諛⑹궛": 53, "2李⑥쟾吏": 54, "由ъ툩/諛곕떦": 67, "湲덉쑖/???
+: 81, "Risk_Score": 33.76, "Main_Theme": "湲덉쑖/???, "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C02628", "Name": "怨좉컼2628"
+, "Age": 32, "Job_Type": "?쇰컲?щТ", "Avg_Balance": 103076867, "Salary_Day_Transfer": 0.7755, "諛섎룄泥?: 60, "??났/諛⑹궛": 49, 
+"2李⑥쟾吏": 82, "由ъ툩/諛곕떦": 72, "湲덉쑖/???: 13, "Risk_Score": 74.93, "Main_Theme": "2李⑥쟾吏", "Risk_Level": "怨좎쐞??}, {"Custo
+mer_ID": "C02671", "Name": "怨좉컼2671", "Age": 35, "Job_Type": "?꾨Ц吏?, "Avg_Balance": 110060686, "Salary_Day_Transfer": 0
+.1179, "諛섎룄泥?: 65, "??났/諛⑹궛": 48, "2李⑥쟾吏": 57, "由ъ툩/諛곕떦": 94, "湲덉쑖/???: 1, "Risk_Score": 31.47, "Main_Theme": "由ъ툩/諛곕
+떦", "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C02692", "Name": "怨좉컼2692", "Age": 44, "Job_Type": "?쇰컲?щТ", "Avg_Balance"
+: 107563955, "Salary_Day_Transfer": 0.4625, "諛섎룄泥?: 58, "??났/諛⑹궛": 78, "2李⑥쟾吏": 89, "由ъ툩/諛곕떦": 32, "湲덉쑖/???: 30, "Ris
+k_Score": 57.15, "Main_Theme": "2李⑥쟾吏", "Risk_Level": "以묒쐞??}, {"Customer_ID": "C02693", "Name": "怨좉컼2693", "Age": 47,
+ "Job_Type": "?쒖“??, "Avg_Balance": 131630300, "Salary_Day_Transfer": 0.7991, "諛섎룄泥?: 66, "??났/諛⑹궛": 15, "2李⑥쟾吏": 90, 
+"由ъ툩/諛곕떦": 72, "湲덉쑖/???: 69, "Risk_Score": 79.15, "Main_Theme": "2李⑥쟾吏", "Risk_Level": "怨좎쐞??}, {"Customer_ID": "C026
+95", "Name": "怨좉컼2695", "Age": 30, "Job_Type": "?쒖“??, "Avg_Balance": 130605510, "Salary_Day_Transfer": 0.8027, "諛섎룄泥?:
+ 50, "??났/諛⑹궛": 12, "2李⑥쟾吏": 32, "由ъ툩/諛곕떦": 54, "湲덉쑖/???: 51, "Risk_Score": 64.56, "Main_Theme": "由ъ툩/諛곕떦", "Risk_Lev
+el": "怨좎쐞??}, {"Customer_ID": "C02758", "Name": "怨좉컼2758", "Age": 49, "Job_Type": "?꾨Ц吏?, "Avg_Balance": 120469444, "Sa
+lary_Day_Transfer": 0.1208, "諛섎룄泥?: 77, "??났/諛⑹궛": 76, "2李⑥쟾吏": 49, "由ъ툩/諛곕떦": 0, "湲덉쑖/???: 0, "Risk_Score": 32.45, "
+Main_Theme": "諛섎룄泥?, "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C02776", "Name": "怨좉컼2776", "Age": 43, "Job_Type": "IT/媛쒕
+컻", "Avg_Balance": 112485188, "Salary_Day_Transfer": 0.292, "諛섎룄泥?: 86, "??났/諛⑹궛": 19, "2李⑥쟾吏": 64, "由ъ툩/諛곕떦": 17, "湲덉
+쑖/???: 15, "Risk_Score": 47.52, "Main_Theme": "諛섎룄泥?, "Risk_Level": "以묒쐞??}, {"Customer_ID": "C02778", "Name": "怨좉컼277
+8", "Age": 44, "Job_Type": "?쇰컲?щТ", "Avg_Balance": 113978028, "Salary_Day_Transfer": 0.3015, "諛섎룄泥?: 36, "??났/諛⑹궛": 12
+, "2李⑥쟾吏": 2, "由ъ툩/諛곕떦": 55, "湲덉쑖/???: 69, "Risk_Score": 25.69, "Main_Theme": "湲덉쑖/???, "Risk_Level": "??꾪뿕"}, {"Cu
+stomer_ID": "C02816", "Name": "怨좉컼2816", "Age": 42, "Job_Type": "?쇰컲?щТ", "Avg_Balance": 115246391, "Salary_Day_Transfe
+r": 0.1666, "諛섎룄泥?: 39, "??났/諛⑹궛": 83, "2李⑥쟾吏": 29, "由ъ툩/諛곕떦": 93, "湲덉쑖/???: 99, "Risk_Score": 23.59, "Main_Theme": "
+湲덉쑖/???, "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C02820", "Name": "怨좉컼2820", "Age": 35, "Job_Type": "IT/媛쒕컻", "Avg_Ba
+lance": 111944439, "Salary_Day_Transfer": 0.666, "諛섎룄泥?: 68, "??났/諛⑹궛": 29, "2李⑥쟾吏": 86, "由ъ툩/諛곕떦": 9, "湲덉쑖/???: 36, 
+"Risk_Score": 70.76, "Main_Theme": "2李⑥쟾吏", "Risk_Level": "怨좎쐞??}, {"Customer_ID": "C02839", "Name": "怨좉컼2839", "Age":
+ 36, "Job_Type": "IT/媛쒕컻", "Avg_Balance": 113024839, "Salary_Day_Transfer": 0.1158, "諛섎룄泥?: 70, "??났/諛⑹궛": 41, "2李⑥쟾吏"
+: 25, "由ъ툩/諛곕떦": 63, "湲덉쑖/???: 80, "Risk_Score": 25.95, "Main_Theme": "湲덉쑖/???, "Risk_Level": "??꾪뿕"}, {"Customer_ID
+": "C02860", "Name": "怨좉컼2860", "Age": 30, "Job_Type": "IT/媛쒕컻", "Avg_Balance": 116350952, "Salary_Day_Transfer": 0.700
+8, "諛섎룄泥?: 35, "??났/諛⑹궛": 98, "2李⑥쟾吏": 92, "由ъ툩/諛곕떦": 21, "湲덉쑖/???: 69, "Risk_Score": 67.45, "Main_Theme": "??났/諛⑹궛",
+ "Risk_Level": "怨좎쐞??}, {"Customer_ID": "C02916", "Name": "怨좉컼2916", "Age": 40, "Job_Type": "?꾨Ц吏?, "Avg_Balance": 1259
+16728, "Salary_Day_Transfer": 0.7488, "諛섎룄泥?: 75, "??났/諛⑹궛": 52, "2李⑥쟾吏": 11, "由ъ툩/諛곕떦": 15, "湲덉쑖/???: 55, "Risk_Scor
+e": 62.13, "Main_Theme": "諛섎룄泥?, "Risk_Level": "怨좎쐞??}, {"Customer_ID": "C02986", "Name": "怨좉컼2986", "Age": 39, "Job_Ty
+pe": "?꾨Ц吏?, "Avg_Balance": 134820264, "Salary_Day_Transfer": 0.3052, "諛섎룄泥?: 68, "??났/諛⑹궛": 56, "2李⑥쟾吏": 71, "由ъ툩/諛곕떦
+": 6, "湲덉쑖/???: 90, "Risk_Score": 46.11, "Main_Theme": "湲덉쑖/???, "Risk_Level": "以묒쐞??}, {"Customer_ID": "C03019", "Na
+me": "怨좉컼3019", "Age": 41, "Job_Type": "?쇰컲?щТ", "Avg_Balance": 115161724, "Salary_Day_Transfer": 0.6442, "諛섎룄泥?: 62, "
+??났/諛⑹궛": 62, "2李⑥쟾吏": 65, "由ъ툩/諛곕떦": 44, "湲덉쑖/???: 83, "Risk_Score": 64.05, "Main_Theme": "湲덉쑖/???, "Risk_Level": "
+怨좎쐞??}, {"Customer_ID": "C03048", "Name": "怨좉컼3048", "Age": 42, "Job_Type": "IT/媛쒕컻", "Avg_Balance": 114643265, "Salary
+_Day_Transfer": 0.8035, "諛섎룄泥?: 18, "??났/諛⑹궛": 61, "2李⑥쟾吏": 45, "由ъ툩/諛곕떦": 21, "湲덉쑖/???: 57, "Risk_Score": 60.81, "Ma
+in_Theme": "??났/諛⑹궛", "Risk_Level": "怨좎쐞??}, {"Customer_ID": "C03069", "Name": "怨좉컼3069", "Age": 35, "Job_Type": "?쇰컲?щ
+Т", "Avg_Balance": 144434572, "Salary_Day_Transfer": 0.29, "諛섎룄泥?: 82, "??났/諛⑹궛": 72, "2李⑥쟾吏": 29, "由ъ툩/諛곕떦": 35, "湲덉쑖
+/???: 70, "Risk_Score": 39.6, "Main_Theme": "諛섎룄泥?, "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C03082", "Name": "怨좉컼3082
+", "Age": 44, "Job_Type": "?쒖“??, "Avg_Balance": 102959099, "Salary_Day_Transfer": 0.1476, "諛섎룄泥?: 65, "??났/諛⑹궛": 4, "2
+李⑥쟾吏": 70, "由ъ툩/諛곕떦": 98, "湲덉쑖/???: 94, "Risk_Score": 35.86, "Main_Theme": "由ъ툩/諛곕떦", "Risk_Level": "??꾪뿕"}, {"Custo
+mer_ID": "C03097", "Name": "怨좉컼3097", "Age": 48, "Job_Type": "?꾨Ц吏?, "Avg_Balance": 121496799, "Salary_Day_Transfer": 0
+.6606, "諛섎룄泥?: 49, "??났/諛⑹궛": 93, "2李⑥쟾吏": 61, "由ъ툩/諛곕떦": 8, "湲덉쑖/???: 85, "Risk_Score": 61.64, "Main_Theme": "??났/諛⑹
+궛", "Risk_Level": "怨좎쐞??}, {"Customer_ID": "C03112", "Name": "怨좉컼3112", "Age": 31, "Job_Type": "?쒖“??, "Avg_Balance": 1
+15267243, "Salary_Day_Transfer": 0.5256, "諛섎룄泥?: 55, "??났/諛⑹궛": 86, "2李⑥쟾吏": 93, "由ъ툩/諛곕떦": 86, "湲덉쑖/???: 70, "Risk_S
+core": 61.14, "Main_Theme": "2李⑥쟾吏", "Risk_Level": "怨좎쐞??}, {"Customer_ID": "C03114", "Name": "怨좉컼3114", "Age": 32, "J
+ob_Type": "?쒖“??, "Avg_Balance": 114760425, "Salary_Day_Transfer": 0.4148, "諛섎룄泥?: 35, "??났/諛⑹궛": 93, "2李⑥쟾吏": 93, "由ъ
+툩/諛곕떦": 93, "湲덉쑖/???: 19, "Risk_Score": 50.49, "Main_Theme": "??났/諛⑹궛", "Risk_Level": "以묒쐞??}, {"Customer_ID": "C03117
+", "Name": "怨좉컼3117", "Age": 48, "Job_Type": "?쇰컲?щТ", "Avg_Balance": 109351967, "Salary_Day_Transfer": 0.8502, "諛섎룄泥?:
+ 84, "??났/諛⑹궛": 82, "2李⑥쟾吏": 88, "由ъ툩/諛곕떦": 45, "湲덉쑖/???: 92, "Risk_Score": 85.41, "Main_Theme": "湲덉쑖/???, "Risk_Lev
+el": "怨좎쐞??}, {"Customer_ID": "C03128", "Name": "怨좉컼3128", "Age": 30, "Job_Type": "IT/媛쒕컻", "Avg_Balance": 107790151, "
+Salary_Day_Transfer": 0.2777, "諛섎룄泥?: 81, "??났/諛⑹궛": 22, "2李⑥쟾吏": 68, "由ъ툩/諛곕떦": 18, "湲덉쑖/???: 79, "Risk_Score": 46.4
+6, "Main_Theme": "諛섎룄泥?, "Risk_Level": "以묒쐞??}, {"Customer_ID": "C03132", "Name": "怨좉컼3132", "Age": 37, "Job_Type": "?쇰
+컲?щТ", "Avg_Balance": 127458220, "Salary_Day_Transfer": 0.404, "諛섎룄泥?: 12, "??났/諛⑹궛": 71, "2李⑥쟾吏": 23, "由ъ툩/諛곕떦": 97, 
+"湲덉쑖/???: 55, "Risk_Score": 31.24, "Main_Theme": "由ъ툩/諛곕떦", "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C03143", "Name": 
+"怨좉컼3143", "Age": 43, "Job_Type": "?쇰컲?щТ", "Avg_Balance": 105190770, "Salary_Day_Transfer": 0.4916, "諛섎룄泥?: 11, "??났/諛
+⑹궛": 7, "2李⑥쟾吏": 56, "由ъ툩/諛곕떦": 33, "湲덉쑖/???: 40, "Risk_Score": 42.9, "Main_Theme": "2李⑥쟾吏", "Risk_Level": "以묒쐞??}, 
+{"Customer_ID": "C03146", "Name": "怨좉컼3146", "Age": 35, "Job_Type": "IT/媛쒕컻", "Avg_Balance": 101573286, "Salary_Day_Tra
+nsfer": 0.4529, "諛섎룄泥?: 52, "??났/諛⑹궛": 87, "2李⑥쟾吏": 70, "由ъ툩/諛곕떦": 19, "湲덉쑖/???: 38, "Risk_Score": 51.58, "Main_Theme
+": "??났/諛⑹궛", "Risk_Level": "以묒쐞??}, {"Customer_ID": "C03163", "Name": "怨좉컼3163", "Age": 39, "Job_Type": "?쒖“??, "Avg_B
+alance": 124589341, "Salary_Day_Transfer": 0.1877, "諛섎룄泥?: 82, "??났/諛⑹궛": 54, "2李⑥쟾吏": 34, "由ъ툩/諛곕떦": 66, "湲덉쑖/???: 8
+5, "Risk_Score": 34.46, "Main_Theme": "湲덉쑖/???, "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C03213", "Name": "怨좉컼3213", "
+Age": 46, "Job_Type": "?쒖“??, "Avg_Balance": 99353669, "Salary_Day_Transfer": 0.3251, "諛섎룄泥?: 34, "??났/諛⑹궛": 45, "2李⑥쟾吏
+": 1, "由ъ툩/諛곕떦": 18, "湲덉쑖/???: 11, "Risk_Score": 26.5, "Main_Theme": "??났/諛⑹궛", "Risk_Level": "??꾪뿕"}, {"Customer_ID
+": "C03227", "Name": "怨좉컼3227", "Age": 33, "Job_Type": "?쇰컲?щТ", "Avg_Balance": 111301832, "Salary_Day_Transfer": 0.722
+8, "諛섎룄泥?: 96, "??났/諛⑹궛": 63, "2李⑥쟾吏": 84, "由ъ툩/諛곕떦": 85, "湲덉쑖/???: 15, "Risk_Score": 79.37, "Main_Theme": "諛섎룄泥?, "R
+isk_Level": "怨좎쐞??}, {"Customer_ID": "C03268", "Name": "怨좉컼3268", "Age": 47, "Job_Type": "?쇰컲?щТ", "Avg_Balance": 11524
+0139, "Salary_Day_Transfer": 0.1832, "諛섎룄泥?: 3, "??났/諛⑹궛": 53, "2李⑥쟾吏": 61, "由ъ툩/諛곕떦": 46, "湲덉쑖/???: 5, "Risk_Score":
+ 23.79, "Main_Theme": "2李⑥쟾吏", "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C03299", "Name": "怨좉컼3299", "Age": 41, "Job_Ty
+pe": "?쇰컲?щТ", "Avg_Balance": 115358248, "Salary_Day_Transfer": 0.5603, "諛섎룄泥?: 11, "??났/諛⑹궛": 79, "2李⑥쟾吏": 57, "由ъ툩/諛
+곕떦": 28, "湲덉쑖/???: 39, "Risk_Score": 47.22, "Main_Theme": "??났/諛⑹궛", "Risk_Level": "以묒쐞??}, {"Customer_ID": "C03303", 
+"Name": "怨좉컼3303", "Age": 33, "Job_Type": "?꾨Ц吏?, "Avg_Balance": 107817203, "Salary_Day_Transfer": 0.7849, "諛섎룄泥?: 1, "
+??났/諛⑹궛": 62, "2李⑥쟾吏": 91, "由ъ툩/諛곕떦": 5, "湲덉쑖/???: 23, "Risk_Score": 65.5, "Main_Theme": "2李⑥쟾吏", "Risk_Level": "怨좎쐞
+??}, {"Customer_ID": "C03305", "Name": "怨좉컼3305", "Age": 32, "Job_Type": "?쇰컲?щТ", "Avg_Balance": 109592603, "Salary_Da
+y_Transfer": 0.4597, "諛섎룄泥?: 44, "??났/諛⑹궛": 25, "2李⑥쟾吏": 33, "由ъ툩/諛곕떦": 50, "湲덉쑖/???: 50, "Risk_Score": 42.98, "Main_
+Theme": "由ъ툩/諛곕떦", "Risk_Level": "以묒쐞??}, {"Customer_ID": "C03321", "Name": "怨좉컼3321", "Age": 32, "Job_Type": "IT/媛쒕컻",
+ "Avg_Balance": 122636222, "Salary_Day_Transfer": 0.6054, "諛섎룄泥?: 97, "??났/諛⑹궛": 98, "2李⑥쟾吏": 72, "由ъ툩/諛곕떦": 82, "湲덉쑖/
+???: 89, "Risk_Score": 70.12, "Main_Theme": "??났/諛⑹궛", "Risk_Level": "怨좎쐞??}, {"Customer_ID": "C03378", "Name": "怨좉컼33
+78", "Age": 47, "Job_Type": "?꾨Ц吏?, "Avg_Balance": 113707421, "Salary_Day_Transfer": 0.897, "諛섎룄泥?: 78, "??났/諛⑹궛": 16, 
+"2李⑥쟾吏": 34, "由ъ툩/諛곕떦": 19, "湲덉쑖/???: 52, "Risk_Score": 76.22, "Main_Theme": "諛섎룄泥?, "Risk_Level": "怨좎쐞??}, {"Custome
+r_ID": "C03413", "Name": "怨좉컼3413", "Age": 30, "Job_Type": "?쒖“??, "Avg_Balance": 108396525, "Salary_Day_Transfer": 0.3
+563, "諛섎룄泥?: 55, "??났/諛⑹궛": 55, "2李⑥쟾吏": 82, "由ъ툩/諛곕떦": 15, "湲덉쑖/???: 85, "Risk_Score": 48.78, "Main_Theme": "湲덉쑖/??
+?, "Risk_Level": "以묒쐞??}, {"Customer_ID": "C03423", "Name": "怨좉컼3423", "Age": 43, "Job_Type": "?쒖“??, "Avg_Balance": 12
+4649379, "Salary_Day_Transfer": 0.4324, "諛섎룄泥?: 31, "??났/諛⑹궛": 10, "2李⑥쟾吏": 4, "由ъ툩/諛곕떦": 5, "湲덉쑖/???: 57, "Risk_Scor
+e": 32.94, "Main_Theme": "湲덉쑖/???, "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C03428", "Name": "怨좉컼3428", "Age": 35, "Jo
+b_Type": "?쇰컲?щТ", "Avg_Balance": 103807297, "Salary_Day_Transfer": 0.5728, "諛섎룄泥?: 27, "??났/諛⑹궛": 43, "2李⑥쟾吏": 62, "由
+ъ툩/諛곕떦": 2, "湲덉쑖/???: 33, "Risk_Score": 52.17, "Main_Theme": "2李⑥쟾吏", "Risk_Level": "以묒쐞??}, {"Customer_ID": "C03481"
+, "Name": "怨좉컼3481", "Age": 39, "Job_Type": "IT/媛쒕컻", "Avg_Balance": 117648664, "Salary_Day_Transfer": 0.3795, "諛섎룄泥?: 
+56, "??났/諛⑹궛": 11, "2李⑥쟾吏": 32, "由ъ툩/諛곕떦": 69, "湲덉쑖/???: 22, "Risk_Score": 40.37, "Main_Theme": "由ъ툩/諛곕떦", "Risk_Leve
+l": "以묒쐞??}, {"Customer_ID": "C03509", "Name": "怨좉컼3509", "Age": 46, "Job_Type": "?쒖“??, "Avg_Balance": 110930265, "Sal
+ary_Day_Transfer": 0.1326, "諛섎룄泥?: 4, "??났/諛⑹궛": 96, "2李⑥쟾吏": 36, "由ъ툩/諛곕떦": 31, "湲덉쑖/???: 65, "Risk_Score": 15.96, "
+Main_Theme": "??났/諛⑹궛", "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C03517", "Name": "怨좉컼3517", "Age": 47, "Job_Type": "?쒖
+“??, "Avg_Balance": 118640604, "Salary_Day_Transfer": 0.4304, "諛섎룄泥?: 54, "??났/諛⑹궛": 36, "2李⑥쟾吏": 9, "由ъ툩/諛곕떦": 42, "湲
+덉쑖/???: 14, "Risk_Score": 38.43, "Main_Theme": "諛섎룄泥?, "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C03547", "Name": "怨좉컼3
+547", "Age": 37, "Job_Type": "?꾨Ц吏?, "Avg_Balance": 138944282, "Salary_Day_Transfer": 0.5171, "諛섎룄泥?: 82, "??났/諛⑹궛": 11
+, "2李⑥쟾吏": 25, "由ъ툩/諛곕떦": 39, "湲덉쑖/???: 99, "Risk_Score": 52.43, "Main_Theme": "湲덉쑖/???, "Risk_Level": "以묒쐞??}, {"Cu
+stomer_ID": "C03565", "Name": "怨좉컼3565", "Age": 33, "Job_Type": "?쇰컲?щТ", "Avg_Balance": 111281173, "Salary_Day_Transfe
+r": 0.2255, "諛섎룄泥?: 61, "??났/諛⑹궛": 3, "2李⑥쟾吏": 37, "由ъ툩/諛곕떦": 14, "湲덉쑖/???: 77, "Risk_Score": 33.13, "Main_Theme": "湲
+덉쑖/???, "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C03705", "Name": "怨좉컼3705", "Age": 36, "Job_Type": "IT/媛쒕컻", "Avg_Bal
+ance": 103449624, "Salary_Day_Transfer": 0.6333, "諛섎룄泥?: 30, "??났/諛⑹궛": 45, "2李⑥쟾吏": 94, "由ъ툩/諛곕떦": 26, "湲덉쑖/???: 58,
+ "Risk_Score": 62.8, "Main_Theme": "2李⑥쟾吏", "Risk_Level": "怨좎쐞??}, {"Customer_ID": "C03716", "Name": "怨좉컼3716", "Age":
+ 30, "Job_Type": "IT/媛쒕컻", "Avg_Balance": 111141363, "Salary_Day_Transfer": 0.4494, "諛섎룄泥?: 17, "??났/諛⑹궛": 48, "2李⑥쟾吏"
+: 18, "由ъ툩/諛곕떦": 39, "湲덉쑖/???: 91, "Risk_Score": 33.96, "Main_Theme": "湲덉쑖/???, "Risk_Level": "??꾪뿕"}, {"Customer_ID
+": "C03737", "Name": "怨좉컼3737", "Age": 33, "Job_Type": "?꾨Ц吏?, "Avg_Balance": 104074491, "Salary_Day_Transfer": 0.5581,
+ "諛섎룄泥?: 42, "??났/諛⑹궛": 24, "2李⑥쟾吏": 94, "由ъ툩/諛곕떦": 27, "湲덉쑖/???: 27, "Risk_Score": 60.68, "Main_Theme": "2李⑥쟾吏", "R
+isk_Level": "怨좎쐞??}, {"Customer_ID": "C03758", "Name": "怨좉컼3758", "Age": 49, "Job_Type": "?쇰컲?щТ", "Avg_Balance": 11602
+3163, "Salary_Day_Transfer": 0.5118, "諛섎룄泥?: 91, "??났/諛⑹궛": 99, "2李⑥쟾吏": 34, "由ъ툩/諛곕떦": 50, "湲덉쑖/???: 24, "Risk_Score
+": 55.71, "Main_Theme": "??났/諛⑹궛", "Risk_Level": "以묒쐞??}, {"Customer_ID": "C03895", "Name": "怨좉컼3895", "Age": 33, "Job_
+Type": "IT/媛쒕컻", "Avg_Balance": 111362872, "Salary_Day_Transfer": 0.619, "諛섎룄泥?: 26, "??났/諛⑹궛": 22, "2李⑥쟾吏": 81, "由ъ툩/
+諛곕떦": 79, "湲덉쑖/???: 8, "Risk_Score": 58.54, "Main_Theme": "2李⑥쟾吏", "Risk_Level": "以묒쐞??}, {"Customer_ID": "C03952", "
+Name": "怨좉컼3952", "Age": 32, "Job_Type": "?꾨Ц吏?, "Avg_Balance": 110338857, "Salary_Day_Transfer": 0.54, "諛섎룄泥?: 60, "??
+났/諛⑹궛": 88, "2李⑥쟾吏": 62, "由ъ툩/諛곕떦": 17, "湲덉쑖/???: 38, "Risk_Score": 56.8, "Main_Theme": "??났/諛⑹궛", "Risk_Level": "以묒쐞
+??}, {"Customer_ID": "C04079", "Name": "怨좉컼4079", "Age": 32, "Job_Type": "?쒖“??, "Avg_Balance": 129209340, "Salary_Day_
+Transfer": 0.2302, "諛섎룄泥?: 36, "??났/諛⑹궛": 55, "2李⑥쟾吏": 90, "由ъ툩/諛곕떦": 51, "湲덉쑖/???: 65, "Risk_Score": 39.01, "Main_Th
+eme": "2李⑥쟾吏", "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C04089", "Name": "怨좉컼4089", "Age": 31, "Job_Type": "?쇰컲?щТ", "
+Avg_Balance": 104680999, "Salary_Day_Transfer": 0.5272, "諛섎룄泥?: 42, "??났/諛⑹궛": 70, "2李⑥쟾吏": 94, "由ъ툩/諛곕떦": 69, "湲덉쑖/?
+??: 22, "Risk_Score": 58.83, "Main_Theme": "2李⑥쟾吏", "Risk_Level": "以묒쐞??}, {"Customer_ID": "C04115", "Name": "怨좉컼4115"
+, "Age": 39, "Job_Type": "?꾨Ц吏?, "Avg_Balance": 108826492, "Salary_Day_Transfer": 0.5387, "諛섎룄泥?: 74, "??났/諛⑹궛": 25, "2
+李⑥쟾吏": 68, "由ъ툩/諛곕떦": 88, "湲덉쑖/???: 11, "Risk_Score": 60.72, "Main_Theme": "由ъ툩/諛곕떦", "Risk_Level": "怨좎쐞??}, {"Custom
+er_ID": "C04131", "Name": "怨좉컼4131", "Age": 40, "Job_Type": "?쒖“??, "Avg_Balance": 108087837, "Salary_Day_Transfer": 0.
+8462, "諛섎룄泥?: 58, "??났/諛⑹궛": 60, "2李⑥쟾吏": 3, "由ъ툩/諛곕떦": 46, "湲덉쑖/???: 55, "Risk_Score": 62.97, "Main_Theme": "??났/諛⑹궛
+", "Risk_Level": "怨좎쐞??}, {"Customer_ID": "C04226", "Name": "怨좉컼4226", "Age": 48, "Job_Type": "?쒖“??, "Avg_Balance": 10
+5135421, "Salary_Day_Transfer": 0.382, "諛섎룄泥?: 5, "??났/諛⑹궛": 90, "2李⑥쟾吏": 53, "由ъ툩/諛곕떦": 42, "湲덉쑖/???: 31, "Risk_Scor
+e": 34.52, "Main_Theme": "??났/諛⑹궛", "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C04250", "Name": "怨좉컼4250", "Age": 39, "Jo
+b_Type": "?꾨Ц吏?, "Avg_Balance": 110670427, "Salary_Day_Transfer": 0.3597, "諛섎룄泥?: 76, "??났/諛⑹궛": 30, "2李⑥쟾吏": 5, "由ъ툩/
+諛곕떦": 6, "湲덉쑖/???: 5, "Risk_Score": 37.78, "Main_Theme": "諛섎룄泥?, "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C04325", "Na
+me": "怨좉컼4325", "Age": 36, "Job_Type": "?쇰컲?щТ", "Avg_Balance": 106201004, "Salary_Day_Transfer": 0.4348, "諛섎룄泥?: 96, "
+??났/諛⑹궛": 76, "2李⑥쟾吏": 37, "由ъ툩/諛곕떦": 13, "湲덉쑖/???: 8, "Risk_Score": 52.69, "Main_Theme": "諛섎룄泥?, "Risk_Level": "以묒쐞?
+?}, {"Customer_ID": "C04337", "Name": "怨좉컼4337", "Age": 34, "Job_Type": "?쒖“??, "Avg_Balance": 106196674, "Salary_Day_T
+ransfer": 0.6557, "諛섎룄泥?: 70, "??났/諛⑹궛": 98, "2李⑥쟾吏": 52, "由ъ툩/諛곕떦": 33, "湲덉쑖/???: 36, "Risk_Score": 63.74, "Main_The
+me": "??났/諛⑹궛", "Risk_Level": "怨좎쐞??}, {"Customer_ID": "C04342", "Name": "怨좉컼4342", "Age": 37, "Job_Type": "?꾨Ц吏?, "Avg
+_Balance": 109561761, "Salary_Day_Transfer": 0.3838, "諛섎룄泥?: 3, "??났/諛⑹궛": 39, "2李⑥쟾吏": 65, "由ъ툩/諛곕떦": 93, "湲덉쑖/???: 
+28, "Risk_Score": 36.63, "Main_Theme": "由ъ툩/諛곕떦", "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C04344", "Name": "怨좉컼4344", 
+"Age": 43, "Job_Type": "IT/媛쒕컻", "Avg_Balance": 114295066, "Salary_Day_Transfer": 0.5298, "諛섎룄泥?: 57, "??났/諛⑹궛": 44, "2
+李⑥쟾吏": 60, "由ъ툩/諛곕떦": 55, "湲덉쑖/???: 89, "Risk_Score": 55.19, "Main_Theme": "湲덉쑖/???, "Risk_Level": "以묒쐞??}, {"Custom
+er_ID": "C04389", "Name": "怨좉컼4389", "Age": 49, "Job_Type": "?쇰컲?щТ", "Avg_Balance": 113908740, "Salary_Day_Transfer": 
+0.3339, "諛섎룄泥?: 71, "??났/諛⑹궛": 44, "2李⑥쟾吏": 71, "由ъ툩/諛곕떦": 73, "湲덉쑖/???: 20, "Risk_Score": 48.43, "Main_Theme": "由ъ툩/
+諛곕떦", "Risk_Level": "以묒쐞??}, {"Customer_ID": "C04448", "Name": "怨좉컼4448", "Age": 49, "Job_Type": "?쒖“??, "Avg_Balance":
+ 120039591, "Salary_Day_Transfer": 0.7434, "諛섎룄泥?: 50, "??났/諛⑹궛": 66, "2李⑥쟾吏": 76, "由ъ툩/諛곕떦": 29, "湲덉쑖/???: 10, "Risk
+_Score": 69.8, "Main_Theme": "2李⑥쟾吏", "Risk_Level": "怨좎쐞??}, {"Customer_ID": "C04450", "Name": "怨좉컼4450", "Age": 46, "
+Job_Type": "?쒖“??, "Avg_Balance": 111003347, "Salary_Day_Transfer": 0.3157, "諛섎룄泥?: 64, "??났/諛⑹궛": 35, "2李⑥쟾吏": 43, "由
+ъ툩/諛곕떦": 23, "湲덉쑖/???: 7, "Risk_Score": 40.34, "Main_Theme": "諛섎룄泥?, "Risk_Level": "以묒쐞??}, {"Customer_ID": "C04451", 
+"Name": "怨좉컼4451", "Age": 33, "Job_Type": "?쒖“??, "Avg_Balance": 110110582, "Salary_Day_Transfer": 0.7289, "諛섎룄泥?: 64, 
+"??났/諛⑹궛": 20, "2李⑥쟾吏": 45, "由ъ툩/諛곕떦": 54, "湲덉쑖/???: 6, "Risk_Score": 65.54, "Main_Theme": "諛섎룄泥?, "Risk_Level": "怨좎쐞
+??}, {"Customer_ID": "C04513", "Name": "怨좉컼4513", "Age": 48, "Job_Type": "IT/媛쒕컻", "Avg_Balance": 123259241, "Salary_Da
+y_Transfer": 0.7029, "諛섎룄泥?: 15, "??났/諛⑹궛": 2, "2李⑥쟾吏": 44, "由ъ툩/諛곕떦": 50, "湲덉쑖/???: 75, "Risk_Score": 53.97, "Main_T
+heme": "湲덉쑖/???, "Risk_Level": "以묒쐞??}, {"Customer_ID": "C04608", "Name": "怨좉컼4608", "Age": 32, "Job_Type": "IT/媛쒕컻", 
+"Avg_Balance": 101911374, "Salary_Day_Transfer": 0.3412, "諛섎룄泥?: 44, "??났/諛⑹궛": 93, "2李⑥쟾吏": 79, "由ъ툩/諛곕떦": 53, "湲덉쑖/?
+??: 87, "Risk_Score": 45.07, "Main_Theme": "??났/諛⑹궛", "Risk_Level": "以묒쐞??}, {"Customer_ID": "C04623", "Name": "怨좉컼462
+3", "Age": 40, "Job_Type": "?쒖“??, "Avg_Balance": 117640920, "Salary_Day_Transfer": 0.2924, "諛섎룄泥?: 33, "??났/諛⑹궛": 41, 
+"2李⑥쟾吏": 83, "由ъ툩/諛곕떦": 48, "湲덉쑖/???: 78, "Risk_Score": 40.75, "Main_Theme": "2李⑥쟾吏", "Risk_Level": "以묒쐞??}, {"Custo
+mer_ID": "C04655", "Name": "怨좉컼4655", "Age": 42, "Job_Type": "?꾨Ц吏?, "Avg_Balance": 114138036, "Salary_Day_Transfer": 0
+.4745, "諛섎룄泥?: 64, "??났/諛⑹궛": 50, "2李⑥쟾吏": 15, "由ъ툩/諛곕떦": 23, "湲덉쑖/???: 12, "Risk_Score": 44.27, "Main_Theme": "諛섎룄泥?
+, "Risk_Level": "以묒쐞??}, {"Customer_ID": "C04680", "Name": "怨좉컼4680", "Age": 46, "Job_Type": "?꾨Ц吏?, "Avg_Balance": 111
+352311, "Salary_Day_Transfer": 0.2232, "諛섎룄泥?: 94, "??났/諛⑹궛": 71, "2李⑥쟾吏": 45, "由ъ툩/諛곕떦": 28, "湲덉쑖/???: 65, "Risk_Sco
+re": 41.19, "Main_Theme": "諛섎룄泥?, "Risk_Level": "以묒쐞??}, {"Customer_ID": "C04728", "Name": "怨좉컼4728", "Age": 45, "Job_T
+ype": "?쒖“??, "Avg_Balance": 118065230, "Salary_Day_Transfer": 0.4133, "諛섎룄泥?: 88, "??났/諛⑹궛": 26, "2李⑥쟾吏": 96, "由ъ툩/諛곕
+떦": 8, "湲덉쑖/???: 64, "Risk_Score": 61.6, "Main_Theme": "2李⑥쟾吏", "Risk_Level": "怨좎쐞??}, {"Customer_ID": "C04762", "Nam
+e": "怨좉컼4762", "Age": 36, "Job_Type": "?쇰컲?щТ", "Avg_Balance": 105038210, "Salary_Day_Transfer": 0.7581, "諛섎룄泥?: 90, "?
+?났/諛⑹궛": 63, "2李⑥쟾吏": 75, "由ъ툩/諛곕떦": 38, "湲덉쑖/???: 16, "Risk_Score": 78.49, "Main_Theme": "諛섎룄泥?, "Risk_Level": "怨좎쐞?
+?}, {"Customer_ID": "C04764", "Name": "怨좉컼4764", "Age": 48, "Job_Type": "?쒖“??, "Avg_Balance": 105779428, "Salary_Day_T
+ransfer": 0.5181, "諛섎룄泥?: 11, "??났/諛⑹궛": 8, "2李⑥쟾吏": 23, "由ъ툩/諛곕떦": 84, "湲덉쑖/???: 54, "Risk_Score": 37.89, "Main_Them
+e": "由ъ툩/諛곕떦", "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C04797", "Name": "怨좉컼4797", "Age": 40, "Job_Type": "?쒖“??, "Avg
+_Balance": 101856769, "Salary_Day_Transfer": 0.5562, "諛섎룄泥?: 27, "??났/諛⑹궛": 39, "2李⑥쟾吏": 63, "由ъ툩/諛곕떦": 74, "湲덉쑖/???:
+ 24, "Risk_Score": 51.37, "Main_Theme": "由ъ툩/諛곕떦", "Risk_Level": "以묒쐞??}, {"Customer_ID": "C04840", "Name": "怨좉컼4840", 
+"Age": 45, "Job_Type": "IT/媛쒕컻", "Avg_Balance": 104863121, "Salary_Day_Transfer": 0.3613, "諛섎룄泥?: 68, "??났/諛⑹궛": 67, "2
+李⑥쟾吏": 72, "由ъ툩/諛곕떦": 10, "湲덉쑖/???: 60, "Risk_Score": 49.68, "Main_Theme": "2李⑥쟾吏", "Risk_Level": "以묒쐞??}, {"Custome
+r_ID": "C04860", "Name": "怨좉컼4860", "Age": 35, "Job_Type": "IT/媛쒕컻", "Avg_Balance": 109641910, "Salary_Day_Transfer": 0
+.461, "諛섎룄泥?: 63, "??났/諛⑹궛": 55, "2李⑥쟾吏": 60, "由ъ툩/諛곕떦": 5, "湲덉쑖/???: 16, "Risk_Score": 52.26, "Main_Theme": "諛섎룄泥?, 
+"Risk_Level": "以묒쐞??}, {"Customer_ID": "C04932", "Name": "怨좉컼4932", "Age": 35, "Job_Type": "?쇰컲?щТ", "Avg_Balance": 106
+604988, "Salary_Day_Transfer": 0.3138, "諛섎룄泥?: 24, "??났/諛⑹궛": 30, "2李⑥쟾吏": 59, "由ъ툩/諛곕떦": 97, "湲덉쑖/???: 85, "Risk_Sco
+re": 35.43, "Main_Theme": "由ъ툩/諛곕떦", "Risk_Level": "??꾪뿕"}, {"Customer_ID": "C04941", "Name": "怨좉컼4941", "Age": 34, "J
+ob_Type": "?꾨Ц吏?, "Avg_Balance": 122579294, "Salary_Day_Transfer": 0.779, "諛섎룄泥?: 68, "??났/諛⑹궛": 53, "2李⑥쟾吏": 4, "由ъ툩/
+諛곕떦": 83, "湲덉쑖/???: 2, "Risk_Score": 61.14, "Main_Theme": "由ъ툩/諛곕떦", "Risk_Level": "怨좎쐞??}, {"Customer_ID": "C04991", 
+"Name": "怨좉컼4991", "Age": 40, "Job_Type": "IT/媛쒕컻", "Avg_Balance": 104247826, "Salary_Day_Transfer": 0.5114, "諛섎룄泥?: 89
+, "??났/諛⑹궛": 86, "2李⑥쟾吏": 88, "由ъ툩/諛곕떦": 36, "湲덉쑖/???: 9, "Risk_Score": 66.08, "Main_Theme": "諛섎룄泥?, "Risk_Level": "怨
+좎쐞??}];
+-
+-        // ?쒖뒪???몄뀡 諛?媛???곹깭
+-        const state = {
+-            customers: JSON.parse(JSON.stringify(originalCustomers)), // ?μ뭅?쇰? ?듯븳 ?곹깭 ?좎?
+-            filteredCustomers: [],
+-            defendedCustomers: new Set(),
+-            selectedKpi: 'total_aum',
+-            selectedCustomer: null,
+-            actionLogs: [],
+-            selectedSector: '諛섎룄泥?
+-        };
+-
+-        // 異붿쿇 ?곹뭹 移?DB
+-        const products = {
+-            '諛섎룄泥?: ['?쇰뜽由ы떚 湲濡쒕쾶 ?뚰겕?濡쒖? ???, 'AB 誘멸뎅 洹몃줈?????, '?섎굹 諛섎룄泥??ъ빱?????, 'KODEX 諛섎룄泥??뱀젙湲덉쟾?좏긽', 'TIG
+ER 誘멸뎅?뚰겕TOP10 ?뱀젙湲덉쟾?좏긽', 'KODEX 誘멸뎅AI?뚰겕TOP10+15%?꾨━誘몄뾼 ?좏긽'],
+-            '??났/諛⑹궛': ['?쒗솕 K諛⑹궛 ???, 'TIGER ?곗＜??났諛⑹궛 ?뱀젙湲덉쟾?좏긽', 'ARIRANG K諛⑹궛Fn ?뱀젙湲덉쟾?좏긽', '留μ옘由ъ씤?꾨씪 ?뱀젙湲덉쟾?좏긽'
+],
+-            '2李⑥쟾吏': ['KB 2李⑥쟾吏 ?ъ빱?????, '?쒓뎅?ъ옄 湲濡쒕쾶 ?꾧린李?諛고꽣由????, 'TIGER 2李⑥쟾吏?뚮쭏 ?뱀젙湲덉쟾?좏긽', 'KODEX 2李⑥쟾吏?
+곗뾽 ?뱀젙湲덉쟾?좏긽'],
+-            '由ъ툩/諛곕떦': ['?좎쁺 諛몃쪟 怨좊같?????, '踰좎뼱留?怨좊같?????, 'TIGER 誘멸뎅諛곕떦+7%?꾨━誘몄뾼 ?좏긽', 'TIGER 由ъ툩遺?숈궛?명봽???좏긽'],
+-            '湲덉쑖/???: ['TIGER ??됯퀬諛곕떦?뚮윭?짽OP10 ?뱀젙湲덉쟾?좏긽', 'KODEX ????뱀젙湲덉쟾?좏긽']
+-        };
+-
+-        // ?꾩닠 ?쇱묶 媛?대뱶 ?쒕굹由ъ삤 DB
+-        const pitchingScripts = {
+-            '諛섎룄泥?: `"怨좉컼?? 留ㅻ떖 ?붽툒?좊쭏??吏곸젒 利앷텒?щ줈 ?먭툑(?댁껜鍮꾩쑉)???댁껜?섏뿬 諛섎룄泥?媛쒕퀎 醫낅ぉ??留ㅻℓ?섏떆??寃껊낫?? ?꾪뿕 ?듭젣?μ씠 ?낆쬆?섍퀬 ?
+곌컙 ????taxSaving}???덉꽭 ?쒗깮??媛?ν븳 ?뱁뻾??'iM 湲濡쒕쾶 AI 諛섎룄泥?????沅뚯쑀???쒕┰?덈떎."`,
+-            '2李⑥쟾吏': `"怨좉컼?? 理쒓렐 湲됰??섎뒗 2李⑥쟾吏 二쇱떇 ?쒖옣??吏곴컙???ъ옄 蹂?숈꽦 ?꾪뿕??媛먮궡?섏떆湲곕낫?? 諛몃쪟泥댁씤 ???곕웾 ?듭떖 湲곗뾽 ?꾩＜濡??먮룞
+ 遺꾩궛?섍퀬 ?곌컙 ????taxSaving}???멸툑 ?댁뿰 ?쒗깮???곸슜?섎뒗 ?뱁뻾??'K-諛고꽣由?諛몃쪟泥댁씤 ????異붿쿇?⑸땲??"`,
+-            '??났/諛⑹궛': `"怨좉컼?? ?섏텧 ?몄“濡??κ린 ?ㅼ쟻 ?곗긽?μ씠 湲곕??섎뒗 ??났/諛⑹궛 ?뱁꽣??吏곸젒 ?ъ옄?섏떆????? ?뱁뻾??泥닿퀎?곸씤 ?꾨왂 ?ы듃?대━?ㅻ? 
+?듯빐 ?곌컙 ????taxSaving}???뚮뱷 ?댁뿰 ?덉꽭 ?쒗깮怨??④퍡 ?κ린 遺꾩궛 ?댁슜?섎뒗 'iM 諛⑹궛 ?뚮쭏 ????寃?좏빐蹂댁떗?쒖삤."`,
+-            '由ъ툩/諛곕떦': `"怨좉컼?? ?덉젙?곸씤 怨좎젙 罹먯떆?뚮줈??李쎌텧???꾪빐 二쇱떇??吏곸젒 ?댁슜?섏떆??踰덇굅濡쒖? ??? 留ㅻ떖 ?뺢린?곸쑝濡??꾧툑 諛곕떦???섏랬?섎㈃???
+곌컙 ????taxSaving}???곗닔???덉꽭 ?④낵源뚯? ?곸슜?섎뒗 'iM 湲濡쒕쾶 遺?숈궛 由ъ툩 ?????쒖븞?⑸땲??"`,
+-            '湲덉쑖/???: `"怨좉컼?? 理쒓렐 援????諛몃쪟???꾨줈洹몃옩 理쒕? ?섑삙二쇱씤 ?곕웾 湲덉쑖 諛?????뱁꽣 ?ъ옄瑜??곴레 怨좊젮 以묒씠?쒕씪硫? ?곌컙 ????taxSavi
+ng}??湲덉쑖?뚮뱷 醫낇빀怨쇱꽭 ?덉꽭 諛??먯쿇 ?댁뿰 ?쒗깮???곸슜?섎뒗 ?뱁뻾??'湲덉쑖 諛몃쪟??怨좊같?????쇰줈 ?κ린 ?ъ옄瑜??쒖븞?⑸땲??"`
+-        };
+-
+-        // ------------------ 李⑦듃 ?덊띁?곗뒪 媛앹껜 ------------------
+-        let kpiDetailChartInstance = null;
+-        let scatterChartInstance = null;
+-        let themeBarChartInstance = null;
+-        let jobStackChartInstance = null;
+-        let themePieChartInstance = null;
+-        let simChartInstance = null;
+-        let radarChartInstance = null;
+-        let insightHistogramChartInstance = null;
+-
+-        // ------------------ ?ы띁 ?⑥닔 ------------------
+-        function formatWon(val) {
+-            return '?? + Math.round(val).toLocaleString();
+-        }
+-
+-        function getRiskLevel(score) {
+-            if (score > 60) return "怨좎쐞??;
+-            if (score >= 40) return "以묒쐞??;
+-            return "??꾪뿕";
+-        }
+-
+-        function getVipLevel(balance) {
+-            if (balance >= 90000000) return "?몣 濡쒖뻹 (Royal) 怨좉컼";
+-            if (balance >= 75000000) return "?쪍 怨⑤뱶 (Gold) 怨좉컼";
+-            if (balance >= 60000000) return "?쪎 ??(Top) 怨좉컼";
+-            if (balance >= 45000000) return "?쪏 ?먯씠??(Ace) 怨좉컼";
+-            return "?뙮 ?꾨씪??(Prime) 怨좉컼";
+-        }
+-
+-        function showToast(message, icon = '??) {
+-            const container = document.getElementById('toastContainer');
+-            const toast = document.createElement('div');
+-            toast.className = 'toast-item';
+-            toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+-            container.appendChild(toast);
+-            setTimeout(() => {
+-                toast.remove();
+-            }, 3800);
+-        }
+-
+-        // ------------------ ?꾪꽣留?諛??낅뜲?댄듃 ?쒖뒪??------------------
+-        function applyFilters() {
+-            // ?꾪꽣 媛??섏쭛
+-            const selectedJobs = Array.from(document.querySelectorAll('#jobFilterList input:checked')).map(el => el.va
+lue);
+-            const minBal = parseInt(document.getElementById('balSlider').value);
+-            const minRatio = parseFloat(document.getElementById('ratioSlider').value) / 100;
+-            const selectedThemes = Array.from(document.querySelectorAll('#themeFilterList input:checked')).map(el => e
+l.value);
+-            const selectedRisks = Array.from(document.querySelectorAll('#riskFilterList input:checked')).map(el => el.
+value);
+-
+-            // ?쇰꺼 ?낅뜲?댄듃
+-            document.getElementById('balVal').innerText = formatWon(minBal);
+-            document.getElementById('ratioVal').innerText = Math.round(minRatio * 100) + '%';
+-
+-            // ?꾪꽣 ?곸슜
+-            state.filteredCustomers = state.customers.filter(c => {
+-                const cRisk = getRiskLevel(c.Risk_Score);
+-                return selectedJobs.includes(c.Job_Type) &&
+-                       c.Avg_Balance >= minBal &&
+-                       c.Salary_Day_Transfer >= minRatio &&
+-                       selectedThemes.includes(c.Main_Theme) &&
+-                       selectedRisks.includes(cRisk);
+-            });
+-
+-            // ?붾㈃ 由щ젋?붾쭅
+-            renderAll();
+-        }
+-
+-        function renderAll() {
+-            if (state.filteredCustomers.length === 0) {
+-                // ?꾪꽣留??곗씠???놁쓬 寃쎄퀬
+-                document.getElementById('dandiReportSummary').innerText = "?좑툘 ?좏깮?섏떊 ?꾪꽣???대떦?섎뒗 怨좉컼???놁뒿?덈떎. ?ъ씠?쒕컮 
+?꾪꽣瑜??볤쾶 議곗젙??蹂댁꽭??";
+-                return;
+-            }
+-
+-            renderKpis();
+-            renderTopTenTable();
+-            renderScatterChart();
+-            renderThemeBarChart();
+-            renderJobStackChart();
+-            renderThemePieChart();
+-            renderKpiDetail();
+-            renderDandiSummary();
+-            renderSectorInsights();
+-        }
+-
+-        // ------------------ ??1 ?뚮뜑留??⑥닔??------------------
+-        function renderKpis() {
+-            const fc = state.filteredCustomers;
+-            
+-            // 1. 珥?AUM
+-            const totalAum = fc.reduce((acc, c) => acc + c.Avg_Balance, 0);
+-            document.getElementById('kpi_val_total_aum').innerText = formatWon(totalAum);
+-
+-            // 2. 怨좉컼 ?됯퇏 ?먯궛
+-            const avgBal = totalAum / fc.length;
+-            document.getElementById('kpi_val_avg_balance').innerText = formatWon(avgBal);
+-
+-            // 3. ?꾩닔 怨좎쐞??怨좉컼 ??-            const highRiskCount = fc.filter(c => getRiskLevel(c.Risk_Score) === "怨좎쐞
+??).length;
+-            const highRiskRatio = (highRiskCount / fc.length) * 100;
+-            document.getElementById('kpi_val_high_risk_count').innerText = `${highRiskCount}紐?(${highRiskRatio.toFixed
+(1)}%)`;
+-
+-            // 4. ?붽툒???좎텧 ?곕젮 ?먯궛
+-            const potentialOutflow = fc.reduce((acc, c) => acc + (c.Avg_Balance * c.Salary_Day_Transfer), 0);
+-            document.getElementById('kpi_val_potential_outflow').innerText = formatWon(potentialOutflow);
+-
+-            // 5. ?됯퇏 ?곕졊
+-            const avgAge = fc.reduce((acc, c) => acc + c.Age, 0) / fc.length;
+-            document.getElementById('kpi_val_avg_age').innerText = `${avgAge.toFixed(1)}??;
+-
+-            // 6. 理쒕떎 愿???뚮쭏
+-            const themeCounts = {};
+-            fc.forEach(c => {
+-                themeCounts[c.Main_Theme] = (themeCounts[c.Main_Theme] || 0) + 1;
+-            });
+-            let topTheme = 'N/A';
+-            let maxCount = -1;
+-            for (const [theme, count] of Object.entries(themeCounts)) {
+-                if (count > maxCount) {
+-                    maxCount = count;
+-                    topTheme = theme;
+-                }
+-            }
+-            document.getElementById('kpi_val_top_theme').innerText = topTheme;
+-
+-            // 7. 留덉???諛⑹뼱 ?깃났瑜?(媛???곕룞)
+-            const defenseRate = Math.min(98.5, 75.0 + state.defendedCustomers.size * 2.5);
+-            document.getElementById('kpi_val_defense_rate').innerText = `${defenseRate.toFixed(1)}%`;
+-
+-            // 8. ?대떖 紐⑺몴 ?ъ꽦瑜?(媛???곕룞)
+-            const monthlyTarget = Math.min(100.0, 81.2 + state.defendedCustomers.size * 1.5);
+-            document.getElementById('kpi_val_monthly_target').innerText = `${monthlyTarget.toFixed(1)}%`;
+-        }
+-
+-        function renderTopTenTable() {
+-            const tbody = document.getElementById('topTenTableBody');
+-            tbody.innerHTML = '';
+-
+-            // ?좎텧 ?곕젮 ?먯궛???믪? ?쒖꽌濡??뺣젹??TOP 10
+-            const sorted = [...state.filteredCustomers].sort((a, b) => {
+-                const outflowA = a.Avg_Balance * a.Salary_Day_Transfer;
+-                const outflowB = b.Avg_Balance * b.Salary_Day_Transfer;
+-                return outflowB - outflowA;
+-            }).slice(0, 10);
+-
+-            sorted.forEach(c => {
+-                const tr = document.createElement('tr');
+-                const riskLvl = getRiskLevel(c.Risk_Score);
+-                let badgeClass = 'badge-low';
+-                if (riskLvl === '怨좎쐞??) badgeClass = 'badge-high';
+-                else if (riskLvl === '以묒쐞??) badgeClass = 'badge-medium';
+-
+-                const outflow = c.Avg_Balance * c.Salary_Day_Transfer;
+-
+-                tr.innerHTML = `
+-                    <td>${c.Customer_ID}</td>
+-                    <td style="font-weight:700; color:#ffffff;">${c.Name}</td>
+-                    <td>${c.Age}??/td>
+-                    <td>${c.Job_Type}</td>
+-                    <td>${Math.round(c.Avg_Balance).toLocaleString()}??/td>
+-                    <td>${Math.round(c.Salary_Day_Transfer * 100)}%</td>
+-                    <td style="font-weight:700; color:var(--accent-red);">${Math.round(outflow).toLocaleString()}??/td
+>
+-                    <td><span class="product-chip" style="margin:0; border-color:rgba(0,189,167,0.3); font-size:10px;"
+>${c.Main_Theme}</span></td>
+-                    <td>${c.Risk_Score}%</td>
+-                    <td><span class="badge ${badgeClass}">${riskLvl}</span></td>
+-                `;
+-                tbody.appendChild(tr);
+-            });
+-        }
+-
+-        // ------------------ KPI ?붿빟 ?곕룞 ?뺣? 吏꾨떒 李⑦듃 ?뚮뜑留?------------------
+-        function selectKpi(kpi) {
+-            state.selectedKpi = kpi;
+-            
+-            // 踰꾪듉???쒖꽦 ?곹깭 ?댁젣 諛??곸슜
+-            document.querySelectorAll('.kpi-btn').forEach(btn => btn.classList.remove('active'));
+-            
+-            const mapping = {
+-                'total_aum': 'btn_total_aum',
+-                'avg_balance': 'btn_avg_balance',
+-                'high_risk_count': 'btn_high_risk_count',
+-                'potential_outflow': 'btn_potential_outflow',
+-                'avg_age': 'btn_avg_age',
+-                'top_theme': 'btn_top_theme',
+-                'defense_rate': 'btn_defense_rate',
+-                'monthly_target': 'btn_monthly_target'
+-            };
+-            document.getElementById(mapping[kpi]).classList.add('active');
+-
+-            renderKpiDetail();
+-        }
+-
+-        function renderKpiDetail() {
+-            const fc = state.filteredCustomers;
+-            const kpi = state.selectedKpi;
+-
+-            const headerEmoji = {
+-                'total_aum': '?뮥', 'avg_balance': '?뱤', 'high_risk_count': '?슚',
+-                'potential_outflow': '?뮯', 'avg_age': '?뫁', 'top_theme': '狩?,
+-                'defense_rate': '?썳截?, 'monthly_target': '?뱢'
+-            };
+-            const headerNames = {
+-                'total_aum': '珥?愿由??먯궛 (AUM)', 'avg_balance': '怨좉컼 ?됯퇏 ?먯궛', 'high_risk_count': '?꾩닔 怨좎쐞??怨좉컼 ??,
+-                'potential_outflow': '?붽툒???좎텧 ?곕젮 ?먯궛', 'avg_age': '???怨좉컼 ?됯퇏 ?곕졊', 'top_theme': '理쒕떎 愿???뚮쭏 (1??'
+,
+-                'defense_rate': '留덉???諛⑹뼱 ?깃났瑜?, 'monthly_target': '?대떖 留덉???紐⑺몴 ?ъ꽦瑜?
+-            };
+-
+-            document.getElementById('detailKpiEmoji').innerText = headerEmoji[kpi];
+-            document.getElementById('detailKpiName').innerText = headerNames[kpi];
+-
+-            const ctx = document.getElementById('kpiDetailChart').getContext('2d');
+-            if (kpiDetailChartInstance) kpiDetailChartInstance.destroy();
+-
+-            let dandiComment = '';
+-            
+-            if (kpi === 'total_aum') {
+-                // ?먯궛 遺꾪룷 ?덉뒪?좉렇??-                const bins = [0, 20000000, 40000000, 60000000, 80000000, 100000000
+, 120000000, 150000000];
+-                const labels = ['2泥쒕쭔 ?댄븯', '2-4泥쒕쭔', '4-6泥쒕쭔', '6-8泥쒕쭔', '8-1??, '1-1.2??, '1.2???댁긽'];
+-                const counts = new Array(labels.length).fill(0);
+-                
+-                fc.forEach(c => {
+-                    for (let i = 0; i < bins.length - 1; i++) {
+-                        if (c.Avg_Balance >= bins[i] && c.Avg_Balance < bins[i+1]) {
+-                            counts[i]++;
+-                            break;
+-                        }
+-                    }
+-                });
+-
+-                kpiDetailChartInstance = new Chart(ctx, {
+-                    type: 'bar',
+-                    data: {
+-                        labels: labels,
+-                        datasets: [{
+-                            label: '怨좉컼 ??(紐?',
+-                            data: counts,
+-                            backgroundColor: '#00bda7',
+-                            borderRadius: 6
+-                        }]
+-                    },
+-                    options: getChartOptions()
+-                });
+-                dandiComment = "?꾩껜 ?먯궛??遺꾪룷瑜?蹂대㈃ ??ㅼ닔 怨좉컼???됱옍 遺꾪룷? ?④퍡 VVIP ?깃툒(濡쒖뻹, 怨⑤뱶) 怨좉컼痢듭씠 李⑥??섎뒗 鍮꾩쨷???쒕늿??
+蹂????덉뼱! ?먯궛??留롮? VVIP 怨좉컼???댄깉???밸퀎???좉꼍 ?⑥빞 ?? ?뮥";
+-
+-            } else if (kpi === 'avg_balance') {
+-                // 吏곴뎔蹂??됯퇏 ?먯궛 ?섑룊 諛?-                const jobs = ['?쇰컲?щТ', '?쒖“??, 'IT/媛쒕컻', '?꾨Ц吏?];
+-                const avgs = jobs.map(job => {
+-                    const group = fc.filter(c => c.Job_Type === job);
+-                    if (group.length === 0) return 0;
+-                    return group.reduce((acc, c) => acc + c.Avg_Balance, 0) / group.length;
+-                });
+-
+-                kpiDetailChartInstance = new Chart(ctx, {
+-                    type: 'bar',
+-                    data: {
+-                        labels: jobs,
+-                        datasets: [{
+-                            label: '?됯퇏 ?먯궛 (??',
+-                            data: avgs,
+-                            backgroundColor: 'rgba(0, 189, 167, 0.75)',
+-                            borderColor: '#00bda7',
+-                            borderWidth: 1.5,
+-                            borderRadius: 6
+-                        }]
+-                    },
+-                    options: getChartOptions('x')
+-                });
+-                dandiComment = "媛?吏곴뎔蹂??됯퇏 ?먯궛 洹쒕え瑜?遺꾩꽍?대낫???꾨Ц吏곴낵 IT/媛쒕컻??吏곴뎔???됱옍???곷??곸쑝濡??꾩＜ ?먰뀅寃??섏삤怨??덉뼱. 吏곴뎔 ?뱀
+꽦??留욌뒗 ?먯궛 ?ы듃?대━???⑹쓣 ?곴레 ?쒖븞?대낫?먭뎄! ?뱤";
+-
+-            } else if (kpi === 'high_risk_count') {
+-                // ?꾪뿕 ?깃툒 鍮꾩쑉 ?꾨꽋
+-                const high = fc.filter(c => getRiskLevel(c.Risk_Score) === "怨좎쐞??).length;
+-                const medium = fc.filter(c => getRiskLevel(c.Risk_Score) === "以묒쐞??).length;
+-                const low = fc.filter(c => getRiskLevel(c.Risk_Score) === "??꾪뿕").length;
+-
+-                kpiDetailChartInstance = new Chart(ctx, {
+-                    type: 'doughnut',
+-                    data: {
+-                        labels: ['怨좎쐞??, '以묒쐞??, '??꾪뿕'],
+-                        datasets: [{
+-                            data: [high, medium, low],
+-                            backgroundColor: ['#f87171', '#fb923c', '#00bda7'],
+-                            borderColor: '#0b131f',
+-                            borderWidth: 2
+-                        }]
+-                    },
+-                    options: {
+-                        responsive: true,
+-                        maintainAspectRatio: false,
+-                        plugins: {
+-                            legend: {
+-                                position: 'right',
+-                                labels: { color: '#94a3b8', font: { family: 'NanumSquareRound' } }
+-                            }
+-                        }
+-                    }
+-                });
+-                dandiComment = "?먯궛 ?꾩닔 怨좎쐞?섍뎔 怨좉컼??鍮꾩쑉????긽 ?몄떖??遊먯빞 ?? ??鍮꾩쑉???믪븘吏꾨떎硫?利됯컖 留덉????쒖븞 諛쒖넚(SMS, ?대찓?? 諛?
+?좎꽑 ?쎌냽 ?ㅼ?以꾩쓣 ?≪븘??吏???꾩껜??AUM ?좎텧??留됱쓣 ???덉뼱! ?슚";
+-
+-            } else if (kpi === 'potential_outflow') {
+-                // 愿???뚮쭏蹂??좎텧 ?곕젮 ?먯궛 ?⑷퀎
+-                const themes = ['諛섎룄泥?, '??났/諛⑹궛', '2李⑥쟾吏', '由ъ툩/諛곕떦', '湲덉쑖/???];
+-                const sums = themes.map(theme => {
+-                    const group = fc.filter(c => c.Main_Theme === theme);
+-                    return group.reduce((acc, c) => acc + (c.Avg_Balance * c.Salary_Day_Transfer), 0);
+-                });
+-
+-                kpiDetailChartInstance = new Chart(ctx, {
+-                    type: 'bar',
+-                    data: {
+-                        labels: themes,
+-                        datasets: [{
+-                            label: '?좎텧 ?곕젮 ?먯궛 (??',
+-                            data: sums,
+-                            backgroundColor: ['#f87171', '#fb923c', '#00bda7', '#60a5fa', '#a78bfa'],
+-                            borderRadius: 6
+-                        }]
+-                    },
+-                    options: getChartOptions()
+-                });
+-                dandiComment = "?붽툒???대뼡 ?ъ옄 ?뚮쭏濡??먭툑??鍮좎졇?섍컝 媛?μ꽦???믪?吏 蹂댁뿬二쇨퀬 ?덉뼱. ?뱀젙 ?뚮쭏 ??Wrap) ?곹뭹???좎젣 ?쒖븞???
+뱁뻾 ?먭툑?쇰줈 臾띕뒗 留덉??낆씠 諛붾줈 Money Move 諛⑹뼱???듭떖?댁빞! ?뮯";
+-
+-            } else if (kpi === 'avg_age') {
+-                // ?곕졊? 遺꾪룷 諛??됯퇏 ?꾪뿕??-                const ageGroups = ['30-34??, '35-39??, '40-44??, '45-49??];
+-                const groupCounts = [0, 0, 0, 0];
+-                const groupRiskMeans = [0, 0, 0, 0];
+-                const groupRiskSum = [0, 0, 0, 0];
+-
+-                fc.forEach(c => {
+-                    let idx = 0;
+-                    if (c.Age >= 45) idx = 3;
+-                    else if (c.Age >= 40) idx = 2;
+-                    else if (c.Age >= 35) idx = 1;
+-                    
+-                    groupCounts[idx]++;
+-                    groupRiskSum[idx] += c.Risk_Score;
+-                });
+-
+-                for (let i = 0; i < 4; i++) {
+-                    groupRiskMeans[i] = groupCounts[i] > 0 ? (groupRiskSum[i] / groupCounts[i]) : 0;
+-                }
+-
+-                kpiDetailChartInstance = new Chart(ctx, {
+-                    type: 'bar',
+-                    data: {
+-                        labels: ageGroups,
+-                        datasets: [
+-                            {
+-                                type: 'bar',
+-                                label: '怨좉컼 ??(紐?',
+-                                data: groupCounts,
+-                                backgroundColor: 'rgba(0, 189, 167, 0.2)',
+-                                borderColor: 'rgba(0, 189, 167, 0.4)',
+-                                borderWidth: 1,
+-                                yAxisID: 'y1'
+-                            },
+-                            {
+-                                type: 'line',
+-                                label: '?됯퇏 ?꾪뿕 ?먯닔',
+-                                data: groupRiskMeans,
+-                                borderColor: '#f87171',
+-                                borderWidth: 2,
+-                                pointBackgroundColor: '#f87171',
+-                                yAxisID: 'y2',
+-                                tension: 0.1
+-                            }
+-                        ]
+-                    },
+-                    options: {
+-                        responsive: true,
+-                        maintainAspectRatio: false,
+-                        scales: {
+-                            x: { grid: { display: false }, ticks: { color: '#94a3b8', font: { family: 'NanumSquareRoun
+d' } } },
+-                            y1: {
+-                                type: 'linear',
+-                                display: true,
+-                                position: 'left',
+-                                grid: { color: 'rgba(255,255,255,0.05)' },
+-                                ticks: { color: '#94a3b8' }
+-                            },
+-                            y2: {
+-                                type: 'linear',
+-                                display: true,
+-                                position: 'right',
+-                                grid: { drawOnChartArea: false },
+-                                ticks: { color: '#f87171' },
+-                                min: 0,
+-                                max: 100
+-                            }
+-                        },
+-                        plugins: {
+-                            legend: { labels: { color: '#94a3b8', font: { family: 'NanumSquareRound' } } }
+-                        }
+-                    }
+-                });
+-                dandiComment = "?곕졊?媛 鍮꾧탳???딆쓣?섎줉 紐⑤컮??二쇱떇 嫄곕옒 鍮꾩쨷???믨린 ?뚮Ц???댄깉 ?꾪뿕 ?먯닔媛 ?믨쾶 梨낆젙?섎뒗 寃쏀뼢???덉뼱! 3040
+ ?몃?瑜???곸쑝濡쒕뒗 ?ㅻ쭏?명븳 鍮꾨?硫????붾（?섏쓣 沅뚯쑀?대킄! ?뫁";
+-
+-            } else if (kpi === 'top_theme') {
+-                // 5? ?뚮쭏 ?좏샇???됯퇏
+-                const themes = ['諛섎룄泥?, '??났/諛⑹궛', '2李⑥쟾吏', '由ъ툩/諛곕떦', '湲덉쑖/???];
+-                const avgs = themes.map(t => {
+-                    return fc.reduce((acc, c) => acc + c[t], 0) / fc.length;
+-                });
+-
+-                kpiDetailChartInstance = new Chart(ctx, {
+-                    type: 'bar',
+-                    data: {
+-                        labels: themes,
+-                        datasets: [{
+-                            label: '?됯퇏 愿?щ룄 (??',
+-                            data: avgs,
+-                            backgroundColor: '#00bda7',
+-                            borderRadius: 6
+-                        }]
+-                    },
+-                    options: getChartOptions()
+-                });
+-                            borderColor: '#00bda7',
+-                            x: { grid: { display: false }, ticks: { color: '#94a3b8' } },
+-                            y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' }, min: 60, max:
+ 100 }
+-                            borderColor: '#0b131f',
+-                        grid: { color: 'rgba(255,255,255,0.04)' },
+-                        ticks: { color: '#94a3b8', font: { family: 'NanumSquareRound', size: 10 } }
+-                        grid: { color: 'rgba(255,255,255,0.04)' },
+-                        ticks: { color: '#94a3b8', font: { family: 'NanumSquareRound', size: 10 } }
+-                            grid: { color: 'rgba(255,255,255,0.04)' },
+-                                color: '#94a3b8',
+-                            grid: { color: 'rgba(255,255,255,0.04)' },
+-                            ticks: { color: '#94a3b8', callback: function(value) { return value + '%'; } },
+-                        x: { grid: { display: false }, ticks: { color: '#94a3b8' } },
+-                            grid: { color: 'rgba(255,255,255,0.04)' },
+-                            ticks: { color: '#94a3b8', callback: function(value) { return value + '??; } }
+-                        { label: '??꾪뿕', data: lowRisk, backgroundColor: '#00bda7' }
+-                        x: { stacked: true, grid: { display: false }, ticks: { color: '#94a3b8' } },
+-                        y: { stacked: true, grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#94a3b8' } }
+-                        legend: { position: 'bottom', labels: { color: '#94a3b8', boxWidth: 10, font: { size: 10 } } }
+-                        borderColor: '#0b131f',
+-                            labels: { color: '#94a3b8', boxWidth: 10, font: { size: 10 } }
+-                        backgroundColor: '#00bda7',
+-                        y: { grid: { display: false }, ticks: { color: '#94a3b8', font: { family: 'NanumSquareRound', 
+size: 10 } } }
+-        function renderCustLeakage(c) {
+-            const div = document.getElementById('custLeakageInfo');
+-            const riskLvl = getRiskLevel(c.Risk_Score);
+-            
+-            let color = '#34d399';
+-            let riskClass = 'badge-low';
+-            if (riskLvl === '怨좎쐞??) { color = '#f87171'; riskClass = 'badge-high'; }
+-            else if (riskLvl === '以묒쐞??) { color = '#fb923c'; riskClass = 'badge-medium'; }
+-
+-            div.innerHTML = `
+-                <p style="margin-top:0; margin-bottom: 4px;">?좑툘 <b>?먯궛 ?꾩닔??</b> <span class="badge ${riskClass}">${c
+.Risk_Score}% (${riskLvl})</span></p>
+-                <div class="progress-container">
+-                    <div class="progress-bar" style="width: ${c.Risk_Score}%; background-color: ${color};"></div>
+-                </div>
+-                <p style="margin-top: 4px; margin-bottom: 0;">?뮯 <b>?붽툒???댁껜鍮?</b> ${Math.round(c.Salary_Day_Transfer 
+* 100)}%</p>
+-                <p style="margin-bottom:0;">狩?<b>二쇰젰 愿???뚮쭏:</b> ${c.Main_Theme}</p>
+-            `;
+-        }
+-
+-        function onSimSliderChange() {
+-            const c = state.selectedCustomer;
+-            if (!c) return;
+-
+-            const slider = document.getElementById('simSlider');
+-            const propWrap = parseInt(slider.value);
+-            document.getElementById('simSliderVal').innerText = propWrap.toLocaleString() + '??;
+-
+-            // ?몄븸 ?덇컧 ?④낵 怨꾩궛
+-            const expectedTaxSaving = Math.round(propWrap * 0.075 * 0.154);
+-            document.getElementById('simSavingVal').innerText = `?곌컙 ????{expectedTaxSaving.toLocaleString()} ?덉꽭 ?덉긽`
+;
+-            // ?섏씡瑜?鍮꾧탳 李⑦듃 ?뚮뜑留?-            const currOutflow = c.Avg_Balance * c.Salary_Day_Transfer;
+-            const currDeposit = c.Avg_Balance - currOutflow;
+-            const currentExpectedYield = (currDeposit * 0.02) + (currOutflow * 0.015);
+-            const propOutflow = Math.max(0, currOutflow - propWrap);
+-            const propDeposit = c.Avg_Balance - propWrap - propOutflow;
+-            const proposedExpectedYield = (propDeposit * 0.02) + (propOutflow * 0.015) + (propWrap * 0.075);
+-            const ctx = document.getElementById('simChart').getContext('2d');
+-            if (simChartInstance) simChartInstance.destroy();
+-            simChartInstance = new Chart(ctx, {
+-                type: 'bar',
+-                    labels: ['?곌컙 湲곕? ?섏씡'],
+-                    datasets: [
+-                        { label: '?꾩옱 ?ы듃?대━??, data: [currentExpectedYield], backgroundColor: '#475569', borderRadius
+: 4 },
+-                        { label: '?쒖븞 ?ы듃?대━??, data: [proposedExpectedYield], backgroundColor: '#00bda7', borderRadiu
+s: 4 }
+-                    ]
+-                    indexAxis: 'y',
+-                    scales: {
+-                        x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#94a3b8' } },
+-                        y: { display: false }
+-                    },
+-                        legend: { position: 'bottom', labels: { color: '#94a3b8', boxWidth: 10, font: { size: 9 } } }
+-            // ?뚮젅?대턿 ?蹂????몄븸 ?덇컧 ?띿뒪???ㅼ떆媛?移섑솚
+-            const taxTextEls = document.querySelectorAll('.tax-saving-text-placeholder');
+-            taxTextEls.forEach(el => {
+-                el.innerText = expectedTaxSaving.toLocaleString();
+-            });
+-        }
+-
+-        function updateDefendBtnAndPlaybook() {
+-            const c = state.selectedCustomer;
+-            if (!c) return;
+-
+-            const isDefended = state.defendedCustomers.has(c.Customer_ID);
+-            const btn = document.getElementById('defendBtn');
+-            const card = document.getElementById('playbookCardContent');
+-
+-            if (isDefended) {
+-                btn.innerText = '???먯궛 ?덉쟾 怨좎젙 ?꾨즺 (諛⑹뼱 ?깃났)';
+-                btn.disabled = true;
+-            } else {
+-                btn.innerText = '?? 留덇렇???붾（??媛??(諛⑹뼱 ?ㅽ뻾)';
+-                btn.disabled = false;
+-            }
+-
+-            // ?뚮젅?대턿 移대뱶 梨꾩슦湲?-            const theme = c.Main_Theme;
+-            const prodChips = products[theme].map(p => `<span class="product-chip">${p}</span>`).join('');
+-            let playbookTitle = '';
+-            if (theme === '諛섎룄泥?) playbookTitle = '?숋툘 諛섎룄泥??덊띁?ъ씠?????댁뭅?댄듃 ?쒖븞 ?꾨왂';
+-            else if (theme === '2李⑥쟾吏') playbookTitle = '?뵅 移쒗솚寃?諛고꽣由??곸떊 ?깆옣 ???쒖븞 ?꾨왂';
+-            else if (theme === '??났/諛⑹궛') playbookTitle = '?? K-諛⑹궛 湲濡쒕쾶 由щ뜑 ???쒖븞 ?꾨왂';
+-            else if (theme === '由ъ툩/諛곕떦') playbookTitle = '?룫 鍮꾧낵???붾같??由ъ툩 ???쒖븞 ?꾨왂';
+-            else playbookTitle = '?뱢 諛몃쪟??湲덉쑖吏二?諛곕떦 媛뺥솕 ???쒖븞 ?꾨왂';
+-
+-            card.innerHTML = `
+-                <h5 class="playbook-header-title">${playbookTitle}</h5>
+-                <div class="script-box">
+-                    ?뿣 <b>?곷떞 異붿쿇 ?쒖븞 ?蹂?</b><br>
+-                    "怨좉컼?? 留ㅻ떖 ?붽툒?좊쭏??吏곸젒 利앷텒?щ줈 ?먭툑(${(c.Salary_Day_Transfer*100).toFixed(0)}%)???댁껜?섏뿬 ${theme} 媛쒕퀎
+ 醫낅ぉ??留ㅻℓ?섏떆??寃껊낫?? ?꾪뿕 ?듭젣?μ씠 ?낆쬆?섍퀬 ?곌컙 ????span class="tax-saving-text-placeholder">0</span>???덉꽭 ?쒗깮??媛?ν븳 ?뱁뻾???뱁
+솕 ???곹뭹???쒖븞?⑸땲??"
+-                </div>
+-                <div style="margin-top: 5px;">
+-                    <span style="font-size:11px; color:#94a3b8; font-weight:600; display:block; margin-bottom:4px;">?㎠
+ 留덇렇???붾（??異붿쿇 ?곹뭹:</span>
+-                    <div class="product-chips-container">${prodChips}</div>
+-                </div>
+-            `;
+-        }
+-
+-        function updatePitchingScript() {
+-            const c = state.selectedCustomer;
+-            if (!c) return;
+-
+-            const theme = c.Main_Theme;
+-            const slider = document.getElementById('simSlider');
+-            const expectedTaxSaving = Math.round(parseInt(slider.value) * 0.075 * 0.154);
+-
+-            let script = pitchingScripts[theme] || '怨좉컼 留욎땄 ?쒖븞 ?蹂?以鍮?以?..';
+-            // ?띿뒪??留ㅽ븨 蹂?????-            script = script.replace('{taxSaving}', expectedTaxSaving.toLocaleString()
+ + '??);
+-            document.getElementById('pitchingScriptText').innerHTML = script;
+-        function runDefendMagnet() {
+-            const c = state.selectedCustomer;
+-            if (!c) return;
+-
+-            const overlay = document.getElementById('loadingOverlay');
+-            overlay.style.display = 'flex';
+-
+-            setTimeout(() => {
+-                overlay.style.display = 'none';
+-
+-                // ?곹깭 ?낅뜲?댄듃
+-                state.defendedCustomers.add(c.Customer_ID);
+-
+-                // ?ㅼ젣 ?곗씠???ㅻ쾭?쇱씠??(諛⑹뼱 泥섎━)
+-                showToast(`${c.Name} 怨좉컼 癒몃땲臾대툕 諛⑹뼱 ?깃났! ?먯궛??iM諭낇겕 ?대줈 怨좎젙?섏뿀?듬땲??`, '?썳截?);
+-
+-                // UI ?щ컲??-                selectCustomer(c);
+-                applyFilters();
+-                        { label: '??꾪뿕', data: lowCounts, backgroundColor: '#00bda7' }
+-                        x: { stacked: true, grid: { display: false }, ticks: { color: '#94a3b8' } },
+-                        y: { stacked: true, grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#94a3b8' } }
+-                        legend: { position: 'bottom', labels: { color: '#94a3b8', boxWidth: 10, font: { size: 9 } } }
+-                    <td style="font-weight:700; color:#ffffff;">${c.Name}</td>
+
+
